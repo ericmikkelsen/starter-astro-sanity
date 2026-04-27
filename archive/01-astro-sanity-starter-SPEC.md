@@ -179,3 +179,26 @@ export function toPagePath(slug: string): string {
 ## Open Questions
 
 - Should preview be protected only by secret + read token, or include additional environment guards?
+
+## Delivery Reconciliation (2026-04-27)
+
+Delivered as specified:
+
+- Single Astro project with embedded Sanity Studio.
+- Static route generation from Sanity page documents (`index` and `[slug]` pages).
+- Reusable page/web metadata schema fields and future-ready body primitive types.
+- Draft-aware query scaffolding with token guard logic in preview helper code.
+- Sanity typegen automation integrated into `predev` and `prebuild`.
+- Baseline styling, mapping tests, and CI-friendly quality checks.
+
+Implemented differently (intentional):
+
+- Astro content collections were not used for Sanity documents. The implementation uses direct typed Sanity querying/mapping under `src/lib/content/` because Sanity is a remote source, not file-based content.
+
+Deferred or intentionally omitted in this story:
+
+- No dedicated preview activation endpoint (`src/pages/api/preview.ts`) yet.
+- No Vitest DOM suite (`npm run test:dom`) yet.
+- No explicit `lint` or `typecheck` scripts yet.
+
+These deferred items are intentional scope control for the starter foundation and are candidates for the next content-focused story.

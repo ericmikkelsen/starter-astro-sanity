@@ -40,3 +40,23 @@ Create a clean starter that proves a real content loop from Sanity to Astro page
 
 - Sanity account/project provisioning details (projectId, dataset, API version).
 - Preview secret and read token are provisioned for local validation.
+
+## Delivery Reconciliation (2026-04-27)
+
+Status against acceptance criteria:
+
+- Met: chapter PR flow was used for implementation.
+- Met: Sanity Studio is integrated at `/studio`.
+- Met: page schema and Astro page generation are wired end-to-end.
+- Met: homepage lists generated page routes.
+- Met: shared schema/type utilities and reusable web metadata fields were introduced.
+- Met: SSR preview behavior is scaffolded with draft-aware token checks in the content query layer.
+- Met: future-ready body primitive types are defined.
+- Met: README includes concrete Sanity UI token setup steps.
+- Met: typegen automation is wired through `predev` and `prebuild`.
+- Met: baseline tests and quality gates are in place and passing.
+- Met: generated-file review noise reduction is configured (`.gitattributes` and review-budget exclusions).
+
+Intentional boundaries held:
+
+- Out of scope items in this story remained out of scope (Portable Text rendering, authenticated preview activation flow, extra content types, advanced SEO system).

@@ -1,4 +1,3 @@
-import { spawnSync } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
 
 const projectId = process.env.PUBLIC_SANITY_PROJECT_ID;
@@ -29,23 +28,16 @@ function runSanityCommand(args) {
 	return result.status ?? 1;
 }
 
-const extractResult = spawnSync(
-	'npx',
-	[
-		'sanity',
-		'schema',
-		'extract',
-		'--enforce-required-fields',
-		'--path=./src/sanity/extract.json',
-	],
-	{ stdio: 'inherit' }
-);
+// Extraction runs first so TypeGen reads the current schema snapshot from disk.
+const extractStatus = runSanityCommand([
+	'schema',
+	'extract',
+	'--enforce-required-fields',
+	'--path=./src/sanity/extract.json',
+]);
 
-if (extractResult.status !== 0) {
-	process.exit(extractResult.status ?? 1);
+if (extractStatus !== 0) {
+	process.exit(extractStatus);
 }
 
-// Extraction runs first so TypeGen reads the current schema snapshot from disk.
-const typegenResult = runSanityCommand(['typegen', 'generate']);
-
-process.exit(typegenResult);
+process.exit(runSanityCommand(['typegen', 'generate']));

@@ -60,30 +60,30 @@ Type generation automation requirements:
 Target shape (representative):
 
 - `src/pages/index.astro`:
-  - Fetches all page entries and renders a simple links list.
+    - Fetches all page entries and renders a simple links list.
 - `src/pages/[slug].astro`:
-  - Generates static paths from Sanity-backed entries.
-  - Renders title + description for each page.
+    - Generates static paths from Sanity-backed entries.
+    - Renders title + description for each page.
 - `src/pages/api/preview.ts` (or equivalent Astro endpoint):
-  - Handles preview activation/validation for SSR preview mode.
+    - Handles preview activation/validation for SSR preview mode.
 - `src/content/`:
-  - Astro collection config and shared content typing helpers.
+    - Astro collection config and shared content typing helpers.
 - `sanity.config.ts`:
-  - Studio setup and schema registration.
+    - Studio setup and schema registration.
 - `sanity.cli.ts`:
-  - TypeGen configuration using canonical paths below.
+    - TypeGen configuration using canonical paths below.
 - `sanity/schemas/`:
-  - Page schema, reusable web field modules, and future body primitive modules.
+    - Page schema, reusable web field modules, and future body primitive modules.
 - `src/sanity/extract.json`:
-  - Generated schema extract used by TypeGen.
+    - Generated schema extract used by TypeGen.
 - `src/sanity/types.ts`:
-  - Generated schema + query TypeScript types for Sanity integration.
+    - Generated schema + query TypeScript types for Sanity integration.
 - `src/lib/content/` (or similar):
-  - Shared shape definitions/utilities used by both schema and ingestion layers.
+    - Shared shape definitions/utilities used by both schema and ingestion layers.
 - `tests/`:
-  - Node test runner suites for mapping/validation logic.
+    - Node test runner suites for mapping/validation logic.
 - `tests-dom/` (or colocated vitest files):
-  - Minimal DOM-render assertions where useful.
+    - Minimal DOM-render assertions where useful.
 
 ## Content Model
 
@@ -118,13 +118,13 @@ Example style:
 
 ```ts
 export type WebPageCore = {
-  title: string;
-  slug: string;
-  description?: string;
+	title: string;
+	slug: string;
+	description?: string;
 };
 
 export function toPagePath(slug: string): string {
-  return `/${slug}/`;
+	return `/${slug}/`;
 }
 ```
 
@@ -132,33 +132,33 @@ export function toPagePath(slug: string): string {
 
 - TDD for behavior changes and mapping logic.
 - Node test runner for:
-  - Slug/path mapping helpers
-  - Sanity-to-Astro transformation validation
-  - Shared field definition normalization logic
-  - Preview parameter/guard helper logic
+    - Slug/path mapping helpers
+    - Sanity-to-Astro transformation validation
+    - Shared field definition normalization logic
+    - Preview parameter/guard helper logic
 - Vitest for:
-  - Minimal DOM assertions on homepage page-link rendering
+    - Minimal DOM assertions on homepage page-link rendering
 - Run full checks before merge:
-  - tests, lint, typecheck, build
+    - tests, lint, typecheck, build
 
 ## Boundaries
 
 - Always:
-  - Use conventional commits.
-  - Keep chapters reviewable and concern-scoped.
-  - Keep schema/collection contracts typed.
-  - Preserve SSG behavior for public pages.
-  - Mount Studio at `/studio`.
+    - Use conventional commits.
+    - Keep chapters reviewable and concern-scoped.
+    - Keep schema/collection contracts typed.
+    - Preserve SSG behavior for public pages.
+    - Mount Studio at `/studio`.
 - Ask first:
-  - Adding new dependencies not already required by Astro/Sanity integration.
-  - Changing route conventions (for example, nested paths).
-  - Introducing additional content types beyond page.
-  - Changing token scope or preview security strategy.
+    - Adding new dependencies not already required by Astro/Sanity integration.
+    - Changing route conventions (for example, nested paths).
+    - Introducing additional content types beyond page.
+    - Changing token scope or preview security strategy.
 - Never:
-  - Manually update version fields or changelog release entries.
-  - Commit secrets, API tokens, or environment values.
-  - Hand-edit generated Sanity files (`src/sanity/extract.json`, `src/sanity/types.ts`).
-  - Mix unrelated refactors with feature behavior.
+    - Manually update version fields or changelog release entries.
+    - Commit secrets, API tokens, or environment values.
+    - Hand-edit generated Sanity files (`src/sanity/extract.json`, `src/sanity/types.ts`).
+    - Mix unrelated refactors with feature behavior.
 
 ## Success Criteria
 

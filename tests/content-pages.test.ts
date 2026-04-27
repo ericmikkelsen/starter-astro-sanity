@@ -7,6 +7,9 @@ import { spawnSync } from 'node:child_process';
 
 import { mapSanityPageToAstroPage } from '../src/lib/content/pages';
 
+/**
+ * Verifies the mapper preserves the fields the Astro routes depend on.
+ */
 test('mapSanityPageToAstroPage maps valid page records', () => {
 	const mapped = mapSanityPageToAstroPage({
 		_id: 'page-1',
@@ -28,6 +31,9 @@ test('mapSanityPageToAstroPage maps valid page records', () => {
 	assert.equal(mapped?.metaImage?.assetRef, 'image-ref');
 });
 
+/**
+ * Verifies incomplete Sanity records are rejected before they can reach route generation.
+ */
 test('mapSanityPageToAstroPage skips invalid entries', () => {
 	const mapped = mapSanityPageToAstroPage({
 		_id: 'page-2',
@@ -37,11 +43,15 @@ test('mapSanityPageToAstroPage skips invalid entries', () => {
 	assert.equal(mapped, null);
 });
 
+/**
+ * Verifies the typegen wrapper exits early on unconfigured clones without inventing fake outputs.
+ */
 test('sanity:typegen skip does not create placeholder artifacts', () => {
 	const tempDir = mkdtempSync(join(tmpdir(), 'sanity-typegen-skip-'));
 	const scriptPath = resolve(process.cwd(), 'scripts/run-sanity-typegen.mjs');
 
 	try {
+		// Running in a throwaway directory makes it obvious whether the script writes files on its own.
 		const result = spawnSync(process.execPath, [scriptPath], {
 			cwd: tempDir,
 			env: {

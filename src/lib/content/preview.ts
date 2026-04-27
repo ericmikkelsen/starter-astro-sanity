@@ -1,11 +1,14 @@
 import { createClient, type QueryParams } from "@sanity/client";
 
-const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID || "3do82whm";
-const dataset = import.meta.env.PUBLIC_SANITY_DATASET || "production";
-const apiVersion = import.meta.env.PUBLIC_SANITY_API_VERSION || "2026-01-01";
+const runtimeEnv = ((import.meta as { env?: Record<string, string | undefined> }).env ??
+	process.env) as Record<string, string | undefined>;
 
-const previewEnabled = import.meta.env.PUBLIC_SANITY_ENABLE_PREVIEW === "true";
-const token = import.meta.env.SANITY_API_READ_TOKEN;
+const projectId = runtimeEnv.PUBLIC_SANITY_PROJECT_ID || "3do82whm";
+const dataset = runtimeEnv.PUBLIC_SANITY_DATASET || "production";
+const apiVersion = runtimeEnv.PUBLIC_SANITY_API_VERSION || "2026-01-01";
+
+const previewEnabled = runtimeEnv.PUBLIC_SANITY_ENABLE_PREVIEW === "true";
+const token = runtimeEnv.SANITY_API_READ_TOKEN;
 
 const client = createClient({
 	projectId,

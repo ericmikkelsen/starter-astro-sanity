@@ -10,8 +10,8 @@
 		"prebuild": "npm run sanity:typegen",
 		"preview": "astro preview",
 		"astro": "astro",
-		"sanity:schema:extract": "node -e \"require('fs').mkdirSync('./src/sanity', { recursive: true })\" && sanity schema extract --enforce-required-fields --path=./src/sanity/extract.json",
-		"sanity:typegen": "npm run sanity:schema:extract && sanity typegen generate",
+		"sanity:schema:extract": "sanity schema extract --enforce-required-fields --path=./src/sanity/extract.json",
+		"sanity:typegen": "node ./scripts/run-sanity-typegen.mjs",
 		"test": "node --test",
 		"prepare": "husky",
 		"format": "prettier --write ."

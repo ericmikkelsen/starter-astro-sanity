@@ -1,3 +1,4 @@
+import { mkdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 
 const projectId = process.env.PUBLIC_SANITY_PROJECT_ID;
@@ -8,6 +9,8 @@ if (!projectId || !dataset) {
 	console.log("Skipping sanity:typegen (set PUBLIC_SANITY_PROJECT_ID and PUBLIC_SANITY_DATASET to enable).");
 	process.exit(0);
 }
+
+mkdirSync("./src/sanity", { recursive: true });
 
 // Extracting the schema first gives TypeGen a stable source of truth for document definitions.
 const extractResult = spawnSync(

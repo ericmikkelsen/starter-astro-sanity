@@ -1,0 +1,50 @@
+---
+import { getClient } from '../sanity/client';
+import { allPagesQuery } from '../sanity/queries';
+import type { AllPagesQueryResult } from '../sanity/types';
+import '../styles/global.css';
+
+let pages: AllPagesQueryResult = [];
+try {
+	pages = await getClient().fetch(allPagesQuery);
+} catch {
+	// Sanity not yet configured — build succeeds with empty listing
+}
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Pages</title>
+	</head>
+	<body class="max-w-2xl mx-auto px-4 py-12">
+		<h1 class="text-3xl font-bold mb-8">Pages</h1>
+		{
+			pages.length === 0 ? (
+				<p class="text-gray-500">
+					No pages yet. Create a Page document in Sanity Studio.
+				</p>
+			) : (
+				<ul class="space-y-4">
+					{pages.map((page) => (
+						<li>
+							<a
+								href={`/${page.slug?.current}`}
+								class="text-blue-600 hover:underline text-lg font-medium"
+							>
+								{page.title}
+							</a>
+							{page.description && (
+								<p class="text-gray-600 text-sm mt-1">
+									{page.description}
+								</p>
+							)}
+						</li>
+					))}
+				</ul>
+			)
+		}
+	</body>
+</html>

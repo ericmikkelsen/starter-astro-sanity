@@ -1,3 +1,6 @@
+/**
+ * Shared field names keep schema definitions and frontend mapping aligned on the same keys.
+ */
 export const WEB_PAGE_FIELD_NAMES = {
 	title: 'title',
 	slug: 'slug',
@@ -55,6 +58,9 @@ export type BodyImageBlock = {
 	image: WebDocumentImage;
 };
 
+/**
+ * The body union stays narrow and explicit so renderers can switch on `_type` without fallback cases.
+ */
 export type WebDocumentBodyBlock =
 	| BodyHeadingBlock
 	| BodySubheadingBlock

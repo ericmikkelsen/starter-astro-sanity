@@ -1,6 +1,5 @@
-import { sanityClient } from "sanity:client";
-
 import type { WebDocumentCore } from "./shared";
+import { loadQuery } from "./preview";
 
 const PAGE_QUERY = `*[_type == "page" && defined(slug.current)]{
   _id,
@@ -52,7 +51,7 @@ function toAstroPage(entry: SanityPageQueryResult): AstroPage | null {
 
 export async function getAstroPages(): Promise<AstroPage[]> {
 	try {
-		const results = await sanityClient.fetch<SanityPageQueryResult[]>(PAGE_QUERY);
+		const results = await loadQuery<SanityPageQueryResult[]>(PAGE_QUERY);
 		return results.map(toAstroPage).filter((entry): entry is AstroPage => Boolean(entry));
 	} catch {
 		return [];

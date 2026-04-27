@@ -12,6 +12,7 @@
 		"astro": "astro",
 		"sanity:schema:extract": "sanity schema extract --enforce-required-fields --path=./src/sanity/extract.json",
 		"sanity:typegen": "node scripts/run-sanity-typegen.mjs",
+		"start": "npm run dev",
 		"test": "node --import tsx --test tests/**/*.test.ts",
 		"prepare": "husky",
 		"format": "prettier --write ."

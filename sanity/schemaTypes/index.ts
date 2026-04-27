@@ -10,6 +10,12 @@ import {
 	subheadingType,
 } from './objects/bodyBlocks';
 
+/**
+ * Single registry of all schema types loaded by the Studio configuration.
+ *
+ * Keeping documents and reusable object blocks together here makes it easy to
+ * extend the starter without chasing imports across multiple files.
+ */
 export const schemaTypes: SchemaTypeDefinition[] = [
 	pageType,
 	headingType,

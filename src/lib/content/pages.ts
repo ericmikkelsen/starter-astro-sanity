@@ -1,5 +1,5 @@
-import type { WebDocumentCore } from "./shared";
-import { loadQuery } from "./preview";
+import type { WebDocumentCore } from './shared';
+import { loadQuery } from './preview';
 
 const PAGE_QUERY = `*[_type == "page" && defined(slug.current)]{
   _id,
@@ -28,7 +28,15 @@ export type AstroPage = WebDocumentCore & {
 	path: string;
 };
 
-function toAstroPage(entry: SanityPageQueryResult): AstroPage | null {
+/**
+ * Maps raw Sanity page query results into the normalized Astro page shape.
+ *
+ * @param entry The raw page document returned from the Sanity query.
+ * @returns A normalized Astro page, or `null` when required values are missing.
+ */
+export function mapSanityPageToAstroPage(
+	entry: SanityPageQueryResult
+): AstroPage | null {
 	if (!entry.slug || !entry.title) {
 		return null;
 	}
@@ -40,25 +48,44 @@ function toAstroPage(entry: SanityPageQueryResult): AstroPage | null {
 		description: entry.description,
 		metaImage: entry.metaImage?.asset?._ref
 			? {
+					// The frontend only needs the asset reference here so image URL building can stay centralized.
 					assetRef: entry.metaImage.asset._ref,
 					alt: entry.metaImageAlt,
-			  }
+				}
 			: undefined,
 		metaImageAlt: entry.metaImageAlt,
+		// Astro routes are emitted with trailing slashes, so the mapped path mirrors build output.
 		path: `/${entry.slug}/`,
 	};
 }
 
+/**
+ * Fetches all pages from Sanity and returns only valid mapped entries.
+ *
+ * @returns The mapped page list, or an empty array when Sanity cannot be queried.
+ */
 export async function getAstroPages(): Promise<AstroPage[]> {
 	try {
 		const results = await loadQuery<SanityPageQueryResult[]>(PAGE_QUERY);
-		return results.map(toAstroPage).filter((entry): entry is AstroPage => Boolean(entry));
+		// Invalid records are dropped here so route generation never has to branch on partial data.
+		return results
+			.map(mapSanityPageToAstroPage)
+			.filter((entry): entry is AstroPage => Boolean(entry));
 	} catch {
+		// Static generation should degrade to no dynamic pages instead of failing the whole build.
 		return [];
 	}
 }
 
-export async function getAstroPageBySlug(slug: string): Promise<AstroPage | undefined> {
+/**
+ * Looks up a single page by slug from the mapped page list.
+ *
+ * @param slug The page slug to match against the mapped result set.
+ * @returns The first page whose slug matches the input, if one exists.
+ */
+export async function getAstroPageBySlug(
+	slug: string
+): Promise<AstroPage | undefined> {
 	const pages = await getAstroPages();
 	return pages.find((page) => page.slug === slug);
 }

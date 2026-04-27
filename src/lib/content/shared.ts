@@ -1,17 +1,3 @@
-/**
- * Shared field names keep schema definitions and frontend mapping aligned on the same keys.
- */
-export const WEB_PAGE_FIELD_NAMES = {
-	title: 'title',
-	slug: 'slug',
-	description: 'description',
-	metaImage: 'metaImage',
-	metaImageAlt: 'metaImageAlt',
-} as const;
-
-export type WebPageFieldName =
-	(typeof WEB_PAGE_FIELD_NAMES)[keyof typeof WEB_PAGE_FIELD_NAMES];
-
 export type WebDocumentImage = {
 	assetRef: string;
 	alt?: string;

@@ -1,11 +1,23 @@
 {
-	"name": "basic-project",
+	"name": "starter-astro-sanity",
 	"version": "1.0.0",
-	"description": "Code repository starter template with conventional commits and automated versioning",
+	"description": "Astro v6 + Sanity v3 starter with Tailwind v4, TypeScript strict mode, and draft preview",
 	"private": true,
 	"scripts": {
-		"prepare": "husky",
-		"format": "prettier --write ."
+		"dev": "concurrently \"astro dev\" \"sanity dev --port 3333\"",
+		"build": "astro build",
+		"studio": "sanity dev --port 3333",
+		"typegen": "sanity typegen generate",
+		"format": "prettier --write .",
+		"prepare": "husky"
+	},
+	"dependencies": {
+		"@sanity/client": "^7.22.0",
+		"@tailwindcss/vite": "^4.2.4",
+		"astro": "^6.1.9",
+		"concurrently": "^9.2.1",
+		"sanity": "^5.22.0",
+		"tailwindcss": "^4.2.4"
 	},
 	"lint-staged": {
 		"*.{js,jsx,ts,tsx,mjs,cjs,vue,svelte,astro,css,scss,sass,less,html,svg,json,yaml,yml,md}": "prettier --write"

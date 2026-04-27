@@ -1,7 +1,8 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-	font-family: "Atkinson Hyperlegible Next", "Avenir Next", "Segoe UI", sans-serif;
+	font-family:
+		'Atkinson Hyperlegible Next', 'Avenir Next', 'Segoe UI', sans-serif;
 	line-height: 1.5;
 }
 

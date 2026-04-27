@@ -5,7 +5,7 @@ on:
         branches: [main]
 
 permissions:
-    contents: read
+    contents: write
 
 jobs:
     formatting:
@@ -13,6 +13,9 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.head_ref }}
+                  token: ${{ secrets.GITHUB_TOKEN }}
 
             - uses: actions/setup-node@v4
               with:
@@ -22,5 +25,10 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
-            - name: Check formatting
-              run: npx prettier --check .
+            - name: Format
+              run: npx prettier --write .
+
+            - name: Commit formatted files
+              uses: stefanzweifel/git-auto-commit-action@v5
+              with:
+                  commit_message: 'style: auto-format via prettier'

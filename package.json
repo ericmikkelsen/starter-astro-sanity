@@ -12,6 +12,7 @@
 		"astro": "astro",
 		"sanity:schema:extract": "sanity schema extract --enforce-required-fields --path=./src/sanity/extract.json",
 		"sanity:typegen": "node scripts/run-sanity-typegen.mjs",
+		"start": "npm run dev",
 		"test": "node --import tsx --test tests/**/*.test.ts",
 		"prepare": "husky",
 		"format": "prettier --write ."
@@ -33,6 +34,7 @@
 		"husky": "^9.0.0",
 		"lint-staged": "^16.4.0",
 		"prettier": "^3.8.3",
+		"prettier-plugin-tailwindcss": "^0.8.0",
 		"semantic-release": "^25.0.3",
 		"tailwindcss": "^4.2.4",
 		"tsx": "^4.21.0",

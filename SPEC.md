@@ -15,8 +15,8 @@ A developer who clones this repo should be able to add their Sanity project cred
 
 ### User Stories
 
-1. **As a content author** I can open `/studio`, create a Page with a title, slug, description,
-   and rich-text body, hit Publish, and see a new page appear on the site at `/<slug>`.
+1. **As a content author** I can open `/studio`, create a Page with a title, slug, and description,
+   hit Publish, and see a new page appear on the site at `/<slug>`.
 2. **As a developer** I can add a new Sanity document type and its matching Astro collection
    by following a single documented pattern without duplicating field definitions.
 3. **As a developer** I always have TypeScript types for my GROQ query results — they are
@@ -33,7 +33,6 @@ A developer who clones this repo should be able to add their Sanity project cred
 | Studio embed | `@sanity/astro` |
 | Type generation | `@sanity/codegen` + `sanity typegen generate` |
 | Styling | Tailwind CSS v4 (via `@astrojs/tailwind` or native Vite plugin) |
-| Portable Text | `astro-portabletext` (renders `block[]` body field in Astro) |
 | Language | TypeScript (strict) |
 | Testing | `node:test` for schema/unit logic; Vitest for DOM/component tests |
 | Linting / format | Prettier (already configured in this repo) |
@@ -98,8 +97,6 @@ npm test
 │   │   └── types/
 │   │       └── index.ts           # Re-exports generated types from sanity-codegen output
 │   ├── components/
-│   │   ├── PageCard.astro          # Card component for index page grid
-│   │   ├── PortableText.astro      # Renders Sanity block[] body via astro-portabletext
 │   │   └── Layout.astro            # Base HTML layout with Tailwind resets
 │   └── env.d.ts                   # Astro env types + import.meta.env declarations
 ├── sanity.config.ts               # Sanity Studio config (imports schema from src/sanity/schema)
@@ -135,20 +132,17 @@ export const webDocumentFields = [
 ]
 ```
 
-The `page` document type adds a `body` field on top of `webDocumentFields`:
+The `page` document type uses `webDocumentFields` directly — no additional fields in v1:
 
 ```ts
 // src/sanity/schema/documents/page.ts
-import { defineType, defineField } from 'sanity'
+import { defineType } from 'sanity'
 import { webDocumentFields } from '../shared/webDocument'
 
 export const pageType = defineType({
   name: 'page',
   type: 'document',
-  fields: [
-    ...webDocumentFields,
-    defineField({ name: 'body', type: 'array', of: [{ type: 'block' }] }),
-  ],
+  fields: [...webDocumentFields],
 })
 ```
 
@@ -237,9 +231,9 @@ PUBLIC_SANITY_DATASET=    # Exposed to client for Studio embed
 ## Success Criteria
 
 - [ ] `npm run dev` starts without errors; `/studio` loads Sanity Studio in the browser
-- [ ] Creating a Page in the Studio with title, slug, description, and rich-text body,
-      then rebuilding, produces a static HTML file at `/<slug>` with the body rendered
-- [ ] The index page at `/` shows all pages as a styled Tailwind card grid
+- [ ] Creating a Page in the Studio with title, slug, and description, then rebuilding,
+      produces a static HTML file at `/<slug>`
+- [ ] The index page at `/` lists all pages as a plain link list
 - [ ] `npm run typegen` generates TypeScript types from the schema and GROQ queries with no errors
 - [ ] `npm run typecheck` passes with zero type errors
 - [ ] `npm run build` produces a static site with zero errors
@@ -255,10 +249,10 @@ All open questions answered — spec is approved and ready for implementation.
 
 | # | Question | Decision |
 |---|---|---|
-| 1 | Rich text / Portable Text body field on `page`? | **Yes** — `body: array of block` added; rendered via `astro-portabletext` |
-| 2 | Tailwind scope | **Yes** — starter layout included; responsive card grid on index page |
+| 1 | Rich text / Portable Text body field on `page`? | **Defer to v2** — `page` uses `webDocumentFields` only |
+| 2 | Tailwind scope | **Yes** — starter layout included; index page is a plain link list (no styled grid) |
 | 3 | Astro version | **v6.x** (latest stable from `npm create astro@latest`) |
-| 4 | Home page style | **Styled card grid** (not plain link list) |
+| 4 | Home page style | **Plain link list** — no styled card grid in v1 |
 | 5 | Rendering mode | **SSG confirmed** — fully static; no SSR/preview in v1 |
 | 6 | Generator (Plop/Yeoman) | **Defer to v2** — document the pattern only |
 | 7 | Testing framework | **`node:test`** for schema/unit logic; **Vitest** for DOM/component tests |

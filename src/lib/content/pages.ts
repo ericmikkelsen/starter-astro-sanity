@@ -1,6 +1,5 @@
-import type { WebDocumentCore } from "./shared";
-import { toPagePath } from "./pageHelpers";
-import { loadQuery } from "./preview";
+import type { WebDocumentCore } from './shared';
+import { loadQuery } from './preview';
 
 const PAGE_QUERY = `*[_type == "page" && defined(slug.current)]{
   _id,
@@ -33,7 +32,9 @@ export type AstroPage = WebDocumentCore & {
  * Maps raw Sanity page query results into the normalized Astro page shape.
  * Returns null when required values are missing.
  */
-export function mapSanityPageToAstroPage(entry: SanityPageQueryResult): AstroPage | null {
+export function mapSanityPageToAstroPage(
+	entry: SanityPageQueryResult
+): AstroPage | null {
 	if (!entry.slug || !entry.title) {
 		return null;
 	}
@@ -47,10 +48,10 @@ export function mapSanityPageToAstroPage(entry: SanityPageQueryResult): AstroPag
 			? {
 					assetRef: entry.metaImage.asset._ref,
 					alt: entry.metaImageAlt,
-			  }
+				}
 			: undefined,
 		metaImageAlt: entry.metaImageAlt,
-		path: toPagePath(entry.slug),
+		path: `/${entry.slug}/`,
 	};
 }
 
@@ -61,7 +62,9 @@ export function mapSanityPageToAstroPage(entry: SanityPageQueryResult): AstroPag
 export async function getAstroPages(): Promise<AstroPage[]> {
 	try {
 		const results = await loadQuery<SanityPageQueryResult[]>(PAGE_QUERY);
-		return results.map(mapSanityPageToAstroPage).filter((entry): entry is AstroPage => Boolean(entry));
+		return results
+			.map(mapSanityPageToAstroPage)
+			.filter((entry): entry is AstroPage => Boolean(entry));
 	} catch {
 		return [];
 	}
@@ -70,7 +73,9 @@ export async function getAstroPages(): Promise<AstroPage[]> {
 /**
  * Looks up a single page by slug from the mapped page list.
  */
-export async function getAstroPageBySlug(slug: string): Promise<AstroPage | undefined> {
+export async function getAstroPageBySlug(
+	slug: string
+): Promise<AstroPage | undefined> {
 	const pages = await getAstroPages();
 	return pages.find((page) => page.slug === slug);
 }

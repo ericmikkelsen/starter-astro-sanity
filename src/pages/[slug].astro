@@ -7,9 +7,9 @@ import '../styles/global.css';
 export async function getStaticPaths() {
 	try {
 		const pages = await getClient().fetch(allPagesQuery);
-		return pages
-			.filter((page) => page.slug?.current)
-			.map((page) => ({ params: { slug: page.slug!.current } }));
+		return pages.flatMap((page) =>
+			page.slug?.current ? [{ params: { slug: page.slug.current } }] : []
+		);
 	} catch {
 		// Sanity not yet configured — build succeeds with no pages
 		return [];

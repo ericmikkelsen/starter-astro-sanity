@@ -1,5 +1,6 @@
 import { createClient, type QueryParams } from "@sanity/client";
 
+// Supports both Astro runtime (import.meta.env) and Node test runtime (process.env).
 const runtimeEnv = ((import.meta as { env?: Record<string, string | undefined> }).env ??
 	process.env) as Record<string, string | undefined>;
 
@@ -17,10 +18,17 @@ const client = createClient({
 	useCdn: !previewEnabled,
 });
 
+/**
+ * Returns whether preview mode is enabled via environment toggle.
+ */
 export function isPreviewEnabled(): boolean {
 	return previewEnabled;
 }
 
+/**
+ * Executes a GROQ query using published or drafts perspective based on preview mode.
+ * Throws when preview is enabled but no read token is configured.
+ */
 export async function loadQuery<QueryResult>(query: string, params?: QueryParams): Promise<QueryResult> {
 	if (!previewEnabled) {
 		return client.fetch<QueryResult>(query, params ?? {}, { perspective: "published" });

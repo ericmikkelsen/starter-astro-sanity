@@ -7,6 +7,10 @@ const dataset = process.env.PUBLIC_SANITY_DATASET;
 const extractPath = "./src/sanity/extract.json";
 const typesPath = "./src/sanity/types.ts";
 
+/**
+ * Creates committed placeholder typegen outputs when Sanity env vars are absent.
+ * This keeps CI/build workflows deterministic before project credentials are configured.
+ */
 function ensurePlaceholderTypegenArtifacts() {
 	mkdirSync("./src/sanity", { recursive: true });
 

@@ -6,6 +6,7 @@ dist/
 build/
 out/
 out-test/
+.astro/
 
 # Skill run outputs (Copilot SDK harness)
 tmp/

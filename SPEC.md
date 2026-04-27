@@ -28,13 +28,14 @@ A developer who clones this repo should be able to add their Sanity project cred
 
 | Concern | Package / Version |
 |---|---|
-| Framework | Astro (latest stable — `npm create astro@latest`, currently v5.x) |
+| Framework | Astro v6.x (latest stable — `npm create astro@latest`) |
 | CMS | Sanity v3 (`sanity`, `@sanity/client`) |
 | Studio embed | `@sanity/astro` |
 | Type generation | `@sanity/codegen` + `sanity typegen generate` |
 | Styling | Tailwind CSS v4 (via `@astrojs/tailwind` or native Vite plugin) |
+| Portable Text | `astro-portabletext` (renders `block[]` body field in Astro) |
 | Language | TypeScript (strict) |
-| Testing | Vitest (unit); no E2E in v1 |
+| Testing | `node:test` for schema/unit logic; Vitest for DOM/component tests |
 | Linting / format | Prettier (already configured in this repo) |
 
 ---
@@ -48,6 +49,12 @@ npm install
 # Start Astro dev server (also serves /studio)
 npm run dev
 
+# Run node:test unit tests (schema, query helpers)
+npm run test:unit
+
+# Run Vitest component/DOM tests
+npm run test:dom
+
 # Generate Sanity TypeScript types from schema + queries
 npm run typegen
 
@@ -60,7 +67,7 @@ npm run build
 # Preview built site
 npm run preview
 
-# Run unit tests
+# Run all tests (unit + dom)
 npm test
 ```
 
@@ -91,7 +98,8 @@ npm test
 │   │   └── types/
 │   │       └── index.ts           # Re-exports generated types from sanity-codegen output
 │   ├── components/
-│   │   ├── PageCard.astro          # Reusable card component for page listings
+│   │   ├── PageCard.astro          # Card component for index page grid
+│   │   ├── PortableText.astro      # Renders Sanity block[] body via astro-portabletext
 │   │   └── Layout.astro            # Base HTML layout with Tailwind resets
 │   └── env.d.ts                   # Astro env types + import.meta.env declarations
 ├── sanity.config.ts               # Sanity Studio config (imports schema from src/sanity/schema)
@@ -125,6 +133,23 @@ export const webDocumentFields = [
   defineField({ name: 'metaImage', type: 'image', options: { hotspot: true } }),
   defineField({ name: 'metaImageAlt', type: 'string' }),
 ]
+```
+
+The `page` document type adds a `body` field on top of `webDocumentFields`:
+
+```ts
+// src/sanity/schema/documents/page.ts
+import { defineType, defineField } from 'sanity'
+import { webDocumentFields } from '../shared/webDocument'
+
+export const pageType = defineType({
+  name: 'page',
+  type: 'document',
+  fields: [
+    ...webDocumentFields,
+    defineField({ name: 'body', type: 'array', of: [{ type: 'block' }] }),
+  ],
+})
 ```
 
 ### 2. Type Generation Flow
@@ -189,8 +214,10 @@ PUBLIC_SANITY_DATASET=    # Exposed to client for Studio embed
 
 ## Testing Strategy
 
-- **Unit tests (Vitest)**: Schema helper functions (e.g. `webDocumentFields` shape),
-  query string composition utilities.
+- **`node:test` (built-in)**: Schema helper functions (e.g. `webDocumentFields` shape, query
+  string composition). Zero extra dependencies; runs with `node --test`.
+- **Vitest**: DOM/component tests that require a browser-like environment (e.g. testing
+  rendered Astro component output).
 - **No E2E in v1** — deferred to a future chapter.
 - Tests live alongside source in `src/**/*.test.ts`.
 
@@ -210,31 +237,31 @@ PUBLIC_SANITY_DATASET=    # Exposed to client for Studio embed
 ## Success Criteria
 
 - [ ] `npm run dev` starts without errors; `/studio` loads Sanity Studio in the browser
-- [ ] Creating a Page in the Studio with title, slug, and description, then rebuilding,
-      produces a static HTML file at `/<slug>`
+- [ ] Creating a Page in the Studio with title, slug, description, and rich-text body,
+      then rebuilding, produces a static HTML file at `/<slug>` with the body rendered
+- [ ] The index page at `/` shows all pages as a styled Tailwind card grid
 - [ ] `npm run typegen` generates TypeScript types from the schema and GROQ queries with no errors
 - [ ] `npm run typecheck` passes with zero type errors
 - [ ] `npm run build` produces a static site with zero errors
-- [ ] `npm test` passes (unit tests for schema helpers)
+- [ ] `npm test` passes (`node:test` unit tests + Vitest DOM tests)
 - [ ] A new developer following the "Adding a New Document Type" steps can ship a second
       document type without touching existing code
 
 ---
 
-## Open Questions
+## Resolved Decisions
 
-1. **Astro rendering mode**: Confirmed SSG (static) for v1? Or should there be an SSR mode
-   option for preview drafts?
-2. **Tailwind approach**: Minimal CSS custom properties / base reset only, or include a
-   small set of pre-built utility classes for layout (e.g., a responsive grid for the index page)?
-3. **Rich text / Portable Text**: Should the `page` document type include a
-   Portable Text (`block` array) body field in addition to `description`? Rendering
-   Portable Text in Astro requires `@portabletext/react` or `astro-portabletext`.
-4. **Yeoman / Plop generator**: Defer to v2, or include a minimal `plop` scaffold for
-   generating new document type files?
-5. **Testing**: Is Vitest acceptable, or is there a preference for another test runner?
-6. **Home page**: Should `index.astro` list all pages as a simple link list, or include
-   a styled card grid?
+All open questions answered — spec is approved and ready for implementation.
+
+| # | Question | Decision |
+|---|---|---|
+| 1 | Rich text / Portable Text body field on `page`? | **Yes** — `body: array of block` added; rendered via `astro-portabletext` |
+| 2 | Tailwind scope | **Yes** — starter layout included; responsive card grid on index page |
+| 3 | Astro version | **v6.x** (latest stable from `npm create astro@latest`) |
+| 4 | Home page style | **Styled card grid** (not plain link list) |
+| 5 | Rendering mode | **SSG confirmed** — fully static; no SSR/preview in v1 |
+| 6 | Generator (Plop/Yeoman) | **Defer to v2** — document the pattern only |
+| 7 | Testing framework | **`node:test`** for schema/unit logic; **Vitest** for DOM/component tests |
 
 ---
 

@@ -1,4 +1,5 @@
 import type { WebDocumentCore } from "./shared";
+import { toPagePath } from "./pageHelpers";
 import { loadQuery } from "./preview";
 
 const PAGE_QUERY = `*[_type == "page" && defined(slug.current)]{
@@ -28,7 +29,7 @@ export type AstroPage = WebDocumentCore & {
 	path: string;
 };
 
-function toAstroPage(entry: SanityPageQueryResult): AstroPage | null {
+export function mapSanityPageToAstroPage(entry: SanityPageQueryResult): AstroPage | null {
 	if (!entry.slug || !entry.title) {
 		return null;
 	}
@@ -45,14 +46,14 @@ function toAstroPage(entry: SanityPageQueryResult): AstroPage | null {
 			  }
 			: undefined,
 		metaImageAlt: entry.metaImageAlt,
-		path: `/${entry.slug}/`,
+		path: toPagePath(entry.slug),
 	};
 }
 
 export async function getAstroPages(): Promise<AstroPage[]> {
 	try {
 		const results = await loadQuery<SanityPageQueryResult[]>(PAGE_QUERY);
-		return results.map(toAstroPage).filter((entry): entry is AstroPage => Boolean(entry));
+		return results.map(mapSanityPageToAstroPage).filter((entry): entry is AstroPage => Boolean(entry));
 	} catch {
 		return [];
 	}

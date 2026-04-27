@@ -1,6 +1,6 @@
-import type { SchemaTypeDefinition } from "sanity";
+import type { SchemaTypeDefinition } from 'sanity';
 
-import { pageType } from "./documents/page";
+import { pageType } from './documents/page';
 import {
 	bodyTextType,
 	headingType,
@@ -8,7 +8,7 @@ import {
 	linkType,
 	listType,
 	subheadingType,
-} from "./objects/bodyBlocks";
+} from './objects/bodyBlocks';
 
 export const schemaTypes: SchemaTypeDefinition[] = [
 	pageType,

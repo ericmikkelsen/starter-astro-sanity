@@ -1,12 +1,16 @@
+/**
+ * Shared field names keep schema definitions and frontend mapping aligned on the same keys.
+ */
 export const WEB_PAGE_FIELD_NAMES = {
-	title: "title",
-	slug: "slug",
-	description: "description",
-	metaImage: "metaImage",
-	metaImageAlt: "metaImageAlt",
+	title: 'title',
+	slug: 'slug',
+	description: 'description',
+	metaImage: 'metaImage',
+	metaImageAlt: 'metaImageAlt',
 } as const;
 
-export type WebPageFieldName = (typeof WEB_PAGE_FIELD_NAMES)[keyof typeof WEB_PAGE_FIELD_NAMES];
+export type WebPageFieldName =
+	(typeof WEB_PAGE_FIELD_NAMES)[keyof typeof WEB_PAGE_FIELD_NAMES];
 
 export type WebDocumentImage = {
 	assetRef: string;
@@ -24,36 +28,39 @@ export type WebDocumentCore = {
 };
 
 export type BodyHeadingBlock = {
-	_type: "heading";
+	_type: 'heading';
 	text: string;
 };
 
 export type BodySubheadingBlock = {
-	_type: "subheading";
+	_type: 'subheading';
 	text: string;
 };
 
 export type BodyTextBlock = {
-	_type: "bodyText";
+	_type: 'bodyText';
 	text: string;
 };
 
 export type BodyLinkBlock = {
-	_type: "link";
+	_type: 'link';
 	url: string;
 	text: string;
 };
 
 export type BodyListBlock = {
-	_type: "list";
+	_type: 'list';
 	items: string[];
 };
 
 export type BodyImageBlock = {
-	_type: "imageObject";
+	_type: 'imageObject';
 	image: WebDocumentImage;
 };
 
+/**
+ * The body union stays narrow and explicit so renderers can switch on `_type` without fallback cases.
+ */
 export type WebDocumentBodyBlock =
 	| BodyHeadingBlock
 	| BodySubheadingBlock

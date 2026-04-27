@@ -33,7 +33,6 @@ cp .env.example .env
 PUBLIC_SANITY_PROJECT_ID=your_project_id
 PUBLIC_SANITY_DATASET=production
 PUBLIC_SANITY_API_VERSION=2026-01-01
-PUBLIC_SANITY_ENABLE_PREVIEW=false
 SANITY_API_READ_TOKEN=your_read_token_for_preview
 SANITY_PREVIEW_SECRET=your_preview_secret
 ```
@@ -99,7 +98,7 @@ Recommended script shape:
 {
 	"scripts": {
 		"sanity:schema:extract": "sanity schema extract --enforce-required-fields --path=./src/sanity/extract.json",
-		"sanity:typegen": "node scripts/run-sanity-typegen.mjs",
+		"sanity:typegen": "npm run sanity:schema:extract && sanity typegen generate",
 		"predev": "npm run sanity:typegen",
 		"prebuild": "npm run sanity:typegen"
 	}

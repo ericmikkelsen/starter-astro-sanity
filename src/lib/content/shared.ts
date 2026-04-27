@@ -1,15 +1,13 @@
-/**
- * Shared field names used by both Sanity schema definitions and frontend mapping.
- */
 export const WEB_PAGE_FIELD_NAMES = {
-	title: "title",
-	slug: "slug",
-	description: "description",
-	metaImage: "metaImage",
-	metaImageAlt: "metaImageAlt",
+	title: 'title',
+	slug: 'slug',
+	description: 'description',
+	metaImage: 'metaImage',
+	metaImageAlt: 'metaImageAlt',
 } as const;
 
-export type WebPageFieldName = (typeof WEB_PAGE_FIELD_NAMES)[keyof typeof WEB_PAGE_FIELD_NAMES];
+export type WebPageFieldName =
+	(typeof WEB_PAGE_FIELD_NAMES)[keyof typeof WEB_PAGE_FIELD_NAMES];
 
 export type WebDocumentImage = {
 	assetRef: string;
@@ -27,39 +25,36 @@ export type WebDocumentCore = {
 };
 
 export type BodyHeadingBlock = {
-	_type: "heading";
+	_type: 'heading';
 	text: string;
 };
 
 export type BodySubheadingBlock = {
-	_type: "subheading";
+	_type: 'subheading';
 	text: string;
 };
 
 export type BodyTextBlock = {
-	_type: "bodyText";
+	_type: 'bodyText';
 	text: string;
 };
 
 export type BodyLinkBlock = {
-	_type: "link";
+	_type: 'link';
 	url: string;
 	text: string;
 };
 
 export type BodyListBlock = {
-	_type: "list";
+	_type: 'list';
 	items: string[];
 };
 
 export type BodyImageBlock = {
-	_type: "imageObject";
+	_type: 'imageObject';
 	image: WebDocumentImage;
 };
 
-/**
- * Future-ready body primitives kept as a discriminated union for straightforward rendering.
- */
 export type WebDocumentBodyBlock =
 	| BodyHeadingBlock
 	| BodySubheadingBlock

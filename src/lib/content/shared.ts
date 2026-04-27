@@ -1,3 +1,6 @@
+/**
+ * Shared field names used by both Sanity schema definitions and frontend mapping.
+ */
 export const WEB_PAGE_FIELD_NAMES = {
 	title: "title",
 	slug: "slug",
@@ -54,6 +57,9 @@ export type BodyImageBlock = {
 	image: WebDocumentImage;
 };
 
+/**
+ * Future-ready body primitives kept as a discriminated union for straightforward rendering.
+ */
 export type WebDocumentBodyBlock =
 	| BodyHeadingBlock
 	| BodySubheadingBlock

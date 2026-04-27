@@ -4,6 +4,15 @@
 	"description": "Code repository starter template with conventional commits and automated versioning",
 	"private": true,
 	"scripts": {
+		"dev": "astro dev",
+		"predev": "npm run sanity:typegen",
+		"build": "astro build",
+		"prebuild": "npm run sanity:typegen",
+		"preview": "astro preview",
+		"astro": "astro",
+		"sanity:schema:extract": "sanity schema extract --enforce-required-fields --path=./src/sanity/extract.json",
+		"sanity:typegen": "node scripts/run-sanity-typegen.mjs",
+		"test": "node --test",
 		"prepare": "husky",
 		"format": "prettier --write ."
 	},
@@ -19,10 +28,28 @@
 		"@semantic-release/github": "^12.0.6",
 		"@semantic-release/npm": "^13.1.5",
 		"@semantic-release/release-notes-generator": "^14.1.0",
+		"@tailwindcss/vite": "^4.2.4",
 		"conventional-changelog-conventionalcommits": "^9.1.0",
 		"husky": "^9.0.0",
 		"lint-staged": "^16.4.0",
 		"prettier": "^3.8.3",
-		"semantic-release": "^25.0.3"
+		"semantic-release": "^25.0.3",
+		"tailwindcss": "^4.2.4",
+		"typescript": "^5.9.3"
+	},
+	"dependencies": {
+		"@astrojs/react": "^5.0.4",
+		"@sanity/astro": "^3.3.1",
+		"@sanity/client": "^7.22.0",
+		"@types/react": "^19.2.14",
+		"@types/react-dom": "^19.2.3",
+		"@types/react-is": "^19.2.0",
+		"@types/styled-components": "^5.1.36",
+		"astro": "^6.1.9",
+		"react": "^19.2.5",
+		"react-dom": "^19.2.5",
+		"react-is": "^19.2.5",
+		"sanity": "^5.22.0",
+		"styled-components": "^6.4.1"
 	}
 }

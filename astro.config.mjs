@@ -12,8 +12,14 @@ if (!projectId || !dataset) {
 		"Missing required Sanity environment variables: PUBLIC_SANITY_PROJECT_ID and PUBLIC_SANITY_DATASET must be set.",
 	);
 }
+
+// Static builds do not need the embedded Studio route, so we only mount it during local development.
 const studioBasePath = process.env.NODE_ENV === "production" ? undefined : "/studio";
 
+/**
+ * Astro runtime configuration for the starter's base toolchain.
+ * It wires framework integrations together before content-specific behavior is layered on.
+ */
 export default defineConfig({
 	integrations: [
 		sanity({
@@ -21,7 +27,7 @@ export default defineConfig({
 			dataset,
 			apiVersion,
 			useCdn: false,
-				studioBasePath,
+			studioBasePath,
 		}),
 		react(),
 	],

@@ -15,6 +15,11 @@ function requireEnv(name: "PUBLIC_SANITY_PROJECT_ID" | "PUBLIC_SANITY_DATASET"):
 
 const projectId = requireEnv("PUBLIC_SANITY_PROJECT_ID");
 const dataset = requireEnv("PUBLIC_SANITY_DATASET");
+
+/**
+ * Embedded Sanity Studio configuration.
+ * This keeps Studio hosting concerns separate from later schema and data-fetching work.
+ */
 export default defineConfig({
 	name: "astro-sanity-starter",
 	title: "Astro + Sanity Starter",

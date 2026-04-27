@@ -1,11 +1,13 @@
 @import "tailwindcss";
 
 :root {
+	/* Keep the starter readable before any brand-specific design system is applied. */
 	font-family: "Atkinson Hyperlegible Next", "Avenir Next", "Segoe UI", sans-serif;
 	line-height: 1.5;
 }
 
 body {
+	/* Remove browser defaults so later layout chapters start from a stable baseline. */
 	margin: 0;
 	min-height: 100vh;
 }

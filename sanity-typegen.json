@@ -1,0 +1,5 @@
+{
+	"generates": "src/sanity/types.ts",
+	"schema": "sanity.config.ts",
+	"queries": ["src/sanity/queries.ts"]
+}

@@ -1,34 +1,34 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { arrayPageType } from '../sanity/schemaTypes/documents/arrayPage';
+import { pageType } from '../sanity/schemaTypes/documents/page';
 import { schemaTypes } from '../sanity/schemaTypes';
 
 /**
- * Verifies the new document reuses shared page fields and adds the builder array.
+ * Verifies the page document includes shared fields and the blocks array.
  */
-test('arrayPageType defines expected fields', () => {
-	assert.equal(arrayPageType.name, 'arrayPage');
+test('pageType defines expected fields', () => {
+	assert.equal(pageType.name, 'page');
 
-	const fieldNames = arrayPageType.fields?.map((field) => field.name) ?? [];
+	const fieldNames = pageType.fields?.map((field) => field.name) ?? [];
 	assert.equal(fieldNames.includes('title'), true);
 	assert.equal(fieldNames.includes('slug'), true);
 	assert.equal(fieldNames.includes('description'), true);
 	assert.equal(fieldNames.includes('metaImage'), true);
 	assert.equal(fieldNames.includes('metaImageAlt'), true);
-	assert.equal(fieldNames.includes('pageBuilder'), true);
+	assert.equal(fieldNames.includes('blocks'), true);
 });
 
 /**
  * Verifies author-selectable block primitives stay constrained to the current primitive set.
  */
-test('arrayPageType pageBuilder allows expected primitive blocks', () => {
-	const pageBuilderField = arrayPageType.fields?.find(
-		(field) => field.name === 'pageBuilder'
+test('pageType blocks allows expected primitive blocks', () => {
+	const blocksField = pageType.fields?.find(
+		(field) => field.name === 'blocks'
 	);
 	const memberTypes =
-		pageBuilderField && 'of' in pageBuilderField
-			? pageBuilderField.of?.map((member) => member.type)
+		blocksField && 'of' in blocksField
+			? blocksField.of?.map((member) => member.type)
 			: [];
 
 	assert.deepEqual(memberTypes, [
@@ -40,12 +40,13 @@ test('arrayPageType pageBuilder allows expected primitive blocks', () => {
 });
 
 /**
- * Verifies Studio registration includes the new array page document.
+ * Verifies Studio registration does not include a separate array page document.
  */
-test('schemaTypes registry includes arrayPage document type', () => {
+test('schemaTypes registry keeps a single page document type', () => {
 	const schemaTypeNames = new Set(
 		schemaTypes.map((schemaType) => schemaType.name)
 	);
 
-	assert.equal(schemaTypeNames.has('arrayPage'), true);
+	assert.equal(schemaTypeNames.has('page'), true);
+	assert.equal(schemaTypeNames.has('arrayPage'), false);
 });

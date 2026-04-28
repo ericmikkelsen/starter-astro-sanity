@@ -1,5 +1,8 @@
 ---
-import type { ArrayPageBuilderBlock } from '../../lib/content/pageBuilderTypes';
+import type {
+	ArrayPageBuilderBlock,
+	BlockSettings,
+} from '../../lib/content/pageBuilderTypes';
 import Billboard from './Billboard.astro';
 import ListScroller from './listScroller.astro';
 import PeopleRefs from './peopleRefs.astro';
@@ -10,21 +13,23 @@ interface Props {
 	index?: number;
 }
 
-const { data, index = 0 } = Astro.props as Props;
+const { data, index = 1 } = Astro.props as Props;
+const blockSettings: BlockSettings = {
+	as: index === 0 ? 'header' : 'section',
+	hLevel: index === 0 ? 1 : 2,
+	index: index,
+	priority: index === 0 ? true : false,
+};
 ---
 
 {
 	data._type === 'billboard' ? (
-		<Billboard
-			heading={data.heading ?? ''}
-			body={data.body}
-			index={index}
-		/>
+		<Billboard {...data} {...blockSettings} />
 	) : data._type === 'listScroller' ? (
-		<ListScroller {...data} />
+		<ListScroller {...data} {...blockSettings} />
 	) : data._type === 'peopleRefs' ? (
-		<PeopleRefs {...data} />
+		<PeopleRefs {...data} {...blockSettings} />
 	) : data._type === 'richText' ? (
-		<RichText {...data} />
+		<RichText {...data} {...blockSettings} />
 	) : null
 }

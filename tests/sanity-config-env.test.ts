@@ -14,7 +14,7 @@ const importResolver = async () => {
  *
  * @param {() => Promise<void>} callback - Async test body.
  */
-const withStudioEnv = async (callback) => {
+const withStudioEnv = async (callback: () => Promise<void>) => {
 	const previousProjectId = process.env.PUBLIC_SANITY_PROJECT_ID;
 	const previousDataset = process.env.PUBLIC_SANITY_DATASET;
 

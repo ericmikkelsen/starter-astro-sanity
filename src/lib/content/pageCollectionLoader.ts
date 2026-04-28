@@ -1,4 +1,3 @@
-import { createClient } from '@sanity/client';
 import type { Loader } from 'astro/loaders';
 import { z } from 'astro/zod';
 
@@ -7,11 +6,7 @@ import {
 	SANITY_PAGE_COLLECTION_QUERY,
 	type SanityPageQueryResult,
 } from './pageCollection';
-
-// Defaults keep the loader usable on fresh clones before a local Sanity project is configured.
-const projectId = process.env.PUBLIC_SANITY_PROJECT_ID || '3do82whm';
-const dataset = process.env.PUBLIC_SANITY_DATASET || 'production';
-const apiVersion = process.env.PUBLIC_SANITY_API_VERSION || '2026-01-01';
+import { isPreviewEnabled, loadQuery } from './preview';
 
 /**
  * Shared schema for published page entries persisted in Astro's content store.
@@ -41,24 +36,17 @@ const pageCollectionSchema = z.object({
  * @returns An Astro build-time loader for the `pages` collection.
  */
 export function createSanityPageCollectionLoader() {
-	const client = createClient({
-		projectId,
-		dataset,
-		apiVersion,
-		// Published content can use CDN-backed reads during static generation.
-		useCdn: true,
-	});
-
 	return {
 		name: 'sanity-page-collection-loader',
 		schema: pageCollectionSchema,
 		load: async ({ store, parseData, generateDigest, logger }) => {
+			const mode = resolvePageCollectionLoaderMode();
 			logger.info(
-				'Loading published Sanity pages into Astro content layer.'
+				`Loading ${mode} Sanity pages into Astro content layer.`
 			);
 			store.clear();
 
-			const results = await client.fetch<SanityPageQueryResult[]>(
+			const results = await loadQuery<SanityPageQueryResult[]>(
 				SANITY_PAGE_COLLECTION_QUERY
 			);
 
@@ -84,4 +72,16 @@ export function createSanityPageCollectionLoader() {
 			}
 		},
 	} satisfies Loader;
+}
+
+/**
+ * Derives loader mode from shared preview configuration.
+ *
+ * @param previewEnabled Optional override used by tests.
+ * @returns `preview` when draft perspective should be used, otherwise `published`.
+ */
+export function resolvePageCollectionLoaderMode(
+	previewEnabled: boolean = isPreviewEnabled()
+): 'preview' | 'published' {
+	return previewEnabled ? 'preview' : 'published';
 }

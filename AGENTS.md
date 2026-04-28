@@ -16,6 +16,11 @@ These assumptions apply to agent-driven work in this repository.
 - Keep commit diffs reviewable so opening a single commit in GitHub shows one coherent change.
 - Do not mix unrelated behavior, formatting, or refactor work in the same commit.
 
+## Language Scope
+
+- Keep chapter/story sequencing language in Markdown files only.
+- Do not add chapter/story wording to non-Markdown files (source code, tests, config, generated artifacts, or inline code comments).
+
 ## Source of Truth
 
 - Keep this file aligned with [.github/copilot-instructions.md](.github/copilot-instructions.md) when shared assumptions change.

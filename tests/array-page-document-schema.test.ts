@@ -20,7 +20,7 @@ test('arrayPageType defines expected fields', () => {
 });
 
 /**
- * Verifies author-selectable block primitives stay constrained to the chapter-3 set.
+ * Verifies author-selectable block primitives stay constrained to the current primitive set.
  */
 test('arrayPageType pageBuilder allows expected primitive blocks', () => {
 	const pageBuilderField = arrayPageType.fields?.find(

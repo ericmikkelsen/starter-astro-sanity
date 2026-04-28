@@ -1,4 +1,6 @@
 @import 'tailwindcss';
+@source '../**/*.{astro,ts,tsx,js,jsx,html}';
+@source not '../../.github/**';
 
 :root {
 	font-family:

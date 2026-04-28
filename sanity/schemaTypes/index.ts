@@ -2,6 +2,12 @@ import type { SchemaTypeDefinition } from 'sanity';
 
 import { pageType } from './documents/page';
 import {
+	billboardType,
+	listScrollerType,
+	peopleRefsType,
+	richTextType,
+} from './objects/arrayBlockPrimitives';
+import {
 	bodyTextType,
 	headingType,
 	imageObjectType,
@@ -24,4 +30,8 @@ export const schemaTypes: SchemaTypeDefinition[] = [
 	linkType,
 	listType,
 	imageObjectType,
+	billboardType,
+	listScrollerType,
+	peopleRefsType,
+	richTextType,
 ];

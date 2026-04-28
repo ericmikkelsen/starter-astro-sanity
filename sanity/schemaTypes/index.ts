@@ -1,8 +1,8 @@
-import type { SchemaTypeDefinition } from 'sanity';
+import { defineType, type SchemaTypeDefinition } from 'sanity';
 
 import { pageType } from './documents/page';
 import { personType } from './documents/person';
-import { webContentType } from './documents/webContent';
+import { scaffoldPortableTextDocument } from './documents/webContent';
 import {
 	billboardType,
 	listScrollerType,
@@ -27,7 +27,11 @@ import {
 export const schemaTypes: SchemaTypeDefinition[] = [
 	pageType,
 	personType,
-	webContentType,
+	defineType({
+		name: 'blog',
+		title: 'Blog',
+		...scaffoldPortableTextDocument,
+	}),
 	headingType,
 	subheadingType,
 	bodyTextType,

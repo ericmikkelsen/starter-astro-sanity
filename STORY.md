@@ -9,7 +9,7 @@ and reusable components can be created quickly with aligned Sanity + Astro contr
 ## Acceptance Criteria
 
 - [ ] Array-based page-builder document type works end-to-end.
-- [ ] Portable-text web content document type works end-to-end.
+- [ ] Portable-text blog document type works end-to-end.
 - [ ] `npm run scaffold:web-block` generates schema + content-layer module + Astro template.
 - [ ] `npm run scaffold:web-portable` generates schema + content-layer module + Astro template.
 - [ ] `npm run scaffold:component` generates Sanity object schema + Astro component.
@@ -36,8 +36,8 @@ and reusable components can be created quickly with aligned Sanity + Astro contr
 | 07  | `chapter/the-big-content-story/07-page-schema-consolidate-to-blocks`    | Consolidate web page schema to a single `page` document with `blocks` and remove `arrayPage`.                |
 | 08  | `chapter/the-big-content-story/08-image-metadata-normalization`         | Normalize Sanity image authoring to upload+alt and derive dimensions/URL from metadata in content mapping.   |
 | 09  | `chapter/the-big-content-story/09-block-preview-subtitles`              | Add Studio block preview subtitles so editors can identify block types quickly in arrays.                    |
-| 10  | `chapter/the-big-content-story/10-portable-text-document-schema`        | Add portable-text-first web document schema and registration wiring.                                         |
-| 11  | `chapter/the-big-content-story/11-portable-text-routes`                 | Add route/query mapping and rendering path for portable-text web documents.                                  |
+| 10  | `chapter/the-big-content-story/10-portable-text-document-schema`        | Add portable-text-first blog document schema and registration wiring.                                        |
+| 11  | `chapter/the-big-content-story/11-portable-text-routes`                 | Add route/query mapping and rendering path for portable-text blog documents.                                 |
 | 12  | `chapter/the-big-content-story/12-shared-rendering-primitives`          | Add shared Astro rendering primitives and stable prop contracts for generated templates/components.          |
 | 13  | `chapter/the-big-content-story/13-scaffold-web-block`                   | Implement block web-content scaffold command with URL-prefix prompt and post-run registration guidance.      |
 | 14  | `chapter/the-big-content-story/14-scaffold-web-portable`                | Implement portable-text web-content scaffold command with matching output conventions and guidance line.     |

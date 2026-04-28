@@ -15,7 +15,7 @@ test('mapSanityPersonToCollectionEntry maps valid people records', () => {
 			},
 		],
 		image: {
-			src: 'https://example.com/ada.jpg',
+			src: 'https://cdn.sanity.io/images/proj/dataset/ada.jpg',
 			alt: 'Portrait of Ada',
 			width: 800,
 			height: 600,
@@ -25,7 +25,12 @@ test('mapSanityPersonToCollectionEntry maps valid people records', () => {
 	assert.ok(mapped);
 	assert.equal(mapped?.id, 'person-1');
 	assert.equal(mapped?.data.name, 'Ada Lovelace');
-	assert.equal(mapped?.data.image.src, 'https://example.com/ada.jpg');
+	assert.equal(
+		mapped?.data.image.src,
+		'https://cdn.sanity.io/images/proj/dataset/ada.jpg'
+	);
+	assert.equal(mapped?.data.image.width, 800);
+	assert.equal(mapped?.data.image.height, 600);
 });
 
 test('mapSanityPersonToCollectionEntry rejects records without required fields', () => {

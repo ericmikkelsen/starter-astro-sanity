@@ -45,30 +45,13 @@ export const personType = defineType({
 		defineField({
 			name: 'image',
 			title: 'Image',
-			type: 'object',
+			type: 'image',
+			options: { hotspot: true },
 			fields: [
-				defineField({
-					name: 'src',
-					title: 'Source URL',
-					type: 'url',
-					validation: (rule) => rule.required(),
-				}),
 				defineField({
 					name: 'alt',
 					title: 'Alt Text',
 					type: 'string',
-				}),
-				defineField({
-					name: 'width',
-					title: 'Width',
-					type: 'number',
-					validation: (rule) => rule.required().positive().integer(),
-				}),
-				defineField({
-					name: 'height',
-					title: 'Height',
-					type: 'number',
-					validation: (rule) => rule.required().positive().integer(),
 				}),
 			],
 			validation: (rule) => rule.required(),
@@ -77,7 +60,7 @@ export const personType = defineType({
 	preview: {
 		select: {
 			title: 'name',
-			subtitle: 'image.src',
+			media: 'image',
 		},
 	},
 });

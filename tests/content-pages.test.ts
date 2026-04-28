@@ -6,6 +6,12 @@ import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 import { mapSanityPageToAstroPage } from '../src/lib/content/pages';
+import { mapSanityPageToCollectionEntry } from '../src/lib/content/pageCollection';
+
+/**
+ * These tests cover the pure normalization helpers used by both the legacy page
+ * fetch path and the new content-layer loader foundation.
+ */
 
 /**
  * Verifies the mapper preserves the fields the Astro routes depend on.
@@ -41,6 +47,30 @@ test('mapSanityPageToAstroPage skips invalid entries', () => {
 	});
 
 	assert.equal(mapped, null);
+});
+
+/**
+ * Verifies the published content-layer entry keeps Astro route data in a typed collection shape.
+ */
+test('mapSanityPageToCollectionEntry maps valid page records', () => {
+	const mapped = mapSanityPageToCollectionEntry({
+		_id: 'page-3',
+		title: 'Contact',
+		slug: 'contact',
+		description: 'Contact page',
+		metaImage: {
+			asset: {
+				_ref: 'image-ref',
+			},
+		},
+		metaImageAlt: 'Contact image',
+	});
+
+	assert.ok(mapped);
+	assert.equal(mapped?.id, 'page-3');
+	assert.equal(mapped?.data.slug, 'contact');
+	assert.equal(mapped?.data.path, '/contact/');
+	assert.equal(mapped?.data.metaImage?.assetRef, 'image-ref');
 });
 
 /**

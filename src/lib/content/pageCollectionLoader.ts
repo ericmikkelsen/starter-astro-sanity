@@ -44,11 +44,25 @@ export function createSanityPageCollectionLoader() {
 			logger.info(
 				`Loading ${mode} Sanity pages into Astro content layer.`
 			);
-			store.clear();
 
-			const results = await loadQuery<SanityPageQueryResult[]>(
-				SANITY_PAGE_COLLECTION_QUERY
-			);
+			let results: SanityPageQueryResult[];
+			try {
+				results = await loadQuery<SanityPageQueryResult[]>(
+					SANITY_PAGE_COLLECTION_QUERY
+				);
+			} catch (err) {
+				// On failure keep the previous store intact so stale data is served rather
+				// than an empty collection. Callers can treat this as a warning; a hard
+				// build error would hide any previous valid content.
+				logger.warn(
+					`Failed to load Sanity pages – keeping previous store. Error: ${String(err)}`
+				);
+				return;
+			}
+
+			// Only clear after a successful fetch so a transient failure cannot leave the
+			// store empty when a previous sync had valid entries (atomic-replace strategy).
+			store.clear();
 
 			for (const result of results) {
 				const mapped = mapSanityPageToCollectionEntry(result);

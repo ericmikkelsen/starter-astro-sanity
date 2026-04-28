@@ -25,6 +25,26 @@ test('listScrollerType defines expected fields', () => {
 	);
 });
 
+test('heading is required for billboard and listScroller', () => {
+	const requiredRule = { required: () => 'required-called' };
+
+	const billboardHeading = billboardType.fields?.find(
+		(field) => field.name === 'heading'
+	) as { validation?: (rule: typeof requiredRule) => string } | undefined;
+	const listScrollerHeading = listScrollerType.fields?.find(
+		(field) => field.name === 'heading'
+	) as { validation?: (rule: typeof requiredRule) => string } | undefined;
+
+	assert.equal(
+		billboardHeading?.validation?.(requiredRule),
+		'required-called'
+	);
+	assert.equal(
+		listScrollerHeading?.validation?.(requiredRule),
+		'required-called'
+	);
+});
+
 test('peopleRefsType defines people reference array', () => {
 	assert.equal(peopleRefsType.name, 'peopleRefs');
 	assert.deepEqual(

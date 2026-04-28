@@ -3,6 +3,7 @@ import type Link from '../../types/link';
 import type ImageType from '../../types/image';
 import type { ArrayPageBuilderBlockByType } from '../../lib/content/pageBuilderTypes';
 import Image from '../atoms/Image.astro';
+
 interface Props extends Omit<
 	ArrayPageBuilderBlockByType<'billboard'>,
 	'_type'
@@ -19,12 +20,13 @@ const {
 	index = 1,
 	hLevel = 2,
 	link = { text: '', url: '' },
+	image,
 } = Astro.props as Props;
-const Wrapepr = index === 0 ? 'header' : 'section';
+const Wrapper = index === 0 ? 'header' : 'section';
 const Heading = 'h' + hLevel;
 ---
 
-<Wrapepr>
+<Wrapper>
 	<Heading>
 		{heading}
 	</Heading>
@@ -34,4 +36,9 @@ const Heading = 'h' + hLevel;
 			<a href={link.url}>{link.text}</a>
 		)
 	}
-</Wrapepr>
+	{
+		image?.src && (
+			<Image {...(image as Required<ImageType>)} priority={index === 0} />
+		)
+	}
+</Wrapper>

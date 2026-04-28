@@ -3,6 +3,7 @@ import type { ArrayPageBuilderBlock } from './pageBuilderTypes';
 import {
 	projectObjectFields,
 	SANITY_IMAGE_ASSET_REF_FIELDS,
+	SANITY_IMAGE_METADATA_PROJECTION,
 } from './groqProjections';
 import { loadQuery } from './preview';
 
@@ -20,6 +21,9 @@ const PAGE_QUERY = `*[_type == "page" && defined(slug.current)]{
 		body,
 		richText,
 		items,
+		image {
+			${SANITY_IMAGE_METADATA_PROJECTION}
+		},
 		people[]->{
 			_id,
 			name
@@ -31,6 +35,9 @@ const PAGE_QUERY = `*[_type == "page" && defined(slug.current)]{
 		body,
 		richText,
 		items,
+		image {
+			${SANITY_IMAGE_METADATA_PROJECTION}
+		},
 		people[]->{
 			_id,
 			name

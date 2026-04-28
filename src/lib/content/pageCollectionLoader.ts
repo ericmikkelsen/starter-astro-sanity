@@ -55,7 +55,7 @@ export function createSanityPageCollectionLoader() {
 				// than an empty collection. Callers can treat this as a warning; a hard
 				// build error would hide any previous valid content.
 				logger.warn(
-					`Failed to load Sanity pages – keeping previous store. Error: ${String(err)}`
+					`Failed to load Sanity pages – keeping previous store. Error: ${err instanceof Error ? err.message : String(err)}`
 				);
 				return;
 			}

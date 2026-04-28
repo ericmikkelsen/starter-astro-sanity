@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 
+import BlocksPageTemplate from '../components/templates/BlocksPageTemplate.astro';
 import { getAstroPages } from '../lib/content/pages';
 
 export async function getStaticPaths() {
@@ -23,19 +24,6 @@ const { page } = Astro.props;
 		<title>{page.title}</title>
 	</head>
 	<body class="bg-stone-50 text-stone-900">
-		<main
-			class="mx-auto flex min-h-screen max-w-3xl flex-col gap-4 px-6 py-14"
-		>
-			<a
-				class="text-sm font-semibold tracking-[0.14em] text-emerald-700 uppercase"
-				href="/">Back to home</a
-			>
-			<h1 class="text-4xl leading-tight font-bold">{page.title}</h1>
-			{
-				page.description ? (
-					<p class="text-lg text-stone-700">{page.description}</p>
-				) : null
-			}
-		</main>
+		<BlocksPageTemplate page={page} />
 	</body>
 </html>

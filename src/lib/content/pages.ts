@@ -1,4 +1,5 @@
 import type { WebDocumentCore } from './shared';
+import type { ArrayPageBuilderBlock } from './pageBuilderTypes';
 import {
 	projectObjectFields,
 	SANITY_IMAGE_ASSET_REF_FIELDS,
@@ -6,15 +7,39 @@ import {
 import { loadQuery } from './preview';
 
 const PAGE_QUERY = `*[_type == "page" && defined(slug.current)]{
+	_type,
   _id,
   title,
   "slug": slug.current,
   description,
 	${projectObjectFields('metaImage', SANITY_IMAGE_ASSET_REF_FIELDS)},
-  metaImageAlt
+  metaImageAlt,
+	blocks[]{
+		_type,
+		heading,
+		body,
+		richText,
+		items,
+		people[]->{
+			_id,
+			name
+		}
+	},
+	pageBuilder[]{
+		_type,
+		heading,
+		body,
+		richText,
+		items,
+		people[]->{
+			_id,
+			name
+		}
+	}
 } | order(title asc)`;
 
 type SanityPageQueryResult = {
+	_type?: 'page';
 	_id: string;
 	title?: string;
 	slug?: string;
@@ -25,11 +50,15 @@ type SanityPageQueryResult = {
 		};
 	};
 	metaImageAlt?: string;
+	blocks?: ArrayPageBuilderBlock[];
+	pageBuilder?: ArrayPageBuilderBlock[];
 };
 
 export type AstroPage = WebDocumentCore & {
 	id: string;
 	path: string;
+	documentType?: 'page';
+	blocks?: ArrayPageBuilderBlock[];
 };
 
 /**
@@ -58,6 +87,8 @@ export function mapSanityPageToAstroPage(
 				}
 			: undefined,
 		metaImageAlt: entry.metaImageAlt,
+		documentType: entry._type,
+		blocks: entry.blocks ?? entry.pageBuilder,
 		// Astro routes are emitted with trailing slashes, so the mapped path mirrors build output.
 		path: `/${entry.slug}/`,
 	};

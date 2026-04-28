@@ -74,6 +74,49 @@ test('mapSanityPageToCollectionEntry maps valid page records', () => {
 	assert.equal(mapped?.data.metaImage?.assetRef, 'image-ref');
 });
 
+test('mapSanityPageToAstroPage maps blocks records on page documents', () => {
+	const mapped = mapSanityPageToAstroPage({
+		_type: 'page',
+		_id: 'blocks-page-1',
+		title: 'Landing',
+		slug: 'landing',
+		blocks: [
+			{
+				_type: 'billboard',
+				heading: 'Hero heading',
+				body: 'Hero body',
+			},
+		],
+	});
+
+	assert.ok(mapped);
+	assert.equal(mapped?.id, 'blocks-page-1');
+	assert.equal(mapped?.documentType, 'page');
+	assert.equal(mapped?.blocks?.[0]?._type, 'billboard');
+	assert.equal(mapped?.path, '/landing/');
+});
+
+test('mapSanityPageToAstroPage supports legacy pageBuilder records', () => {
+	const mapped = mapSanityPageToAstroPage({
+		_type: 'page',
+		_id: 'legacy-page-builder-1',
+		title: 'Legacy Landing',
+		slug: 'legacy-landing',
+		pageBuilder: [
+			{
+				_type: 'billboard',
+				heading: 'Legacy hero heading',
+				body: 'Legacy hero body',
+			},
+		],
+	});
+
+	assert.ok(mapped);
+	assert.equal(mapped?.id, 'legacy-page-builder-1');
+	assert.equal(mapped?.blocks?.[0]?._type, 'billboard');
+	assert.equal(mapped?.path, '/legacy-landing/');
+});
+
 /**
  * Verifies content-layer loader mode matches shared preview toggle semantics.
  */

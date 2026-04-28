@@ -6,7 +6,7 @@ import { createSanityPeopleCollectionLoader } from './lib/content/peopleCollecti
 /**
  * Build-time content collections backed by Sanity remote data.
  *
- * This file currently registers only the existing page model so the
+ * This file currently registers the
  * content-layer foundation can be validated before additional document types
  * are introduced.
  */

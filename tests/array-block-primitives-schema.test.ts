@@ -13,7 +13,7 @@ test('billboardType defines expected fields', () => {
 	assert.equal(billboardType.name, 'billboard');
 	assert.deepEqual(
 		billboardType.fields?.map((field) => field.name),
-		['heading', 'body', 'ctaLabel', 'ctaHref', 'image']
+		['heading', 'body', 'image']
 	);
 });
 
@@ -21,7 +21,7 @@ test('listScrollerType defines expected fields', () => {
 	assert.equal(listScrollerType.name, 'listScroller');
 	assert.deepEqual(
 		listScrollerType.fields?.map((field) => field.name),
-		['title', 'items']
+		['heading', 'body', 'items']
 	);
 });
 
@@ -36,17 +36,23 @@ test('peopleRefsType defines people reference array', () => {
 		(field) => field.name === 'people'
 	);
 	const referenceMember =
-		peopleField?.type === 'array' ? peopleField.of?.[0] : undefined;
+		peopleField && 'of' in peopleField ? peopleField.of?.[0] : undefined;
+	const referenceTarget =
+		referenceMember && 'to' in referenceMember
+			? Array.isArray(referenceMember.to)
+				? referenceMember.to[0]?.type
+				: undefined
+			: undefined;
 
 	assert.equal(referenceMember?.type, 'reference');
-	assert.equal(referenceMember?.to?.[0]?.type, 'person');
+	assert.equal(referenceTarget, 'person');
 });
 
 test('richTextType defines portable content field', () => {
 	assert.equal(richTextType.name, 'richText');
 	assert.deepEqual(
 		richTextType.fields?.map((field) => field.name),
-		['content']
+		['richText']
 	);
 });
 

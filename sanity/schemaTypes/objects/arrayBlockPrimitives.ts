@@ -17,18 +17,7 @@ export const billboardType = defineType({
 		defineField({
 			name: 'body',
 			title: 'Body',
-			type: 'text',
-			rows: 4,
-		}),
-		defineField({
-			name: 'ctaLabel',
-			title: 'CTA Label',
 			type: 'string',
-		}),
-		defineField({
-			name: 'ctaHref',
-			title: 'CTA URL',
-			type: 'url',
 		}),
 		defineField({
 			name: 'image',
@@ -48,8 +37,13 @@ export const listScrollerType = defineType({
 	type: 'object',
 	fields: [
 		defineField({
-			name: 'title',
-			title: 'Title',
+			name: 'heading',
+			title: 'Heading',
+			type: 'string',
+		}),
+		defineField({
+			name: 'body',
+			title: 'Body',
 			type: 'string',
 		}),
 		defineField({
@@ -94,8 +88,8 @@ export const richTextType = defineType({
 	type: 'object',
 	fields: [
 		defineField({
-			name: 'content',
-			title: 'Content',
+			name: 'richText',
+			title: 'Body',
 			type: 'array',
 			of: [
 				defineArrayMember({

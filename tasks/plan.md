@@ -36,6 +36,10 @@ clear acceptance criteria.
     - `src/components/block`
 - Keep a post-core idea in backlog for Sanity Agent Actions: “Make me a page like X”.
 
+### Known follow-up from chapter 01 review
+
+- Consolidate duplicated page query/mapping logic between legacy fetch helpers and content-layer helpers to prevent contract drift.
+
 ### Task 1: Define scope and constraints
 
 **Acceptance:**

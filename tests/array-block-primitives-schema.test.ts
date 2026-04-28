@@ -76,6 +76,26 @@ test('richTextType defines portable content field', () => {
 	);
 });
 
+test('block previews include block name as subtitle', () => {
+	const billboardPreview = billboardType.preview?.prepare?.({
+		title: 'Hero section',
+	});
+	const listScrollerPreview = listScrollerType.preview?.prepare?.({
+		title: 'Highlights',
+	});
+	const peopleRefsPreview = peopleRefsType.preview?.prepare?.({
+		people: [{ _ref: 'person-1' }, { _ref: 'person-2' }],
+	});
+	const richTextPreview = richTextType.preview?.prepare?.({
+		content: [{ _type: 'block' }],
+	});
+
+	assert.equal(billboardPreview?.subtitle, 'Billboard');
+	assert.equal(listScrollerPreview?.subtitle, 'List Scroller');
+	assert.equal(peopleRefsPreview?.subtitle, 'People References');
+	assert.equal(richTextPreview?.subtitle, 'Rich Text');
+});
+
 test('schemaTypes registry includes array block primitives', () => {
 	const schemaTypeNames = new Set(
 		schemaTypes.map((schemaType) => schemaType.name)

@@ -19,6 +19,17 @@ export const billboardType = defineType({
 		defineField(BODY_FIELD_ARGS),
 		defineField(IMAGE_FIELD_ARGS),
 	],
+	preview: {
+		select: {
+			title: 'heading',
+		},
+		prepare(selection) {
+			return {
+				title: selection.title || 'Untitled Billboard',
+				subtitle: 'Billboard',
+			};
+		},
+	},
 });
 
 /**
@@ -39,6 +50,17 @@ export const listScrollerType = defineType({
 			validation: (rule) => rule.required().min(1),
 		}),
 	],
+	preview: {
+		select: {
+			title: 'heading',
+		},
+		prepare(selection) {
+			return {
+				title: selection.title || 'Untitled List',
+				subtitle: 'List Scroller',
+			};
+		},
+	},
 });
 
 /**
@@ -62,6 +84,21 @@ export const peopleRefsType = defineType({
 			validation: (rule) => rule.required().min(1),
 		}),
 	],
+	preview: {
+		select: {
+			people: 'people',
+		},
+		prepare(selection) {
+			const peopleCount = Array.isArray(selection.people)
+				? selection.people.length
+				: 0;
+
+			return {
+				title: `${peopleCount} linked ${peopleCount === 1 ? 'person' : 'people'}`,
+				subtitle: 'People References',
+			};
+		},
+	},
 });
 
 /**
@@ -72,4 +109,19 @@ export const richTextType = defineType({
 	title: 'Rich Text',
 	type: 'object',
 	fields: [defineField(RICH_TEXT_FIELD_ARGS)],
+	preview: {
+		select: {
+			content: 'richText',
+		},
+		prepare(selection) {
+			const blockCount = Array.isArray(selection.content)
+				? selection.content.length
+				: 0;
+
+			return {
+				title: `${blockCount} block${blockCount === 1 ? '' : 's'}`,
+				subtitle: 'Rich Text',
+			};
+		},
+	},
 });

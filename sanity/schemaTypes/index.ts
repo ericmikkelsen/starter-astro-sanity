@@ -1,6 +1,5 @@
 import type { SchemaTypeDefinition } from 'sanity';
 
-import { arrayPageType } from './documents/arrayPage';
 import { pageType } from './documents/page';
 import { personType } from './documents/person';
 import {
@@ -26,7 +25,6 @@ import {
  */
 export const schemaTypes: SchemaTypeDefinition[] = [
 	pageType,
-	arrayPageType,
 	personType,
 	headingType,
 	subheadingType,

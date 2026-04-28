@@ -7,6 +7,7 @@ import { spawnSync } from 'node:child_process';
 
 import { mapSanityPageToAstroPage } from '../src/lib/content/pages';
 import { mapSanityPageToCollectionEntry } from '../src/lib/content/pageCollection';
+import { resolvePageCollectionLoaderMode } from '../src/lib/content/pageCollectionLoader';
 
 /**
  * These tests cover the pure normalization helpers used by both the legacy page
@@ -71,6 +72,20 @@ test('mapSanityPageToCollectionEntry maps valid page records', () => {
 	assert.equal(mapped?.data.slug, 'contact');
 	assert.equal(mapped?.data.path, '/contact/');
 	assert.equal(mapped?.data.metaImage?.assetRef, 'image-ref');
+});
+
+/**
+ * Verifies content-layer loader mode matches shared preview toggle semantics.
+ */
+test('resolvePageCollectionLoaderMode returns published when preview is disabled', () => {
+	assert.equal(resolvePageCollectionLoaderMode(false), 'published');
+});
+
+/**
+ * Verifies content-layer loader mode switches to draft reads when preview is enabled.
+ */
+test('resolvePageCollectionLoaderMode returns preview when preview is enabled', () => {
+	assert.equal(resolvePageCollectionLoaderMode(true), 'preview');
 });
 
 /**

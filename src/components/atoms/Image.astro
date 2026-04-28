@@ -4,13 +4,15 @@ import { Image as AstroImage } from 'astro:assets';
 interface Props extends ImageType {
 	class?: string;
 }
-
+/**
+ * @link https://www.youtube.com/watch?v=JhTR2fz68ec
+ */
 const {
 	src = '',
 	alt = '',
 	width,
 	height,
-	priority,
+	priority = false,
 	class: className,
 } = Astro.props as Props;
 ---
@@ -21,4 +23,5 @@ const {
 	height={height}
 	src={src}
 	width={width}
+	priority={priority}
 />

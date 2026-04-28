@@ -31,17 +31,21 @@ and reusable components can be created quickly with aligned Sanity + Astro contr
 | 02  | `chapter/the-big-content-story/02-content-layer-preview-mode`           | Add draft/preview loader behavior parity with token guardrails.                                              |
 | 03  | `chapter/the-big-content-story/03-array-block-primitives-schema`        | Add array block primitive schema modules (Billboard, List Scroller, People refs, RichText).                  |
 | 04  | `chapter/the-big-content-story/04-array-page-builder-document`          | Add array-based page-builder document schema and registration wiring.                                        |
-| 05  | `chapter/the-big-content-story/05-array-page-builder-routes`            | Add route/query mapping and rendering path for array-based page-builder documents.                           |
-| 06  | `chapter/the-big-content-story/06-portable-text-document-schema`        | Add portable-text-first web document schema and registration wiring.                                         |
-| 07  | `chapter/the-big-content-story/07-portable-text-routes`                 | Add route/query mapping and rendering path for portable-text web documents.                                  |
-| 08  | `chapter/the-big-content-story/08-shared-rendering-primitives`          | Add shared Astro rendering primitives and stable prop contracts for generated templates/components.          |
-| 09  | `chapter/the-big-content-story/09-scaffold-web-block`                   | Implement block web-content scaffold command with URL-prefix prompt and post-run registration guidance.      |
-| 10  | `chapter/the-big-content-story/10-scaffold-web-portable`                | Implement portable-text web-content scaffold command with matching output conventions and guidance line.     |
-| 11  | `chapter/the-big-content-story/11-scaffold-component`                   | Implement component scaffold with prompt-selectable body type and fixed output dirs (`atom`/`molecule`/etc). |
-| 12  | `chapter/the-big-content-story/12-studio-preview-links`                 | Add Studio preview link generation for supported document types.                                             |
-| 13  | `chapter/the-big-content-story/13-visual-editing-integration`           | Wire visual editing behavior for array-based and portable-text content types.                                |
-| 14  | `chapter/the-big-content-story/14-docs-and-generator-contract-tests`    | Add `docs/scaffolds.md` plus tests for scaffold outputs, route-prefix behavior, and loader preview behavior. |
-| 15  | `chapter/the-big-content-story/15-story-hardening-and-regression-guard` | Add final polish, migration-safety checks, and regression validation for existing page behavior.             |
+| 05  | `chapter/the-big-content-story/05-block-renderer-foundation`            | Add reusable block renderer primitives, shared block types, and baseline block components.                   |
+| 06  | `chapter/the-big-content-story/06-blocks-page-template-routes`          | Add block-aware page template and route/query wiring for rendering page blocks.                              |
+| 07  | `chapter/the-big-content-story/07-page-schema-consolidate-to-blocks`    | Consolidate web page schema to a single `page` document with `blocks` and remove `arrayPage`.                |
+| 08  | `chapter/the-big-content-story/08-image-metadata-normalization`         | Normalize Sanity image authoring to upload+alt and derive dimensions/URL from metadata in content mapping.   |
+| 09  | `chapter/the-big-content-story/09-block-preview-subtitles`              | Add Studio block preview subtitles so editors can identify block types quickly in arrays.                    |
+| 10  | `chapter/the-big-content-story/10-portable-text-document-schema`        | Add portable-text-first web document schema and registration wiring.                                         |
+| 11  | `chapter/the-big-content-story/11-portable-text-routes`                 | Add route/query mapping and rendering path for portable-text web documents.                                  |
+| 12  | `chapter/the-big-content-story/12-shared-rendering-primitives`          | Add shared Astro rendering primitives and stable prop contracts for generated templates/components.          |
+| 13  | `chapter/the-big-content-story/13-scaffold-web-block`                   | Implement block web-content scaffold command with URL-prefix prompt and post-run registration guidance.      |
+| 14  | `chapter/the-big-content-story/14-scaffold-web-portable`                | Implement portable-text web-content scaffold command with matching output conventions and guidance line.     |
+| 15  | `chapter/the-big-content-story/15-scaffold-component`                   | Implement component scaffold with prompt-selectable body type and fixed output dirs (`atom`/`molecule`/etc). |
+| 16  | `chapter/the-big-content-story/16-studio-preview-links`                 | Add Studio preview link generation for supported document types.                                             |
+| 17  | `chapter/the-big-content-story/17-visual-editing-integration`           | Wire visual editing behavior for array-based and portable-text content types.                                |
+| 18  | `chapter/the-big-content-story/18-docs-and-generator-contract-tests`    | Add `docs/scaffolds.md` plus tests for scaffold outputs, route-prefix behavior, and loader preview behavior. |
+| 19  | `chapter/the-big-content-story/19-story-hardening-and-regression-guard` | Add final polish, migration-safety checks, and regression validation for existing page behavior.             |
 
 ## Out of Scope
 
@@ -55,8 +59,7 @@ and reusable components can be created quickly with aligned Sanity + Astro contr
 - Sanity project credentials and preview token values available for local validation.
 - Astro Content Layer API available in current project version.
 
-## Chapter Approval Questions
+## Rescue Notes
 
-1. For chapter 05 routing, should prefix validation reject pluralization mismatches (`campaign` vs `campaigns`) or just enforce URL-safe kebab-case?
-2. For chapter 14 tests, do you want snapshot-style generator tests, or explicit file-structure assertions only?
-3. Do you want chapter 15 to include optional performance checks (build time impact of generated modules), or keep it strictly functional regression/safety?
+- Chapter 05 prototype work exceeded review budget, so it is decomposed into chapters 05-09.
+- Existing chapter intent is preserved and renumbered starting at chapter 10.

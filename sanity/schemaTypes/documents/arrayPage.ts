@@ -5,8 +5,8 @@ import { WEB_PAGE_FIELDS } from '../webPageFields';
 /**
  * Array-based page-builder document using reusable primitive blocks.
  *
- * This chapter intentionally scopes the document to schema-level wiring only;
- * rendering and route integration are handled in the next chapter.
+ * This change intentionally scopes the document to schema-level wiring only;
+ * rendering and route integration are handled in a follow-up step.
  */
 export const arrayPageType = defineType({
 	name: 'arrayPage',

@@ -1,0 +1,37 @@
+---
+import type Link from '../../types/link';
+import type ImageType from '../../types/image';
+import type { ArrayPageBuilderBlockByType } from '../../lib/content/pageBuilderTypes';
+import Image from '../atoms/Image.astro';
+interface Props extends Omit<
+	ArrayPageBuilderBlockByType<'billboard'>,
+	'_type'
+> {
+	index?: number;
+	hLevel?: number;
+	link?: Link;
+	image?: ImageType;
+}
+
+const {
+	heading = '',
+	body = '',
+	index = 1,
+	hLevel = 2,
+	link = { text: '', url: '' },
+} = Astro.props as Props;
+const Wrapepr = index === 0 ? 'header' : 'section';
+const Heading = 'h' + hLevel;
+---
+
+<Wrapepr>
+	<Heading>
+		{heading}
+	</Heading>
+	{body.length && <p>{body}</p>}
+	{
+		link?.text.length && link?.url.length && (
+			<a href={link.url}>{link.text}</a>
+		)
+	}
+</Wrapepr>

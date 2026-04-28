@@ -1,0 +1,23 @@
+---
+import type ImageType from '../../types/image';
+import { Picture as AstroPicture } from 'astro:assets';
+interface Props extends ImageType {
+	class?: string;
+}
+const {
+	src = '',
+	alt = '',
+	width,
+	height,
+	priority,
+	class: className,
+} = Astro.props as Props;
+---
+
+<AstroPicture
+	alt={alt}
+	class={className}
+	height={height}
+	src={src}
+	width={width}
+/>

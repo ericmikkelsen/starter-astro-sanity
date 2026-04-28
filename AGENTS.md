@@ -4,10 +4,10 @@ These assumptions apply to agent-driven work in this repository.
 
 ## Comments and JSDoc
 
-- Add descriptive comments and JSDoc where appropriate.
+- For all newly written or significantly modified code, add concise comments and JSDoc by default.
 - Prefer comments that explain intent, constraints, or non-obvious behavior.
 - Do not add noisy comments that restate obvious code.
-- Add JSDoc to public helpers, config surfaces, loaders, and other reusable code when it improves maintainability.
+- Add JSDoc to public helpers, config surfaces, loaders, and other reusable code.
 
 ## Commits
 

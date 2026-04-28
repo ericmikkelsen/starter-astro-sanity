@@ -27,6 +27,13 @@
 - Every PR must pass: lint, type check, tests, build
 - No secrets in code or version control — use environment variables
 
+## Comments and JSDoc
+
+- For all newly written or significantly modified code, add concise comments and JSDoc by default.
+- Add JSDoc to exported/public helpers, config surfaces, loaders, and reusable components.
+- Prefer comments that explain intent, constraints, or non-obvious behavior.
+- Do not add noisy comments that only restate obvious code.
+
 ## Implementation
 
 - Build in small, verifiable increments (one slice at a time)

@@ -1,15 +1,19 @@
 ---
 import type Link from '../../types/link';
 import type ImageType from '../../types/image';
-import type { ArrayPageBuilderBlockByType } from '../../lib/content/pageBuilderTypes';
+import type {
+	ArrayPageBuilderBlockByType,
+	BlockSettings,
+} from '../../lib/content/pageBuilderTypes';
 import Image from '../atoms/Image.astro';
 
-interface Props extends Omit<
-	ArrayPageBuilderBlockByType<'billboard'>,
-	'_type'
-> {
-	index?: number;
-	hLevel?: number;
+/**
+ * Billboard block content plus shared renderer settings.
+ */
+interface Props
+	extends
+		Omit<ArrayPageBuilderBlockByType<'billboard'>, '_type'>,
+		BlockSettings {
 	link?: Link;
 	image?: ImageType;
 }
@@ -17,12 +21,15 @@ interface Props extends Omit<
 const {
 	heading = '',
 	body = '',
-	index = 1,
-	hLevel = 2,
+	as,
+	hLevel,
+	index,
+	priority,
 	link = { text: '', url: '' },
 	image,
 } = Astro.props as Props;
-const Wrapper = index === 0 ? 'header' : 'section';
+// Astro supports dynamic tag names in component variables for semantic wrappers.
+const Wrapper = as;
 const Heading = 'h' + hLevel;
 ---
 
@@ -30,15 +37,15 @@ const Heading = 'h' + hLevel;
 	<Heading>
 		{heading}
 	</Heading>
-	{body.length && <p>{body}</p>}
+	{body.length ? <p>{body}</p> : null}
 	{
-		link?.text.length && link?.url.length && (
+		link?.text.length && link?.url.length ? (
 			<a href={link.url}>{link.text}</a>
-		)
+		) : null
 	}
 	{
-		image?.src && (
-			<Image {...(image as Required<ImageType>)} priority={index === 0} />
-		)
+		image?.src ? (
+			<Image {...(image as Required<ImageType>)} priority={priority} />
+		) : null
 	}
 </Wrapper>

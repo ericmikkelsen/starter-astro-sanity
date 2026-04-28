@@ -53,6 +53,10 @@ export default defineConfig({
 			__SANITY_STUDIO_PROJECT_ID__: JSON.stringify(projectId),
 			__SANITY_STUDIO_DATASET__: JSON.stringify(dataset),
 		},
+		// Keep Sanity and React compiler runtime pre-bundled so Studio can import named exports reliably.
+		optimizeDeps: {
+			include: ['sanity', 'react/compiler-runtime'],
+		},
 		plugins: [tailwindcss()],
 	},
 });

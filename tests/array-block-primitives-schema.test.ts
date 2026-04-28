@@ -31,6 +31,15 @@ test('peopleRefsType defines people reference array', () => {
 		peopleRefsType.fields?.map((field) => field.name),
 		['people']
 	);
+
+	const peopleField = peopleRefsType.fields?.find(
+		(field) => field.name === 'people'
+	);
+	const referenceMember =
+		peopleField?.type === 'array' ? peopleField.of?.[0] : undefined;
+
+	assert.equal(referenceMember?.type, 'reference');
+	assert.equal(referenceMember?.to?.[0]?.type, 'person');
 });
 
 test('richTextType defines portable content field', () => {

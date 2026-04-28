@@ -4,7 +4,7 @@
  * `section`) stay centralized and consistent.
  */
 interface Props {
-	as: 'header' | 'section';
+const { as, class: className = '' }: Props = Astro.props;
 	class?: string;
 }
 

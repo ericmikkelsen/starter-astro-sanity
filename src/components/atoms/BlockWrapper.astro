@@ -4,11 +4,11 @@
  * `section`) stay centralized and consistent.
  */
 interface Props {
-const { as, class: className = '' }: Props = Astro.props;
+	as?: 'header' | 'section';
 	class?: string;
 }
 
-const { as, class: className = '' } = Astro.props;
+const { as, class: className = '' }: Props = Astro.props;
 ---
 
 {

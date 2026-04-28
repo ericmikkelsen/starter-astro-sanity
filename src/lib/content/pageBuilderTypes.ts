@@ -1,3 +1,5 @@
+import type ImageType from '../../types/image';
+
 /**
  * Narrow portable text block representation used by the scaffolded rich-text block.
  */
@@ -17,25 +19,12 @@ export type BlockSettings = {
 	priority: boolean;
 };
 
-/**
- * Shared page-builder block union used by route mappers and block components.
- *
- * When Sanity typegen outputs are available, this file is the single place to
- * swap these definitions with generated query types.
- */
-export type BillboardImage = {
-	src: string;
-	alt?: string;
-	width: number;
-	height: number;
-};
-
 export type ArrayPageBuilderBlock =
 	| {
 			_type: 'billboard';
 			heading?: string;
 			body?: string;
-			image?: BillboardImage;
+			image?: ImageType;
 	  }
 	| {
 			_type: 'listScroller';

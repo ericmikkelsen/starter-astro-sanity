@@ -11,3 +11,7 @@ This file is a starter example. Copy and adapt it for your feature.
 
 - [ ] Evaluate Astro Content Layer API with a custom Sanity loader instead of file-based content collections
 - [ ] Validate preview-mode compatibility (draft perspective and token handling) in the loader design
+- [ ] Define scaffolded Astro template baseline with default props and conditional rendering
+- [ ] Implement prompt-selectable `body` type in component scaffold
+- [ ] Standardize generated component directories (`atom`, `molecule`, `organism`, `block`)
+- [ ] Capture “make me a page like X” as a post-core Sanity Agent Actions spike

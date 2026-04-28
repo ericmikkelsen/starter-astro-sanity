@@ -18,12 +18,23 @@ clear acceptance criteria.
 
 ## Notes For Next Story (Content-Focused)
 
-### Astro contnet collections
+### Astro content collections
 
 - Astro content collections are file-based (`src/content/**`), while Sanity is a remote API source.
 - For the next content-heavy story, evaluate Astro Content Layer API with a custom Sanity loader.
 - Goal: keep Sanity as the source of truth while gaining collection-style ergonomics and typed content access.
 - Preserve preview behavior (draft perspective + token requirements) when designing the loader workflow.
+
+### Decisions from latest spec answers
+
+- Generate practical starter Astro templates with default props and conditional rendering patterns.
+- Make `body` field type prompt-selectable in component scaffold.
+- Use fixed component output folders by type:
+    - `src/components/atom`
+    - `src/components/molecule`
+    - `src/components/organism`
+    - `src/components/block`
+- Keep a post-core idea in backlog for Sanity Agent Actions: “Make me a page like X”.
 
 ### Task 1: Define scope and constraints
 

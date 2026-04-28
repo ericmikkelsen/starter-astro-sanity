@@ -1,6 +1,13 @@
 import type { SchemaTypeDefinition } from 'sanity';
 
 import { pageType } from './documents/page';
+import { personType } from './documents/person';
+import {
+	billboardType,
+	listScrollerType,
+	peopleRefsType,
+	richTextType,
+} from './objects/arrayBlockPrimitives';
 import {
 	bodyTextType,
 	headingType,
@@ -18,10 +25,15 @@ import {
  */
 export const schemaTypes: SchemaTypeDefinition[] = [
 	pageType,
+	personType,
 	headingType,
 	subheadingType,
 	bodyTextType,
 	linkType,
 	listType,
 	imageObjectType,
+	billboardType,
+	listScrollerType,
+	peopleRefsType,
+	richTextType,
 ];

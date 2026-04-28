@@ -57,39 +57,20 @@ export const LINK_FIELD_ARGS = {
 };
 
 /**
- * Reusable image object with both reference-style and URL-style fields.
+ * Reusable native Sanity image upload field with alt text.
+ * Dimensions (width, height) and URL (src) are derived in the Astro content
+ * layer via GROQ projections against asset metadata — not stored manually.
  */
 export const IMAGE_FIELD_ARGS = {
 	name: 'image',
 	title: 'Image',
-	type: 'object',
+	type: 'image',
+	options: { hotspot: true },
 	fields: [
-		defineField({
-			name: 'imageRef',
-			title: 'Image Ref',
-			type: 'string',
-		}),
-		defineField({
-			name: 'src',
-			title: 'Source URL',
-			type: 'url',
-		}),
 		defineField({
 			name: 'alt',
 			title: 'Alt Text',
 			type: 'string',
-		}),
-		defineField({
-			name: 'width',
-			title: 'Width',
-			type: 'number',
-			validation: (rule) => rule.positive().integer(),
-		}),
-		defineField({
-			name: 'height',
-			title: 'Height',
-			type: 'number',
-			validation: (rule) => rule.positive().integer(),
 		}),
 	],
 };

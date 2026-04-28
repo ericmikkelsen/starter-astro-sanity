@@ -1,6 +1,6 @@
 import {
 	projectObjectFields,
-	SANITY_IMAGE_LEGACY_DIMENSION_FIELDS,
+	SANITY_IMAGE_METADATA_PROJECTION,
 } from './groqProjections';
 
 /**
@@ -10,7 +10,7 @@ export const SANITY_PEOPLE_COLLECTION_QUERY = `*[_type == "person" && defined(na
   _id,
   name,
   bio,
-	${projectObjectFields('image', SANITY_IMAGE_LEGACY_DIMENSION_FIELDS)}
+	${projectObjectFields('image', SANITY_IMAGE_METADATA_PROJECTION)}
 } | order(name asc)`;
 
 export type PersonPortableTextBlock = {

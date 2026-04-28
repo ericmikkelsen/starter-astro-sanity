@@ -38,11 +38,12 @@ test('LINK_FIELD_ARGS defines text and url fields', () => {
 	);
 });
 
-test('IMAGE_FIELD_ARGS defines image metadata fields', () => {
+test('IMAGE_FIELD_ARGS defines native Sanity image upload with alt text', () => {
 	assert.equal(IMAGE_FIELD_ARGS.name, 'image');
+	assert.equal(IMAGE_FIELD_ARGS.type, 'image');
 	assert.deepEqual(
 		IMAGE_FIELD_ARGS.fields?.map((field) => field.name),
-		['imageRef', 'src', 'alt', 'width', 'height']
+		['alt']
 	);
 });
 

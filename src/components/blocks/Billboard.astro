@@ -7,6 +7,9 @@ import type {
 } from '../../lib/content/pageBuilderTypes';
 import Image from '../atoms/Image.astro';
 
+/**
+ * Billboard block content plus shared renderer settings.
+ */
 interface Props
 	extends
 		Omit<ArrayPageBuilderBlockByType<'billboard'>, '_type'>,
@@ -25,6 +28,7 @@ const {
 	link = { text: '', url: '' },
 	image,
 } = Astro.props as Props;
+// Astro supports dynamic tag names in component variables for semantic wrappers.
 const Wrapper = as;
 const Heading = 'h' + hLevel;
 ---

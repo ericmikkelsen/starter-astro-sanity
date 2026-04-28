@@ -1,3 +1,8 @@
+import {
+	projectObjectFields,
+	SANITY_IMAGE_LEGACY_DIMENSION_FIELDS,
+} from './groqProjections';
+
 /**
  * Canonical query for people documents synced into the Astro content layer.
  */
@@ -5,12 +10,7 @@ export const SANITY_PEOPLE_COLLECTION_QUERY = `*[_type == "person" && defined(na
   _id,
   name,
   bio,
-  image {
-    src,
-    alt,
-    width,
-    height
-  }
+	${projectObjectFields('image', SANITY_IMAGE_LEGACY_DIMENSION_FIELDS)}
 } | order(name asc)`;
 
 export type PersonPortableTextBlock = {

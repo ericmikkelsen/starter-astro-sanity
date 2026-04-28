@@ -1,4 +1,8 @@
 import type { WebDocumentCore } from './shared';
+import {
+	projectObjectFields,
+	SANITY_IMAGE_ASSET_REF_FIELDS,
+} from './groqProjections';
 import { loadQuery } from './preview';
 
 const PAGE_QUERY = `*[_type == "page" && defined(slug.current)]{
@@ -6,7 +10,7 @@ const PAGE_QUERY = `*[_type == "page" && defined(slug.current)]{
   title,
   "slug": slug.current,
   description,
-  metaImage,
+	${projectObjectFields('metaImage', SANITY_IMAGE_ASSET_REF_FIELDS)},
   metaImageAlt
 } | order(title asc)`;
 

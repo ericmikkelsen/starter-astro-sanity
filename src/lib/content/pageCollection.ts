@@ -1,4 +1,8 @@
 import type { WebDocumentCore } from './shared';
+import {
+	projectObjectFields,
+	SANITY_IMAGE_ASSET_REF_FIELDS,
+} from './groqProjections';
 
 /**
  * Canonical published-page query used by the build-time Astro content loader.
@@ -8,7 +12,7 @@ export const SANITY_PAGE_COLLECTION_QUERY = `*[_type == "page" && defined(slug.c
   title,
   "slug": slug.current,
   description,
-  metaImage,
+	${projectObjectFields('metaImage', SANITY_IMAGE_ASSET_REF_FIELDS)},
   metaImageAlt
 } | order(title asc)`;
 

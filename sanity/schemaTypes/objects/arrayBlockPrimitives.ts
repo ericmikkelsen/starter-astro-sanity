@@ -77,7 +77,7 @@ export const peopleRefsType = defineType({
 			of: [
 				defineArrayMember({
 					type: 'reference',
-					to: [{ type: 'page' }],
+					to: [{ type: 'person' }],
 				}),
 			],
 			validation: (rule) => rule.required().min(1),

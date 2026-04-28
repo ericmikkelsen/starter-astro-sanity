@@ -1,6 +1,7 @@
 import { defineCollection } from 'astro:content';
 
 import { createSanityPageCollectionLoader } from './lib/content/pageCollectionLoader';
+import { createSanityPeopleCollectionLoader } from './lib/content/peopleCollectionLoader';
 
 /**
  * Build-time content collections backed by Sanity remote data.
@@ -13,4 +14,8 @@ const pages = defineCollection({
 	loader: createSanityPageCollectionLoader(),
 });
 
-export const collections = { pages };
+const people = defineCollection({
+	loader: createSanityPeopleCollectionLoader(),
+});
+
+export const collections = { pages, people };

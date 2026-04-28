@@ -2,6 +2,7 @@ import type { SchemaTypeDefinition } from 'sanity';
 
 import { pageType } from './documents/page';
 import { personType } from './documents/person';
+import { webContentType } from './documents/webContent';
 import {
 	billboardType,
 	listScrollerType,
@@ -26,6 +27,7 @@ import {
 export const schemaTypes: SchemaTypeDefinition[] = [
 	pageType,
 	personType,
+	webContentType,
 	headingType,
 	subheadingType,
 	bodyTextType,

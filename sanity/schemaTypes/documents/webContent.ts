@@ -24,9 +24,7 @@ const linkAnnotation = {
  * `page`, which is structured around reusable block primitives, `webContent`
  * puts a portable text body front and centre with optional supporting metadata.
  */
-export const webContentType = defineType({
-	name: 'webContent',
-	title: 'Web Content',
+export const scaffoldPortableTextDocument = {
 	type: 'document',
 	fields: [
 		...Object.values(WEB_PAGE_FIELDS),
@@ -58,4 +56,4 @@ export const webContentType = defineType({
 			subtitle: 'slug.current',
 		},
 	},
-});
+};

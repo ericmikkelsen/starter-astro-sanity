@@ -17,7 +17,7 @@ test('scaffoldPortableTextDocument defines expected fields', () => {
 	assert.equal(fieldNames.includes('description'), true);
 	assert.equal(fieldNames.includes('metaImage'), true);
 	assert.equal(fieldNames.includes('metaImageAlt'), true);
-	assert.equal(fieldNames.includes('body'), true);
+	assert.equal(fieldNames.includes('richText'), true);
 });
 
 /**
@@ -40,7 +40,7 @@ test('registered blog schema composes scaffoldPortableTextDocument', () => {
  */
 test('scaffoldPortableTextDocument body is a portable text array', () => {
 	const bodyField = scaffoldPortableTextDocument.fields?.find(
-		(field) => field.name === 'body'
+		(field) => field.name === 'richText'
 	);
 
 	assert.ok(bodyField, 'body field should exist');

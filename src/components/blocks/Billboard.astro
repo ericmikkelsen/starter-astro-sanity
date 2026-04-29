@@ -3,9 +3,10 @@ import type Link from '../../types/link';
 import type ImageType from '../../types/image';
 import type {
 	ArrayPageBuilderBlockByType,
-	BlockSettings,
+	BlockSettings
 } from '../../lib/content/pageBuilderTypes';
 import Image from '../atoms/Image.astro';
+import BlockWrapper from '../atoms/BlockWrapper.astro';
 
 /**
  * Billboard block content plus shared renderer settings.
@@ -26,14 +27,13 @@ const {
 	index,
 	priority,
 	link = { text: '', url: '' },
-	image,
+	image
 } = Astro.props as Props;
 // Astro supports dynamic tag names in component variables for semantic wrappers.
-const Wrapper = as;
 const Heading = 'h' + hLevel;
 ---
 
-<Wrapper>
+<BlockWrapper as={as} class="">
 	<Heading>
 		{heading}
 	</Heading>
@@ -48,4 +48,4 @@ const Heading = 'h' + hLevel;
 			<Image {...(image as Required<ImageType>)} priority={priority} />
 		) : null
 	}
-</Wrapper>
+</BlockWrapper>

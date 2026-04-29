@@ -7,10 +7,10 @@ const posts = await getAstroBlogPosts();
 ---
 
 <HTML title="Blog" description="Latest posts">
-	<header class="space-y-3">
+	<header class="mx-auto max-w-3xl space-y-3 px-6 py-14">
 		<h1 class="text-4xl leading-tight font-bold">Blog</h1>
 	</header>
-	<section>
+	<section class="mx-auto max-w-3xl px-6 py-14">
 		{
 			posts.length === 0 ? (
 				<p class="mt-4 text-stone-700">

@@ -7,7 +7,8 @@ import {
 	generateBlockCollectionModule,
 	generateBlockCollectionLoader,
 	generateBlockPageRoute,
-	generateWiringSnippets
+	generateWiringSnippets,
+	formatWiringSnippetsForTerminal
 } from '../scripts/scaffold-web-block';
 
 // --- toPascalCase ---
@@ -208,6 +209,26 @@ test('generateWiringSnippets includes content collection loader wiring lines', (
 	assert.ok(
 		src.includes(
 			'export const collections = { pages, people, campaignCollection };'
+		)
+	);
+});
+
+// --- formatWiringSnippetsForTerminal ---
+
+test('formatWiringSnippetsForTerminal colors comments dark pink', () => {
+	const src = generateWiringSnippets('campaign');
+	const formatted = formatWiringSnippetsForTerminal(src);
+	assert.ok(
+		formatted.includes('\u001b[35m// add inside schemaTypes array\u001b[0m')
+	);
+});
+
+test('formatWiringSnippetsForTerminal colors code lines light pink', () => {
+	const src = generateWiringSnippets('campaign');
+	const formatted = formatWiringSnippetsForTerminal(src);
+	assert.ok(
+		formatted.includes(
+			"\u001b[95mimport { campaignType } from './documents/campaign';\u001b[0m"
 		)
 	);
 });

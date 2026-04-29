@@ -13,6 +13,7 @@
 		"sanity:schema:extract": "sanity schema extract --enforce-required-fields --path=./src/sanity/extract.json",
 		"sanity:typegen": "node scripts/run-sanity-typegen.mjs",
 		"scaffold:web-block": "node --import tsx scripts/scaffold-web-block.ts",
+		"scaffold:web-portable": "node --import tsx scripts/scaffold-web-portable.ts",
 		"start": "npm run dev",
 		"test": "node --import tsx --test tests/**/*.test.ts",
 		"prepare": "husky",

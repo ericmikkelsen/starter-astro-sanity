@@ -3,35 +3,16 @@ import { resolve } from 'node:path';
 
 import {
 	toPascalCase,
+	toStudioTitle,
+	validateScaffoldInputs,
+	printScaffoldGuidance,
 	createPromptSession,
 	writeGeneratedFile
 } from './scaffold-utils';
 
-export { toPascalCase };
-
-const NAME_RE = /^[a-z][a-zA-Z0-9]*$/;
-const URL_PREFIX_RE = /^[a-z0-9-]+$/;
-
-/**
- * Validates scaffold CLI inputs before generating files.
- *
- * @param name       Sanity document type name.
- * @param urlPrefix  URL segment prefix for routes.
- * @throws Error when either value is invalid.
- */
-export function validateScaffoldInputs(name: string, urlPrefix: string): void {
-	if (!NAME_RE.test(name)) {
-		throw new Error(
-			'Invalid document type name. Use /^[a-z][a-zA-Z0-9]*$/ (example: campaign).'
-		);
-	}
-
-	if (!URL_PREFIX_RE.test(urlPrefix)) {
-		throw new Error(
-			'Invalid URL prefix. Use /^[a-z0-9-]+$/ (example: campaigns).'
-		);
-	}
-}
+// Re-export shared utilities so tests and consumers can import them
+// from this module without needing to know they live in scaffold-utils.
+export { toPascalCase, validateScaffoldInputs };
 
 // ---------------------------------------------------------------------------
 // Template functions — pure string generators, no I/O, fully testable
@@ -93,17 +74,17 @@ export function generateBlockCollectionModule(
 	const upper = name.toUpperCase();
 	return `import type { WebDocumentCore } from './shared';
 import type { ArrayPageBuilderBlock } from './pageBuilderTypes';
+import {
+	projectObjectFields,
+	SANITY_IMAGE_ASSET_REF_FIELDS
+} from './groqProjections';
 
 export const SANITY_${upper}_COLLECTION_QUERY = \`*[_type == "${name}" && defined(slug.current)]{
   _id,
   title,
   "slug": slug.current,
   description,
-  metaImage {
-    asset {
-      _ref
-    }
-  },
+  \${projectObjectFields('metaImage', SANITY_IMAGE_ASSET_REF_FIELDS)},
   metaImageAlt,
   blocks[]{
     _type,
@@ -364,19 +345,10 @@ async function main(): Promise<void> {
 
 	validateScaffoldInputs(name, urlPrefix);
 
-	const title = toPascalCase(name);
+	const title = toStudioTitle(name);
 	writeScaffoldFiles(name, title, urlPrefix);
 
-	const pascal = toPascalCase(name);
-	console.log(`\n✔  Generated 4 files for "${name}".`);
-	console.log(`→  Schema: sanity/schemaTypes/documents/${name}.ts`);
-	console.log(`→  Collection: src/lib/content/${name}Collection.ts`);
-	console.log(`→  Loader: src/lib/content/${name}CollectionLoader.ts`);
-	console.log(`→  Route: src/pages/${urlPrefix}/[slug].astro`);
-	console.log(`\nNext: Register ${name}Type in sanity/schemaTypes/index.ts`);
-	console.log(
-		`      Register create${pascal}CollectionLoader() in src/content.config.ts`
-	);
+	printScaffoldGuidance(name, urlPrefix);
 }
 
 const isMain =

@@ -42,6 +42,13 @@ export const LINK_FIELD_ARGS = {
 	],
 };
 
+export const LINKS_FIELD_ARGS = {
+	name: 'links',
+	title: 'Links',
+	type: 'array',
+	of: [LINK_FIELD_ARGS],
+};
+
 /**
  * Reusable native Sanity image upload field with alt text.
  * Dimensions (width, height) and URL (src) are derived in the Astro content

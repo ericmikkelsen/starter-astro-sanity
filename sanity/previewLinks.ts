@@ -13,7 +13,7 @@ const DEFAULT_PREVIEW_SITE_URL = 'http://localhost:4321';
 
 const DOCUMENT_ROUTE_PREFIXES: Record<string, string> = {
 	page: '',
-	webContent: '/blog'
+	blog: '/blog'
 };
 
 /**
@@ -31,8 +31,13 @@ export const resolvePreviewSiteUrl = (
 		importMetaEnv?.[PREVIEW_SITE_URL_ENV_KEY] ??
 		processEnv?.[PREVIEW_SITE_URL_ENV_KEY] ??
 		DEFAULT_PREVIEW_SITE_URL;
+	const normalizedSiteUrl = rawSiteUrl.trim();
 
-	return rawSiteUrl.replace(/\/+$/, '');
+	if (!normalizedSiteUrl) {
+		return DEFAULT_PREVIEW_SITE_URL;
+	}
+
+	return normalizedSiteUrl.replace(/\/+$/, '');
 };
 
 const resolveDocumentSlug = (

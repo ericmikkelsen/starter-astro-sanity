@@ -339,6 +339,41 @@ export function generateWiringSnippets(name: string): string {
 	return `\nCopy/paste wiring snippets:\n\n[sanity/schemaTypes/index.ts]\n\`\`\`ts\nimport { ${name}Type } from './documents/${name}';\n\n// add inside schemaTypes array\n${name}Type,\n\`\`\`\n\n[src/content.config.ts]\n\`\`\`ts\nimport { create${pascal}CollectionLoader } from './lib/content/${name}CollectionLoader';\n\nconst ${name}Collection = defineCollection({\n\tloader: create${pascal}CollectionLoader()\n});\n\n// add to exported collections object\nexport const collections = { pages, people, ${name}Collection };\n\`\`\``;
 }
 
+/**
+ * Adds ANSI pink colors to wiring snippets for terminal readability.
+ * Comment lines are dark pink; non-empty code lines are light pink.
+ *
+ * @param snippets The plain text snippet string.
+ * @returns ANSI-colored snippet string for terminal output.
+ */
+export function formatWiringSnippetsForTerminal(snippets: string): string {
+	const DARK_PINK = '\x1b[35m';
+	const LIGHT_PINK = '\x1b[95m';
+	const RESET = '\x1b[0m';
+
+	const lines = snippets.split('\n');
+	let inCodeBlock = false;
+
+	return lines
+		.map((line) => {
+			if (line.startsWith('```')) {
+				inCodeBlock = !inCodeBlock;
+				return line;
+			}
+
+			if (!inCodeBlock || line.trim().length === 0) {
+				return line;
+			}
+
+			if (line.trimStart().startsWith('//')) {
+				return `${DARK_PINK}${line}${RESET}`;
+			}
+
+			return `${LIGHT_PINK}${line}${RESET}`;
+		})
+		.join('\n');
+}
+
 // ---------------------------------------------------------------------------
 // CLI entry point
 // ---------------------------------------------------------------------------
@@ -361,7 +396,7 @@ async function main(): Promise<void> {
 	console.log(
 		`→  Register: import { create${pascal}CollectionLoader } from './lib/content/${name}CollectionLoader'; and add to collections in src/content.config.ts`
 	);
-	console.log(generateWiringSnippets(name));
+	console.log(formatWiringSnippetsForTerminal(generateWiringSnippets(name)));
 }
 
 const isMain =

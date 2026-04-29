@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 
 import {
 	toPascalCase,
+	validateScaffoldInputs,
 	generateSanityBlockSchema,
 	generateBlockCollectionModule,
 	generateBlockCollectionLoader,
@@ -15,6 +16,26 @@ test('toPascalCase capitalizes the first letter', () => {
 	assert.equal(toPascalCase('campaign'), 'Campaign');
 	assert.equal(toPascalCase('landingPage'), 'LandingPage');
 	assert.equal(toPascalCase('a'), 'A');
+});
+
+// --- validateScaffoldInputs ---
+
+test('validateScaffoldInputs accepts valid name and urlPrefix', () => {
+	assert.doesNotThrow(() => {
+		validateScaffoldInputs('campaign', 'campaigns');
+	});
+});
+
+test('validateScaffoldInputs rejects invalid document type name', () => {
+	assert.throws(() => {
+		validateScaffoldInputs('../campaign', 'campaigns');
+	});
+});
+
+test('validateScaffoldInputs rejects invalid urlPrefix', () => {
+	assert.throws(() => {
+		validateScaffoldInputs('campaign', '../campaigns');
+	});
 });
 
 // --- generateSanityBlockSchema ---

@@ -64,7 +64,7 @@ export const IMAGE_FIELD_ARGS = {
  * Used in the rich text fields
  */
 const linkAnnotation = {
-	name: 'link',
+	name: 'portableTextLink',
 	title: 'Link',
 	type: 'object',
 	fields: [

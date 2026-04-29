@@ -1,13 +1,19 @@
 ---
 import type { AstroBlogPost } from '../../lib/content/blog';
-import { portableTextToHtml } from '../../lib/content/portableTextToHtml';
+import { PortableText } from 'astro-portabletext';
+import PortableTextLinkMark from '../portableText/PortableTextLinkMark.astro';
 
 interface Props {
 	post: AstroBlogPost;
 }
 
 const { post } = Astro.props as Props;
-const bodyHtml = portableTextToHtml(post.body);
+
+const components = {
+	mark: {
+		portableTextLink: PortableTextLinkMark,
+	},
+};
 ---
 
 <main class="mx-auto flex min-h-screen max-w-3xl flex-col gap-4 px-6 py-14">
@@ -23,5 +29,11 @@ const bodyHtml = portableTextToHtml(post.body);
 			) : null
 		}
 	</header>
-	<article class="prose prose-stone mt-4 max-w-none" set:html={bodyHtml} />
+	<article class="prose prose-stone mt-4 max-w-none">
+		<PortableText
+			value={post.body}
+			{components}
+			onMissingComponent={false}
+		/>
+	</article>
 </main>

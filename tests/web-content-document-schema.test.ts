@@ -29,6 +29,8 @@ test('registered blog schema composes scaffoldPortableTextDocument', () => {
 	);
 
 	assert.ok(blogSchema, 'blog schema should exist');
+	assert.ok('fields' in blogSchema, 'blog schema should expose fields');
+	assert.ok('preview' in blogSchema, 'blog schema should expose preview');
 	assert.equal(blogSchema.type, scaffoldPortableTextDocument.type);
 	assert.equal(blogSchema.fields, scaffoldPortableTextDocument.fields);
 	assert.equal(blogSchema.preview, scaffoldPortableTextDocument.preview);

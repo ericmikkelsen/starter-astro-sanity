@@ -1,21 +1,20 @@
 ---
-import '../styles/global.css';
+import '../../styles/global.css';
 import HTML from '../../layouts/html.astro';
+import BlogPostTemplate from '../../components/templates/BlogPostTemplate.astro';
+import { getAstroBlogPosts } from '../../lib/content/blog';
+
+export async function getStaticPaths() {
+	const posts = await getAstroBlogPosts();
+	return posts.map((post) => ({
+		params: { slug: post.slug },
+		props: { post, title: post.title, description: post.description },
+	}));
+}
+
+const { post, title = '', description = '' } = Astro.props;
 ---
 
-<HTML title={'Astro + Sanity Starter'} description="">
-	<header class="space-y-3">
-		<h1>
-			<!-- artilcle title goes here -->
-		</h1>
-		<time datetime={`${/* machine readable publish date*/ ''}`}>
-			// human formatted publish date
-		</time>
-		<p>
-			<!-- author name -->
-		</p>
-	</header>
-	<section>
-		<!-- portable text goes here -->
-	</section>
+<HTML title={title} description={description}>
+	<BlogPostTemplate post={post} />
 </HTML>

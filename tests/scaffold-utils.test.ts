@@ -1,7 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { toPascalCase, writeGeneratedFile } from '../scripts/scaffold-utils';
+import {
+	toPascalCase,
+	toStudioTitle,
+	validateScaffoldInputs,
+	printScaffoldGuidance,
+	writeGeneratedFile
+} from '../scripts/scaffold-utils';
 import { mkdirSync, rmSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -16,6 +22,101 @@ test('toPascalCase preserves subsequent characters unchanged', () => {
 	assert.equal(toPascalCase('landingPage'), 'LandingPage');
 	assert.equal(toPascalCase('a'), 'A');
 	assert.equal(toPascalCase('myContentType'), 'MyContentType');
+});
+
+// --- toStudioTitle ---
+
+test('toStudioTitle capitalizes a single lowercase word', () => {
+	assert.equal(toStudioTitle('article'), 'Article');
+});
+
+test('toStudioTitle converts camelCase to spaced title case', () => {
+	assert.equal(toStudioTitle('landingPage'), 'Landing Page');
+	assert.equal(toStudioTitle('myContentType'), 'My Content Type');
+});
+
+// --- validateScaffoldInputs ---
+
+test('validateScaffoldInputs accepts valid name and urlPrefix', () => {
+	assert.doesNotThrow(() => validateScaffoldInputs('article', 'articles'));
+	assert.doesNotThrow(() =>
+		validateScaffoldInputs('myContent', 'my-content')
+	);
+});
+
+test('validateScaffoldInputs rejects name that starts with uppercase', () => {
+	assert.throws(
+		() => validateScaffoldInputs('Article', 'articles'),
+		/Invalid document type name/
+	);
+});
+
+test('validateScaffoldInputs rejects name with spaces', () => {
+	assert.throws(
+		() => validateScaffoldInputs('my article', 'articles'),
+		/Invalid document type name/
+	);
+});
+
+test('validateScaffoldInputs rejects urlPrefix with uppercase', () => {
+	assert.throws(
+		() => validateScaffoldInputs('article', 'Articles'),
+		/Invalid URL prefix/
+	);
+});
+
+test('validateScaffoldInputs rejects urlPrefix with spaces', () => {
+	assert.throws(
+		() => validateScaffoldInputs('article', 'my articles'),
+		/Invalid URL prefix/
+	);
+});
+
+// --- printScaffoldGuidance ---
+
+test('printScaffoldGuidance outputs copy-pasteable import lines', () => {
+	const lines: string[] = [];
+	const originalLog = console.log;
+	console.log = (...args: unknown[]) => lines.push(args.join(' '));
+
+	try {
+		printScaffoldGuidance('article', 'articles');
+	} finally {
+		console.log = originalLog;
+	}
+
+	const output = lines.join('\n');
+	assert.ok(
+		output.includes('import { articleType }'),
+		'should include schema import'
+	);
+	assert.ok(
+		output.includes('import { createArticleCollectionLoader }'),
+		'should include loader import'
+	);
+	assert.ok(
+		output.includes('const article = defineCollection'),
+		'should include defineCollection call'
+	);
+});
+
+test('printScaffoldGuidance uses the correct document name and urlPrefix in file paths', () => {
+	const lines: string[] = [];
+	const originalLog = console.log;
+	console.log = (...args: unknown[]) => lines.push(args.join(' '));
+
+	try {
+		printScaffoldGuidance('post', 'blog');
+	} finally {
+		console.log = originalLog;
+	}
+
+	const output = lines.join('\n');
+	assert.ok(output.includes('post.ts'), 'should reference post schema file');
+	assert.ok(
+		output.includes('src/pages/blog/[slug].astro'),
+		'should reference blog route'
+	);
 });
 
 // --- writeGeneratedFile ---

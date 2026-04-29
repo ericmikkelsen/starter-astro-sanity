@@ -5,8 +5,9 @@ import type {
 	ArrayPageBuilderBlockByType,
 	BlockSettings
 } from '../../lib/content/pageBuilderTypes';
-import Image from '../atoms/Image.astro';
 import BlockWrapper from '../atoms/BlockWrapper.astro';
+import Heading from '../atoms/Heading.astro';
+import Image from '../atoms/Image.astro';
 
 /**
  * Billboard block content plus shared renderer settings.
@@ -24,17 +25,14 @@ const {
 	body = '',
 	as,
 	hLevel,
-	index,
 	priority,
 	link = { text: '', url: '' },
 	image
 } = Astro.props as Props;
-// Astro supports dynamic tag names in component variables for semantic wrappers.
-const Heading = 'h' + hLevel;
 ---
 
-<BlockWrapper as={as} class="">
-	<Heading>
+<BlockWrapper as={as}>
+	<Heading hLevel={hLevel}>
 		{heading}
 	</Heading>
 	{body.length ? <p>{body}</p> : null}

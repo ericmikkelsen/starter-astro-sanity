@@ -3,27 +3,23 @@ import '../styles/global.css';
 
 import BlocksPageTemplate from '../components/templates/BlocksPageTemplate.astro';
 import { getAstroPages } from '../lib/content/pages';
-
+import HTML from '../layouts/html.astro';
 export async function getStaticPaths() {
 	const pages = await getAstroPages();
 
 	return pages.map((page) => ({
 		params: { slug: page.slug },
-		props: { page },
+		props: {
+			page,
+			title: page.title,
+			description: page.description,
+		},
 	}));
 }
 
-const { page } = Astro.props;
+const { title = '', description = '', page } = Astro.props;
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<title>{page.title}</title>
-	</head>
-	<body class="bg-stone-50 text-stone-900">
-		<BlocksPageTemplate page={page} />
-	</body>
-</html>
+<HTML title={title} description={description}>
+	<BlocksPageTemplate page={page} />
+</HTML>

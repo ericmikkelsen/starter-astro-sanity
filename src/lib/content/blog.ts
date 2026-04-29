@@ -4,7 +4,11 @@ import {
 	SANITY_IMAGE_ASSET_REF_FIELDS,
 } from './groqProjections';
 import { loadQuery } from './preview';
-import type { SanityPortableTextBlock } from './portableTextToHtml';
+
+export type SanityPortableTextBlock = {
+	_type: string;
+	[key: string]: unknown;
+};
 
 const BLOG_QUERY = `*[_type == "blog" && defined(slug.current)]{
   _id,

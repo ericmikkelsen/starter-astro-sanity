@@ -9,6 +9,30 @@ import {
 
 export { toPascalCase };
 
+const NAME_RE = /^[a-z][a-zA-Z0-9]*$/;
+const URL_PREFIX_RE = /^[a-z0-9-]+$/;
+
+/**
+ * Validates scaffold CLI inputs before generating files.
+ *
+ * @param name       Sanity document type name.
+ * @param urlPrefix  URL segment prefix for routes.
+ * @throws Error when either value is invalid.
+ */
+export function validateScaffoldInputs(name: string, urlPrefix: string): void {
+	if (!NAME_RE.test(name)) {
+		throw new Error(
+			'Invalid document type name. Use /^[a-z][a-zA-Z0-9]*$/ (example: campaign).'
+		);
+	}
+
+	if (!URL_PREFIX_RE.test(urlPrefix)) {
+		throw new Error(
+			'Invalid URL prefix. Use /^[a-z0-9-]+$/ (example: campaigns).'
+		);
+	}
+}
+
 // ---------------------------------------------------------------------------
 // Template functions — pure string generators, no I/O, fully testable
 // ---------------------------------------------------------------------------
@@ -338,6 +362,8 @@ async function main(): Promise<void> {
 	const urlPrefix = await prompter.ask('URL prefix (e.g. campaigns): ');
 	prompter.close();
 
+	validateScaffoldInputs(name, urlPrefix);
+
 	const title = toPascalCase(name);
 	writeScaffoldFiles(name, title, urlPrefix);
 
@@ -349,7 +375,7 @@ async function main(): Promise<void> {
 	console.log(`→  Route: src/pages/${urlPrefix}/[slug].astro`);
 	console.log(`\nNext: Register ${name}Type in sanity/schemaTypes/index.ts`);
 	console.log(
-		`      Register ${pascal}CollectionLoader in src/content.config.ts`
+		`      Register create${pascal}CollectionLoader() in src/content.config.ts`
 	);
 }
 
@@ -358,5 +384,8 @@ const isMain =
 	process.argv[1] === fileURLToPath(import.meta.url);
 
 if (isMain) {
-	main().catch(console.error);
+	main().catch((error) => {
+		console.error(error);
+		process.exitCode = 1;
+	});
 }

@@ -33,23 +33,15 @@ test('writeGeneratedFile writes content to disk', () => {
 });
 
 test('writeGeneratedFile creates missing parent directories', () => {
-	const dir = join(
-		tmpdir(),
-		`scaffold-utils-test-${Date.now()}`,
-		'nested',
-		'deep'
-	);
+	const rootDir = join(tmpdir(), `scaffold-utils-test-${Date.now()}`);
+	const dir = join(rootDir, 'nested', 'deep');
 	const filePath = join(dir, 'output.ts');
 
 	try {
 		writeGeneratedFile(filePath, 'const y = 2;\n');
 		assert.ok(existsSync(filePath), 'file should exist after write');
 	} finally {
-		rmSync(join(tmpdir(), `scaffold-utils-test-${Date.now() - 1}`), {
-			recursive: true,
-			force: true
-		});
-		rmSync(dir, { recursive: true, force: true });
+		rmSync(rootDir, { recursive: true, force: true });
 	}
 });
 

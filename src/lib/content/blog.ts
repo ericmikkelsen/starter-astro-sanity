@@ -1,14 +1,10 @@
 import type { WebDocumentCore } from './shared';
+import type { TypedObject } from 'astro-portabletext/types';
 import {
 	projectObjectFields,
 	SANITY_IMAGE_ASSET_REF_FIELDS,
 } from './groqProjections';
 import { loadQuery } from './preview';
-
-export type SanityPortableTextBlock = {
-	_type: string;
-	[key: string]: unknown;
-};
 
 const BLOG_QUERY = `*[_type == "blog" && defined(slug.current)]{
   _id,
@@ -31,13 +27,13 @@ type SanityBlogQueryResult = {
 		};
 	};
 	metaImageAlt?: string;
-	richText?: SanityPortableTextBlock[];
+	richText?: TypedObject[];
 };
 
 export type AstroBlogPost = WebDocumentCore & {
 	id: string;
 	path: string;
-	body: SanityPortableTextBlock[];
+	body: TypedObject[];
 };
 
 /**

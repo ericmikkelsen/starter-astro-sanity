@@ -30,10 +30,6 @@ const components = {
 		}
 	</header>
 	<article class="prose prose-stone mt-4 max-w-none">
-		<PortableText
-			value={post.body}
-			{components}
-			onMissingComponent={false}
-		/>
+		<PortableText value={post.body} {components} />
 	</article>
 </main>

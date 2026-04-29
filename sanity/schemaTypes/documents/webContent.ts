@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
+import { RICH_TEXT_FIELD_ARGS } from '../objects/componentFields';
 
 import { WEB_PAGE_FIELDS } from '../webPageFields';
 
@@ -15,25 +16,8 @@ export const scaffoldPortableTextDocument = {
 	fields: [
 		...Object.values(WEB_PAGE_FIELDS),
 		defineField({
-			name: 'body',
+			...RICH_TEXT_FIELD_ARGS,
 			title: 'Body',
-			type: 'array',
-			of: [
-				defineArrayMember({
-					type: 'block',
-					styles: [
-						{ title: 'Normal', value: 'normal' },
-						{ title: 'H2', value: 'h2' },
-						{ title: 'H3', value: 'h3' },
-						{ title: 'H4', value: 'h4' },
-						{ title: 'Quote', value: 'blockquote' },
-					],
-					marks: {
-						annotations: [linkAnnotation],
-					},
-				}),
-			],
-			validation: (rule) => rule.required().min(1),
 		}),
 	],
 	preview: {

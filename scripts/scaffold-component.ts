@@ -39,6 +39,9 @@ export const DEFAULT_COMPONENT_FIELDS: ComponentFieldKey[] = [
 
 export { toPascalCase };
 
+/**
+ * Validate the component schema/object name entered in the prompt flow.
+ */
 export function validateComponentName(name: string): void {
 	if (!NAME_RE.test(name)) {
 		throw new Error(
@@ -47,6 +50,9 @@ export function validateComponentName(name: string): void {
 	}
 }
 
+/**
+ * Validate that the selected component category maps to a known output folder.
+ */
 export function validateComponentCategory(
 	category: string
 ): asserts category is ComponentCategory {
@@ -57,6 +63,9 @@ export function validateComponentCategory(
 	}
 }
 
+/**
+ * Validate selected field keys from the yes/no field prompt sequence.
+ */
 export function validateComponentFields(
 	fields: string[]
 ): asserts fields is ComponentFieldKey[] {
@@ -73,6 +82,9 @@ export function validateComponentFields(
 	}
 }
 
+/**
+ * Validate body rendering mode for the optional body field.
+ */
 export function validateComponentBodyType(
 	bodyType: string
 ): asserts bodyType is ComponentBodyType {
@@ -81,6 +93,9 @@ export function validateComponentBodyType(
 	}
 }
 
+/**
+ * Build a Sanity object schema module string based on selected component fields.
+ */
 export function generateSanityComponentSchema(
 	name: string,
 	title: string,
@@ -91,6 +106,8 @@ export function generateSanityComponentSchema(
 	const includesBody = selected.has('body');
 	const fieldArgImports: string[] = [];
 	const generatedFields: string[] = [];
+	let usesDefineField = false;
+	let usesDefineArrayMember = false;
 
 	if (selected.has('heading')) {
 		fieldArgImports.push('HEADING_FIELD_ARGS');
@@ -98,6 +115,7 @@ export function generateSanityComponentSchema(
 	}
 
 	if (selected.has('subheading')) {
+		usesDefineField = true;
 		generatedFields.push(`defineField({
 			name: 'subheading',
 			title: 'Subheading',
@@ -112,7 +130,12 @@ export function generateSanityComponentSchema(
 
 	if (includesBody && bodyType === 'portable') {
 		fieldArgImports.push('RICH_TEXT_FIELD_ARGS');
-		generatedFields.push('RICH_TEXT_FIELD_ARGS');
+		usesDefineField = true;
+		generatedFields.push(`defineField({
+			...RICH_TEXT_FIELD_ARGS,
+			name: 'body',
+			title: 'Body'
+		})`);
 	}
 
 	if (selected.has('link')) {
@@ -131,6 +154,15 @@ export function generateSanityComponentSchema(
 	}
 
 	if (selected.has('cards')) {
+		// Keep generated cards self-contained so scaffold output can be used immediately.
+		usesDefineField = true;
+		usesDefineArrayMember = true;
+		fieldArgImports.push(
+			'HEADING_FIELD_ARGS',
+			'BODY_FIELD_ARGS',
+			'LINK_FIELD_ARGS',
+			'IMAGE_FIELD_ARGS'
+		);
 		generatedFields.push(`defineField({
 			name: 'cards',
 			title: 'Cards',
@@ -139,65 +171,36 @@ export function generateSanityComponentSchema(
 				defineArrayMember({
 					type: 'object',
 					fields: [
-						defineField({
-							name: 'heading',
-							title: 'Heading',
-							type: 'string'
-						}),
-						defineField({
-							name: 'body',
-							title: 'Body',
-							type: 'string'
-						}),
-						defineField({
-							name: 'link',
-							title: 'Link',
-							type: 'object',
-							fields: [
-								defineField({
-									name: 'text',
-									title: 'Text',
-									type: 'string'
-								}),
-								defineField({
-									name: 'url',
-									title: 'URL',
-									type: 'url'
-								})
-							]
-						}),
-						defineField({
-							name: 'image',
-							title: 'Image',
-							type: 'image',
-							options: { hotspot: true },
-							fields: [
-								defineField({
-									name: 'alt',
-									title: 'Alt Text',
-									type: 'string'
-								})
-							]
-						})
+						HEADING_FIELD_ARGS,
+						BODY_FIELD_ARGS,
+						LINK_FIELD_ARGS,
+						IMAGE_FIELD_ARGS
 					]
 				})
 			]
 		})`);
 	}
 
+	const uniqueFieldArgImports = [...new Set(fieldArgImports)];
+
+	const sanityImports = ['defineType'];
+	if (usesDefineField) sanityImports.push('defineField');
+	if (usesDefineArrayMember) sanityImports.push('defineArrayMember');
+
 	const importLines = [
-		"import { defineArrayMember, defineField, defineType } from 'sanity';"
+		`import { ${sanityImports.join(', ')} } from 'sanity';`
 	];
 
-	if (fieldArgImports.length === 1) {
+	if (uniqueFieldArgImports.length === 1) {
 		importLines.push(
-			`import { ${fieldArgImports[0]} } from './componentFields';`
+			`import { ${uniqueFieldArgImports[0]} } from './componentFields';`
 		);
 	}
 
-	if (fieldArgImports.length > 1) {
+	if (uniqueFieldArgImports.length > 1) {
+		// Multi-line import keeps generated output stable under prettier and readable in diffs.
 		importLines.push(`import {
-	${fieldArgImports.join(',\n\t')}
+	${uniqueFieldArgImports.join(',\n\t')}
 } from './componentFields';`);
 	}
 
@@ -219,6 +222,9 @@ export const ${name}Type = defineType({
 `;
 }
 
+/**
+ * Build generated Astro component Props interface from selected scaffold fields.
+ */
 function buildPropsInterface(
 	fields: ComponentFieldKey[],
 	bodyType: ComponentBodyType
@@ -239,7 +245,7 @@ function buildPropsInterface(
 		}
 	}
 	if (selected.has('link')) lines.push('link?: Link;');
-	if (selected.has('image')) lines.push('image?: Image;');
+	if (selected.has('image')) lines.push('image?: ImageType;');
 	if (selected.has('links')) lines.push('links?: Link[];');
 	if (selected.has('cards')) lines.push('cards?: Card[];');
 	if (lines.length === 0) lines.push('noop?: boolean;');
@@ -247,6 +253,9 @@ function buildPropsInterface(
 	return `interface Props {\n\t${lines.join('\n\t')}\n}`;
 }
 
+/**
+ * Build optional card type used only when cards are selected.
+ */
 function buildCardType(hasCards: boolean): string {
 	if (!hasCards) return '';
 
@@ -255,11 +264,14 @@ interface Card {
 	heading?: string;
 	body?: string;
 	link?: Link;
-	image?: Image;
+	image?: ImageType;
 }
 `;
 }
 
+/**
+ * Resolve Heading import path relative to the generated component directory.
+ */
 function buildHeadingImport(category: ComponentCategory): string {
 	if (category === 'atoms') {
 		return "import Heading from './Heading.astro';";
@@ -268,6 +280,17 @@ function buildHeadingImport(category: ComponentCategory): string {
 	return "import Heading from '../atoms/Heading.astro';";
 }
 
+function buildImageImport(category: ComponentCategory): string {
+	if (category === 'atoms') {
+		return "import Image from './Image.astro';";
+	}
+
+	return "import Image from '../atoms/Image.astro';";
+}
+
+/**
+ * Build an Astro component module string based on selected fields/body mode/category.
+ */
 export function generateAstroComponent(
 	name: string,
 	fields: ComponentFieldKey[],
@@ -284,14 +307,20 @@ export function generateAstroComponent(
 	if (selected.has('body') && bodyType === 'portable') {
 		imports.push("import { PortableText } from 'astro-portabletext';");
 	}
+	// Only emit imports for selected capabilities to keep generated files minimal.
 	if (selected.has('heading')) {
 		imports.push(buildHeadingImport(category));
+	}
+	if (needsImage) {
+		imports.push(buildImageImport(category));
 	}
 	if (isBlockComponent) {
 		imports.push("import BlockWrapper from '../atoms/BlockWrapper.astro';");
 	}
 	if (needsLink) imports.push("import type Link from '../../types/link';");
-	if (needsImage) imports.push("import type Image from '../../types/image';");
+	if (needsImage) {
+		imports.push("import type ImageType from '../../types/image';");
+	}
 
 	const destructure = [
 		selected.has('heading') ? 'heading' : null,
@@ -323,16 +352,7 @@ export function generateAstroComponent(
 		sectionLines.push('{body ? <p>{body}</p> : null}');
 	}
 	if (selected.has('image')) {
-		sectionLines.push(`{
-		image ? (
-			<img
-				src={image.src}
-				alt={image.alt ?? ''}
-				width={image.width}
-				height={image.height}
-			/>
-		) : null
-	}`);
+		sectionLines.push('{image ? <Image {...image} /> : null}');
 	}
 	if (selected.has('link')) {
 		sectionLines.push('{link ? <a href={link.url}>{link.text}</a> : null}');
@@ -361,14 +381,7 @@ export function generateAstroComponent(
 						{card.link ? (
 							<a href={card.link.url}>{card.link.text}</a>
 						) : null}
-						{card.image ? (
-							<img
-								src={card.image.src}
-								alt={card.image.alt ?? ''}
-								width={card.image.width}
-								height={card.image.height}
-							/>
-						) : null}
+						{card.image ? <Image {...card.image} /> : null}
 					</article>
 				))}
 			</div>
@@ -379,6 +392,7 @@ export function generateAstroComponent(
 	const sectionContent = sectionLines.join('\n\t');
 	const pascal = toPascalCase(name);
 	const cardType = buildCardType(hasCards).trim();
+	// Blocks keep renderer-controlled semantics via BlockWrapper; others use simple div wrappers.
 	const wrapperOpen = isBlockComponent
 		? `<BlockWrapper class="${pascal}">`
 		: `<div class="${pascal}">`;
@@ -413,6 +427,9 @@ ${wrapperClose}
 `;
 }
 
+/**
+ * Write generated schema and Astro component files to their canonical locations.
+ */
 export function writeScaffoldComponentFiles(
 	name: string,
 	title: string,
@@ -434,6 +451,9 @@ export function writeScaffoldComponentFiles(
 	);
 }
 
+/**
+ * Print one-line registration guidance for wiring generated schema exports.
+ */
 export function printComponentScaffoldGuidance(
 	name: string,
 	category: ComponentCategory
@@ -444,6 +464,9 @@ export function printComponentScaffoldGuidance(
 	);
 }
 
+/**
+ * Ask include/exclude prompts for each supported scaffold field key.
+ */
 async function promptForFields(
 	session: ReturnType<typeof createPromptSession>
 ): Promise<ComponentFieldKey[]> {
@@ -460,6 +483,9 @@ async function promptForFields(
 	return selected;
 }
 
+/**
+ * Interactive CLI entrypoint that validates prompt input and writes generated files.
+ */
 async function main(): Promise<void> {
 	const session = createPromptSession();
 

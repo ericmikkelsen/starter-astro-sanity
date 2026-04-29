@@ -33,4 +33,4 @@ The command prints the exact import snippet to register the generated schema in:
 
 - `sanity/schemaTypes/index.ts`
 
-Copy the printed import line and add `<name>Type` to the exported `types` array.
+Copy the printed import line and add `<name>Type` to the exported `schemaTypes` array.

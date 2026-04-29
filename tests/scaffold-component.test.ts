@@ -14,6 +14,7 @@ import {
 	printComponentScaffoldGuidance
 } from '../scripts/scaffold-component';
 
+// Input validation contracts keep the interactive prompt flow predictable.
 test('toPascalCase capitalizes the first letter', () => {
 	assert.equal(toPascalCase('featureCard'), 'FeatureCard');
 	assert.equal(toPascalCase('a'), 'A');
@@ -84,6 +85,9 @@ test('generateSanityComponentSchema includes selected fields and omits unselecte
 	assert.ok(src.includes("type: 'object'"));
 	assert.ok(src.includes('HEADING_FIELD_ARGS'));
 	assert.ok(src.includes('RICH_TEXT_FIELD_ARGS'));
+	assert.ok(src.includes("name: 'body'"));
+	assert.ok(src.includes("title: 'Body'"));
+	assert.ok(!src.includes("name: 'richText'"));
 	assert.ok(src.includes('LINKS_FIELD_ARGS'));
 	assert.ok(!src.includes("name: 'subheading'"));
 	assert.ok(!src.includes('LINK_FIELD_ARGS'));
@@ -98,8 +102,27 @@ test('generateSanityComponentSchema emits string body when requested', () => {
 	);
 	assert.ok(src.includes('BODY_FIELD_ARGS'));
 	assert.ok(!src.includes('RICH_TEXT_FIELD_ARGS'));
+	assert.ok(src.includes("import { defineType } from 'sanity';"));
+	assert.ok(!src.includes('defineField'));
+	assert.ok(!src.includes('defineArrayMember'));
 });
 
+test('generateSanityComponentSchema composes cards from shared field args', () => {
+	const src = generateSanityComponentSchema(
+		'featureCard',
+		'Feature Card',
+		['cards'],
+		'string'
+	);
+	assert.ok(src.includes('HEADING_FIELD_ARGS'));
+	assert.ok(src.includes('BODY_FIELD_ARGS'));
+	assert.ok(src.includes('LINK_FIELD_ARGS'));
+	assert.ok(src.includes('IMAGE_FIELD_ARGS'));
+	assert.ok(src.includes('fields: ['));
+	assert.ok(!src.includes("name: 'url'"));
+});
+
+// Generated Astro modules should include only requested capabilities/imports.
 test('generateAstroComponent includes portable text renderer for portable body', () => {
 	const src = generateAstroComponent(
 		'featureCard',
@@ -131,7 +154,10 @@ test('generateAstroComponent includes string body prop for string body', () => {
 	assert.ok(
 		!src.includes("import { PortableText } from 'astro-portabletext'")
 	);
-	assert.ok(src.includes("import type Image from '../../types/image'"));
+	assert.ok(src.includes("import Image from './Image.astro'"));
+	assert.ok(src.includes("import type ImageType from '../../types/image'"));
+	assert.ok(src.includes('{image ? <Image {...image} /> : null}'));
+	assert.ok(!src.includes('<img'));
 });
 
 test('generateAstroComponent includes cards and links prop shapes when selected', () => {
@@ -144,16 +170,18 @@ test('generateAstroComponent includes cards and links prop shapes when selected'
 	assert.ok(src.includes('cards?: Card[]'));
 	assert.ok(src.includes('cards.map((card) =>'));
 	assert.ok(src.includes('links.map((item) =>'));
+	assert.ok(src.includes('{card.image ? <Image {...card.image} /> : null}'));
 });
 
 test('generateAstroComponent uses BlockWrapper for block category components', () => {
 	const src = generateAstroComponent(
 		'featureCard',
-		['heading', 'body'],
+		['heading', 'body', 'image'],
 		'string',
 		'blocks'
 	);
 	assert.ok(src.includes("import Heading from '../atoms/Heading.astro'"));
+	assert.ok(src.includes("import Image from '../atoms/Image.astro'"));
 	assert.ok(
 		src.includes("import BlockWrapper from '../atoms/BlockWrapper.astro'")
 	);

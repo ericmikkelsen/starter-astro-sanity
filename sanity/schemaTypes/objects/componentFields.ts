@@ -1,19 +1,5 @@
 import { defineArrayMember, defineField } from 'sanity';
 
-const linkAnnotation = {
-	name: 'link',
-	title: 'Link',
-	type: 'object',
-	fields: [
-		defineField({
-			name: 'href',
-			title: 'URL',
-			type: 'url',
-			validation: (rule) => rule.required(),
-		}),
-	],
-};
-
 /**
  * Reusable heading string field.
  */
@@ -74,7 +60,22 @@ export const IMAGE_FIELD_ARGS = {
 		}),
 	],
 };
-
+/**
+ * Used in the rich text fields
+ */
+const linkAnnotation = {
+	name: 'portableTextLink',
+	title: 'Link',
+	type: 'object',
+	fields: [
+		defineField({
+			name: 'href',
+			title: 'URL',
+			type: 'url',
+			validation: (rule) => rule.required(),
+		}),
+	],
+};
 /**
  * Reusable rich text field that excludes `h1` but keeps standard formatting controls.
  */
@@ -90,6 +91,8 @@ export const RICH_TEXT_FIELD_ARGS = {
 				{ title: 'H2', value: 'h2' },
 				{ title: 'H3', value: 'h3' },
 				{ title: 'H4', value: 'h4' },
+				{ title: 'H5', value: 'h5' },
+				{ title: 'H6', value: 'h6' },
 				{ title: 'Quote', value: 'blockquote' },
 			],
 			marks: {

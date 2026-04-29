@@ -1,6 +1,7 @@
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
 
+import { resolveDocumentProductionUrl } from './sanity/previewLinks';
 import { schemaTypes } from './sanity/schemaTypes';
 
 declare const __SANITY_STUDIO_PROJECT_ID__: string;
@@ -40,7 +41,7 @@ export const resolveStudioEnvValue = (
 		PUBLIC_SANITY_DATASET:
 			typeof __SANITY_STUDIO_DATASET__ === 'undefined'
 				? undefined
-				: __SANITY_STUDIO_DATASET__,
+				: __SANITY_STUDIO_DATASET__
 	};
 	if (typeof defineValues[key] === 'string' && defineValues[key]) {
 		return defineValues[key];
@@ -78,8 +79,12 @@ export default defineConfig({
 	projectId,
 	dataset,
 	plugins: [structureTool()],
+	document: {
+		productionUrl: async (previousUrl, context) =>
+			previousUrl ?? resolveDocumentProductionUrl(context.document)
+	},
 	schema: {
 		// Central registry keeps schema composition predictable as new types are added.
-		types: schemaTypes,
-	},
+		types: schemaTypes
+	}
 });

@@ -33,9 +33,12 @@ cp .env.example .env
 PUBLIC_SANITY_PROJECT_ID=your_project_id
 PUBLIC_SANITY_DATASET=production
 PUBLIC_SANITY_API_VERSION=2026-01-01
+PUBLIC_SITE_URL=http://localhost:4321
 SANITY_API_READ_TOKEN=your_read_token_for_preview
 SANITY_PREVIEW_SECRET=your_preview_secret
 ```
+
+`PUBLIC_SITE_URL` is optional in local development, but setting it keeps Studio preview links aligned with the public site URL you expect editors to open.
 
 4. Start development.
 

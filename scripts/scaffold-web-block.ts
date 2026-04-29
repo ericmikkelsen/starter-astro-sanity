@@ -328,6 +328,17 @@ export function writeScaffoldFiles(
 	);
 }
 
+/**
+ * Generates copy/paste-ready wiring snippets for manual registration steps.
+ *
+ * @param name Sanity document type name (e.g. 'campaign').
+ * @returns Multi-line console string with snippets for schema and collections wiring.
+ */
+export function generateWiringSnippets(name: string): string {
+	const pascal = toPascalCase(name);
+	return `\nCopy/paste wiring snippets:\n\n[sanity/schemaTypes/index.ts]\n\`\`\`ts\nimport { ${name}Type } from './documents/${name}';\n\n// add inside schemaTypes array\n${name}Type,\n\`\`\`\n\n[src/content.config.ts]\n\`\`\`ts\nimport { create${pascal}CollectionLoader } from './lib/content/${name}CollectionLoader';\n\nconst ${name}Collection = defineCollection({\n\tloader: create${pascal}CollectionLoader()\n});\n\n// add to exported collections object\nexport const collections = { pages, people, ${name}Collection };\n\`\`\``;
+}
+
 // ---------------------------------------------------------------------------
 // CLI entry point
 // ---------------------------------------------------------------------------
@@ -343,12 +354,14 @@ async function main(): Promise<void> {
 
 	const pascal = toPascalCase(name);
 	console.log(`\n✔  Generated 4 files for "${name}".`);
+	console.log(`→  Route file: src/pages/${urlPrefix}/[slug].astro`);
 	console.log(
 		`→  Register: import { ${name}Type } from './documents/${name}'; and add ${name}Type to schemaTypes[] in sanity/schemaTypes/index.ts`
 	);
 	console.log(
 		`→  Register: import { create${pascal}CollectionLoader } from './lib/content/${name}CollectionLoader'; and add to collections in src/content.config.ts`
 	);
+	console.log(generateWiringSnippets(name));
 }
 
 const isMain =

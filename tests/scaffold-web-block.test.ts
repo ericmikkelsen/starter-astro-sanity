@@ -6,7 +6,8 @@ import {
 	generateSanityBlockSchema,
 	generateBlockCollectionModule,
 	generateBlockCollectionLoader,
-	generateBlockPageRoute
+	generateBlockPageRoute,
+	generateWiringSnippets
 } from '../scripts/scaffold-web-block';
 
 // --- toPascalCase ---
@@ -181,4 +182,32 @@ test('generateBlockPageRoute uses a static path route file shape', () => {
 	assert.ok(src.includes('export async function getStaticPaths()'));
 	assert.ok(src.includes("getCollection('campaign')"));
 	assert.ok(src.includes('<HTML title={title} description={description}>'));
+});
+
+// --- generateWiringSnippets ---
+
+test('generateWiringSnippets includes schema import and array registration lines', () => {
+	const src = generateWiringSnippets('campaign');
+	assert.ok(src.includes('[sanity/schemaTypes/index.ts]'));
+	assert.ok(
+		src.includes("import { campaignType } from './documents/campaign';")
+	);
+	assert.ok(src.includes('campaignType,'));
+});
+
+test('generateWiringSnippets includes content collection loader wiring lines', () => {
+	const src = generateWiringSnippets('campaign');
+	assert.ok(src.includes('[src/content.config.ts]'));
+	assert.ok(
+		src.includes(
+			"import { createCampaignCollectionLoader } from './lib/content/campaignCollectionLoader';"
+		)
+	);
+	assert.ok(src.includes('const campaignCollection = defineCollection({'));
+	assert.ok(src.includes('loader: createCampaignCollectionLoader()'));
+	assert.ok(
+		src.includes(
+			'export const collections = { pages, people, campaignCollection };'
+		)
+	);
 });

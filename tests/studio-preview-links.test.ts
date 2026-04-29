@@ -28,6 +28,18 @@ test('resolvePreviewSiteUrl trims trailing slashes from configured site url', ()
 	);
 });
 
+test('resolvePreviewSiteUrl falls back when configured site url is blank', () => {
+	assert.equal(
+		resolvePreviewSiteUrl({
+			importMetaEnv: {
+				PUBLIC_SITE_URL: '   '
+			},
+			processEnv: {}
+		}),
+		'http://localhost:4321'
+	);
+});
+
 test('resolveDocumentProductionUrl maps page documents to top-level routes', () => {
 	assert.equal(
 		resolveDocumentProductionUrl(
@@ -44,11 +56,11 @@ test('resolveDocumentProductionUrl maps page documents to top-level routes', () 
 	);
 });
 
-test('resolveDocumentProductionUrl maps webContent documents to blog routes', () => {
+test('resolveDocumentProductionUrl maps blog documents to blog routes', () => {
 	assert.equal(
 		resolveDocumentProductionUrl(
 			{
-				_type: 'webContent',
+				_type: 'blog',
 				slug: { current: 'hello-world' }
 			},
 			{

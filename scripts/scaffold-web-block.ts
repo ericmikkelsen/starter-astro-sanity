@@ -223,53 +223,73 @@ export function create${pascal}CollectionLoader(): Loader {
 }
 
 /**
- * Generates the Astro block-page template component for a document type.
+ * Generates a slug route page for a scaffolded block content type.
  *
  * @param name       Sanity document type name (e.g. 'campaign').
  * @param title      PascalCase display name (e.g. 'Campaign').
- * @param urlPrefix  URL path prefix used in the back-link (e.g. 'campaigns').
- * @returns Astro component source for the template file.
+ * @param urlPrefix  URL path prefix used in the generated route directory.
+ * @returns Astro route source for src/pages/<urlPrefix>/[slug].astro.
  */
-export function generateBlockTemplate(
+export function generateBlockPageRoute(
 	name: string,
 	title: string,
 	urlPrefix: string
 ): string {
 	const pascal = toPascalCase(name);
 	return `---
-import Blocks from '../blocks/_blocks.astro';
+import '../../styles/global.css';
+
+import { getCollection } from 'astro:content';
+import Blocks from '../../components/blocks/_blocks.astro';
+import HTML from '../../layouts/html.astro';
 import type { ${pascal}CollectionEntryData } from '../../lib/content/${name}Collection';
 
 interface Props {
 \tentry: ${pascal}CollectionEntryData;
+	title?: string;
+	description?: string;
 }
 
-const { entry } = Astro.props as Props;
+export async function getStaticPaths() {
+	const entries = await getCollection('${name}');
+	return entries.map((entry) => ({
+		params: { slug: entry.data.slug },
+		props: {
+			entry: entry.data,
+			title: entry.data.title,
+			description: entry.data.description
+		}
+	}));
+}
+
+const { entry, title = '', description = '' } = Astro.props as Props;
 const hasBlocks = Boolean(entry.blocks?.length);
 ---
 
-<div class="mx-auto flex min-h-screen max-w-3xl flex-col gap-4 px-6 py-14">
-\t<a
-\t\tclass="text-sm font-semibold tracking-[0.14em] text-emerald-700 uppercase"
-\t\thref="/${urlPrefix}">Back to ${urlPrefix}</a
-\t>
-\t<h1 class="text-4xl leading-tight font-bold">{entry.title}</h1>
-\t{
-\t\tentry.description ? (
-\t\t\t<p class="text-lg text-stone-700">{entry.description}</p>
-\t\t) : null
-\t}
-\t<div class="mt-4 grid gap-5">
-\t\t<Blocks blockData={entry.blocks} />
-\t\t{
-\t\t\thasBlocks ? null : (
-\t\t\t\t<p class="text-sm text-stone-600">
-\t\t\t\t\tNo blocks configured for this ${title} yet.
-\t\t\t\t</p>
-\t\t\t)
-\t\t}
-\t</div>
-</div>
+<HTML title={title} description={description}>
+	<div class="mx-auto flex min-h-screen max-w-3xl flex-col gap-4 px-6 py-14">
+		<a
+			class="text-sm font-semibold tracking-[0.14em] text-emerald-700 uppercase"
+			href="/${urlPrefix}">Back to ${urlPrefix}</a
+		>
+		<h1 class="text-4xl leading-tight font-bold">{entry.title}</h1>
+		{
+			entry.description ? (
+				<p class="text-lg text-stone-700">{entry.description}</p>
+			) : null
+		}
+		<div class="mt-4 grid gap-5">
+			<Blocks blockData={entry.blocks} />
+			{
+				hasBlocks ? null : (
+					<p class="text-sm text-stone-600">
+						No blocks configured for this ${title} yet.
+					</p>
+				)
+			}
+		</div>
+	</div>
+</HTML>
 `;
 }
 
@@ -290,8 +310,6 @@ export function writeScaffoldFiles(
 	title: string,
 	urlPrefix: string
 ): void {
-	const pascal = toPascalCase(name);
-
 	writeGeneratedFile(
 		resolve(`sanity/schemaTypes/documents/${name}.ts`),
 		generateSanityBlockSchema(name, title)
@@ -305,8 +323,8 @@ export function writeScaffoldFiles(
 		generateBlockCollectionLoader(name)
 	);
 	writeGeneratedFile(
-		resolve(`src/components/templates/${pascal}Template.astro`),
-		generateBlockTemplate(name, title, urlPrefix)
+		resolve(`src/pages/${urlPrefix}/[slug].astro`),
+		generateBlockPageRoute(name, title, urlPrefix)
 	);
 }
 

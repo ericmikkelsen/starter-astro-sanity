@@ -6,7 +6,7 @@ import {
 	generateSanityBlockSchema,
 	generateBlockCollectionModule,
 	generateBlockCollectionLoader,
-	generateBlockTemplate
+	generateBlockPageRoute
 } from '../scripts/scaffold-web-block';
 
 // --- toPascalCase ---
@@ -137,20 +137,20 @@ test('generateBlockCollectionLoader names the loader with the document name', ()
 	);
 });
 
-// --- generateBlockTemplate ---
+// --- generateBlockPageRoute ---
 
-test('generateBlockTemplate imports Blocks component', () => {
-	const src = generateBlockTemplate('campaign', 'Campaign', 'campaign');
+test('generateBlockPageRoute imports Blocks component', () => {
+	const src = generateBlockPageRoute('campaign', 'Campaign', 'campaign');
 	assert.ok(
-		src.includes("from '../blocks/_blocks.astro'"),
+		src.includes("from '../../components/blocks/_blocks.astro'"),
 		'should import Blocks component'
 	);
 });
 
-test('generateBlockTemplate imports the generated entry type', () => {
-	const src = generateBlockTemplate('campaign', 'Campaign', 'campaign');
+test('generateBlockPageRoute imports the generated entry type', () => {
+	const src = generateBlockPageRoute('campaign', 'Campaign', 'campaign');
 	assert.ok(
-		src.includes('CampaignCollectionEntry'),
+		src.includes('CampaignCollectionEntryData'),
 		'should reference the collection entry type'
 	);
 	assert.ok(
@@ -159,19 +159,26 @@ test('generateBlockTemplate imports the generated entry type', () => {
 	);
 });
 
-test('generateBlockTemplate includes a back-link using the urlPrefix', () => {
-	const src = generateBlockTemplate('campaign', 'Campaign', 'events');
+test('generateBlockPageRoute includes a back-link using the urlPrefix', () => {
+	const src = generateBlockPageRoute('campaign', 'Campaign', 'events');
 	assert.ok(
 		src.includes('href="/events"'),
 		'back-link should use the url prefix'
 	);
 });
 
-test('generateBlockTemplate renders entry title and description', () => {
-	const src = generateBlockTemplate('campaign', 'Campaign', 'campaign');
+test('generateBlockPageRoute renders entry title and description', () => {
+	const src = generateBlockPageRoute('campaign', 'Campaign', 'campaign');
 	assert.ok(src.includes('{entry.title}'), 'should render title');
 	assert.ok(
 		src.includes('entry.description'),
 		'should conditionally render description'
 	);
+});
+
+test('generateBlockPageRoute uses a static path route file shape', () => {
+	const src = generateBlockPageRoute('campaign', 'Campaign', 'campaigns');
+	assert.ok(src.includes('export async function getStaticPaths()'));
+	assert.ok(src.includes("getCollection('campaign')"));
+	assert.ok(src.includes('<HTML title={title} description={description}>'));
 });

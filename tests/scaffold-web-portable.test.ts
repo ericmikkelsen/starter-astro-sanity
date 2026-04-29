@@ -1,0 +1,198 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+
+import {
+	toPascalCase,
+	toStudioTitle,
+	validateScaffoldInputs,
+	generateSanityPortableSchema,
+	generatePortableCollectionModule,
+	generatePortableCollectionLoader,
+	generatePortablePageRoute
+} from '../scripts/scaffold-web-portable';
+
+// --- toPascalCase ---
+
+test('toPascalCase capitalizes the first letter', () => {
+	assert.equal(toPascalCase('article'), 'Article');
+	assert.equal(toPascalCase('supportPage'), 'SupportPage');
+	assert.equal(toPascalCase('a'), 'A');
+});
+
+// --- toStudioTitle ---
+
+test('toStudioTitle converts camelCase identifiers into editor-facing labels', () => {
+	assert.equal(toStudioTitle('article'), 'Article');
+	assert.equal(toStudioTitle('landingPage'), 'Landing Page');
+});
+
+// --- validateScaffoldInputs ---
+
+test('validateScaffoldInputs accepts valid name and urlPrefix', () => {
+	assert.doesNotThrow(() => {
+		validateScaffoldInputs('article', 'articles');
+	});
+});
+
+test('validateScaffoldInputs rejects invalid document type name', () => {
+	assert.throws(() => {
+		validateScaffoldInputs('../article', 'articles');
+	});
+});
+
+test('validateScaffoldInputs rejects invalid urlPrefix', () => {
+	assert.throws(() => {
+		validateScaffoldInputs('article', '../articles');
+	});
+});
+
+// --- generateSanityPortableSchema ---
+
+test('generateSanityPortableSchema produces a defineType call with the given name', () => {
+	const src = generateSanityPortableSchema('article', 'Article');
+	assert.ok(
+		src.includes("name: 'article'"),
+		'document name should appear in schema'
+	);
+	assert.ok(
+		src.includes("title: 'Article'"),
+		'title should appear in schema'
+	);
+	assert.ok(src.includes("type: 'document'"), 'should declare document type');
+});
+
+test('generateSanityPortableSchema exports a typed variable named <name>Type', () => {
+	const src = generateSanityPortableSchema('article', 'Article');
+	assert.ok(
+		src.includes('export const articleType'),
+		'should export articleType'
+	);
+});
+
+test('generateSanityPortableSchema spreads WEB_PAGE_FIELDS', () => {
+	const src = generateSanityPortableSchema('article', 'Article');
+	assert.ok(
+		src.includes('Object.values(WEB_PAGE_FIELDS)'),
+		'should spread shared web page fields'
+	);
+});
+
+test('generateSanityPortableSchema composes body from RICH_TEXT_FIELD_ARGS', () => {
+	const src = generateSanityPortableSchema('article', 'Article');
+	assert.ok(
+		src.includes('RICH_TEXT_FIELD_ARGS'),
+		'should use shared rich text field args'
+	);
+	assert.ok(src.includes("title: 'Body'"), 'should set the body field title');
+});
+
+// --- generatePortableCollectionModule ---
+
+test('generatePortableCollectionModule includes GROQ query for the document type', () => {
+	const src = generatePortableCollectionModule('article', 'articles');
+	assert.ok(
+		src.includes('_type == "article"'),
+		'query should filter by document type'
+	);
+	assert.ok(
+		src.includes('SANITY_ARTICLE_COLLECTION_QUERY'),
+		'should export a named query constant'
+	);
+});
+
+test('generatePortableCollectionModule projects richText and maps it to body', () => {
+	const src = generatePortableCollectionModule('article', 'articles');
+	assert.ok(src.includes('richText'), 'query should include richText');
+	assert.ok(
+		src.includes('body: entry.richText ?? []'),
+		'mapper should normalize richText into body'
+	);
+});
+
+test('generatePortableCollectionModule exports a mapper function', () => {
+	const src = generatePortableCollectionModule('article', 'articles');
+	assert.ok(
+		src.includes('export function mapSanityArticleToCollectionEntry'),
+		'should export mapper function'
+	);
+});
+
+test('generatePortableCollectionModule builds the path from urlPrefix', () => {
+	const src = generatePortableCollectionModule('article', 'resources');
+	assert.ok(
+		src.includes('`/resources/${entry.slug}/`') ||
+			src.includes("'/resources/' + entry.slug"),
+		'path should include the url prefix'
+	);
+});
+
+// --- generatePortableCollectionLoader ---
+
+test('generatePortableCollectionLoader exports a loader factory function', () => {
+	const src = generatePortableCollectionLoader('article');
+	assert.ok(
+		src.includes('export function createArticleCollectionLoader'),
+		'should export loader factory'
+	);
+});
+
+test('generatePortableCollectionLoader imports from the collection module', () => {
+	const src = generatePortableCollectionLoader('article');
+	assert.ok(
+		src.includes("from './articleCollection'"),
+		'should import from the generated collection module'
+	);
+});
+
+test('generatePortableCollectionLoader includes body in schema validation', () => {
+	const src = generatePortableCollectionLoader('article');
+	assert.ok(
+		src.includes('body: z.array(z.record(z.unknown()))'),
+		'should require a portable body array in schema'
+	);
+});
+
+// --- generatePortablePageRoute ---
+
+test('generatePortablePageRoute imports PortableText component', () => {
+	const src = generatePortablePageRoute('article', 'Article', 'articles');
+	assert.ok(
+		src.includes("import { PortableText } from 'astro-portabletext'"),
+		'should import PortableText renderer'
+	);
+});
+
+test('generatePortablePageRoute imports the generated entry type', () => {
+	const src = generatePortablePageRoute('article', 'Article', 'articles');
+	assert.ok(
+		src.includes('ArticleCollectionEntryData'),
+		'should reference the collection entry type'
+	);
+	assert.ok(
+		src.includes("from '../../lib/content/articleCollection'"),
+		'should import from the generated collection module'
+	);
+});
+
+test('generatePortablePageRoute includes a back-link using the urlPrefix', () => {
+	const src = generatePortablePageRoute('article', 'Article', 'resources');
+	assert.ok(
+		src.includes('href="/resources/"'),
+		'back-link should use the url prefix'
+	);
+});
+
+test('generatePortablePageRoute renders portable body content', () => {
+	const src = generatePortablePageRoute('article', 'Article', 'articles');
+	assert.ok(
+		src.includes('<PortableText value={entry.body} {components} />'),
+		'should render portable body from mapped entry data'
+	);
+});
+
+test('generatePortablePageRoute uses static paths with the generated collection', () => {
+	const src = generatePortablePageRoute('article', 'Article', 'articles');
+	assert.ok(src.includes('export async function getStaticPaths()'));
+	assert.ok(src.includes("getCollection('article')"));
+	assert.ok(src.includes('<HTML title={title} description={description}>'));
+});

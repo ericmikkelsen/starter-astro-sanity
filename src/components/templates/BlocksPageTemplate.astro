@@ -10,7 +10,7 @@ const { page } = Astro.props as Props;
 const hasBlocks = Boolean(page.blocks?.length);
 ---
 
-<main class="mx-auto flex min-h-screen max-w-3xl flex-col gap-4 px-6 py-14">
+<div class="mx-auto flex min-h-screen max-w-3xl flex-col gap-4 px-6 py-14">
 	<a
 		class="text-sm font-semibold tracking-[0.14em] text-emerald-700 uppercase"
 		href="/">Back to home</a
@@ -31,4 +31,4 @@ const hasBlocks = Boolean(page.blocks?.length);
 			)
 		}
 	</div>
-</main>
+</div>

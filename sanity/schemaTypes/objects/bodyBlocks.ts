@@ -91,17 +91,5 @@ export const imageObjectType = defineType({
 			validation: (rule) => rule.required(),
 		}),
 		defineField({ name: 'alt', title: 'Alt Text', type: 'string' }),
-		defineField({
-			name: 'width',
-			title: 'Width',
-			type: 'number',
-			validation: (rule) => rule.positive().integer(),
-		}),
-		defineField({
-			name: 'height',
-			title: 'Height',
-			type: 'number',
-			validation: (rule) => rule.positive().integer(),
-		}),
 	],
 });

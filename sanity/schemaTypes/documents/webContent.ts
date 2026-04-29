@@ -2,20 +2,6 @@ import { defineArrayMember, defineField, defineType } from 'sanity';
 
 import { WEB_PAGE_FIELDS } from '../webPageFields';
 
-const linkAnnotation = {
-	name: 'link',
-	title: 'Link',
-	type: 'object',
-	fields: [
-		defineField({
-			name: 'href',
-			title: 'URL',
-			type: 'url',
-			validation: (rule) => rule.required(),
-		}),
-	],
-};
-
 /**
  * Portable-text-first web content document type.
  *

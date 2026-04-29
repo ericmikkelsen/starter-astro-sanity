@@ -1,19 +1,5 @@
 import { defineArrayMember, defineField } from 'sanity';
 
-const linkAnnotation = {
-	name: 'link',
-	title: 'Link',
-	type: 'object',
-	fields: [
-		defineField({
-			name: 'href',
-			title: 'URL',
-			type: 'url',
-			validation: (rule) => rule.required(),
-		}),
-	],
-};
-
 /**
  * Reusable heading string field.
  */

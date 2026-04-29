@@ -50,6 +50,7 @@
 		"@types/react-is": "^19.2.0",
 		"@types/styled-components": "^5.1.36",
 		"astro": "^6.1.9",
+		"astro-portabletext": "^0.13.0",
 		"react": "^19.2.5",
 		"react-dom": "^19.2.5",
 		"react-is": "^19.2.5",

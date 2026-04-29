@@ -75,5 +75,5 @@ test('RICH_TEXT_BASIC_FIELD_ARGS only enables link annotations', () => {
 
 	assert.equal((blockMember.lists ?? []).length, 0);
 	assert.equal((blockMember.marks?.decorators ?? []).length, 0);
-	assert.equal(blockMember.marks?.annotations?.[0]?.name, 'link');
+	assert.equal(blockMember.marks?.annotations?.[0]?.name, 'portableTextLink');
 });

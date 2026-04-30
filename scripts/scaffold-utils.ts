@@ -69,23 +69,24 @@ export function printScaffoldGuidance(name: string, urlPrefix: string): void {
 	const pink = '\x1b[95m';
 	const reset = '\x1b[0m';
 	console.log(`
-✔  Generated 4 files for "${name}".
+✔  Generated 5 files for "${name}".
 →  Schema:     sanity/schemaTypes/documents/${name}.ts
 →  Collection: src/lib/content/${name}Collection.ts
 →  Loader:     src/lib/content/${name}CollectionLoader.ts
 →  Route:      src/pages/${urlPrefix}/[slug].astro
+→  Preview:    src/pages/preview/${urlPrefix}/[slug].astro
 
 Next — copy and paste these into your config files:
 
-  sanity/schemaTypes/index.ts
+	sanity/schemaTypes/index.ts
 ${pink}  import { ${name}Type } from './documents/${name}';
-  // add ${name}Type to the types array${reset}
+	// add ${name}Type to the types array${reset}
 
-  src/content.config.ts
+	src/content.config.ts
 ${pink}  import { create${pascal}CollectionLoader } from './lib/content/${name}CollectionLoader';
-  const ${name} = defineCollection({ loader: create${pascal}CollectionLoader() });
-  // add ${name} to the collections export${reset}
-  `);
+	const ${name} = defineCollection({ loader: create${pascal}CollectionLoader() });
+	// add ${name} to the collections export${reset}
+	`);
 }
 
 /**

@@ -2,7 +2,7 @@ import type { WebDocumentCore } from './shared';
 import type { TypedObject } from 'astro-portabletext/types';
 import {
 	projectObjectFields,
-	SANITY_IMAGE_ASSET_REF_FIELDS,
+	SANITY_IMAGE_ASSET_REF_FIELDS
 } from './groqProjections';
 import { loadQuery } from './preview';
 
@@ -57,13 +57,13 @@ export function mapSanityBlogToAstroPost(
 		metaImage: entry.metaImage?.asset?._ref
 			? {
 					assetRef: entry.metaImage.asset._ref,
-					alt: entry.metaImageAlt,
+					alt: entry.metaImageAlt
 				}
 			: undefined,
 		metaImageAlt: entry.metaImageAlt,
 		// Astro routes are emitted with trailing slashes, so the mapped path mirrors build output.
 		path: `/blog/${entry.slug}/`,
-		body: entry.richText ?? [],
+		body: entry.richText ?? []
 	};
 }
 
@@ -83,4 +83,17 @@ export async function getAstroBlogPosts(): Promise<AstroBlogPost[]> {
 		// Static generation should degrade to no dynamic pages instead of failing the whole build.
 		return [];
 	}
+}
+
+/**
+ * Looks up a single blog post by slug from the mapped post list.
+ *
+ * @param slug The blog slug to match against the mapped result set.
+ * @returns The first post whose slug matches the input, if one exists.
+ */
+export async function getAstroBlogPostBySlug(
+	slug: string
+): Promise<AstroBlogPost | undefined> {
+	const posts = await getAstroBlogPosts();
+	return posts.find((post) => post.slug === slug);
 }

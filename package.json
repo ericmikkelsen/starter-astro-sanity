@@ -45,6 +45,7 @@
 		"typescript": "^5.9.3"
 	},
 	"dependencies": {
+		"@astrojs/node": "^10.0.6",
 		"@astrojs/react": "^5.0.4",
 		"@sanity/astro": "^3.3.1",
 		"@sanity/client": "^7.22.0",

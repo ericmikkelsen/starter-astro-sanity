@@ -1,4 +1,5 @@
 import react from '@astrojs/react';
+import node from '@astrojs/node';
 import sanity from '@sanity/astro';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
@@ -27,6 +28,8 @@ const requiredEnv = (key) => {
 const projectId = requiredEnv('PUBLIC_SANITY_PROJECT_ID');
 const dataset = requiredEnv('PUBLIC_SANITY_DATASET');
 const apiVersion = env.PUBLIC_SANITY_API_VERSION || '2026-01-01';
+const visualEditingEnabled =
+	env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === 'true';
 const studioBasePath =
 	process.env.NODE_ENV === 'production' ? undefined : '/studio';
 
@@ -37,6 +40,10 @@ const studioBasePath =
  * only content pages while local development keeps `/studio` available.
  */
 export default defineConfig({
+	output: 'server',
+	adapter: node({
+		mode: 'standalone'
+	}),
 	integrations: [
 		sanity({
 			projectId,
@@ -44,19 +51,24 @@ export default defineConfig({
 			apiVersion,
 			useCdn: false,
 			studioBasePath,
+			stega: visualEditingEnabled
+				? {
+						studioUrl: studioBasePath ?? '/studio'
+					}
+				: false
 		}),
-		react(),
+		react()
 	],
 	vite: {
 		// Mirror required Studio values into the client bundle used by embedded Sanity Studio.
 		define: {
 			__SANITY_STUDIO_PROJECT_ID__: JSON.stringify(projectId),
-			__SANITY_STUDIO_DATASET__: JSON.stringify(dataset),
+			__SANITY_STUDIO_DATASET__: JSON.stringify(dataset)
 		},
 		// Keep Sanity and React compiler runtime pre-bundled so Studio can import named exports reliably.
 		optimizeDeps: {
-			include: ['sanity', 'react/compiler-runtime'],
+			include: ['sanity', 'react/compiler-runtime']
 		},
-		plugins: [tailwindcss()],
-	},
+		plugins: [tailwindcss()]
+	}
 });

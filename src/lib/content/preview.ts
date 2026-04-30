@@ -17,7 +17,7 @@ const client = createClient({
 	dataset,
 	apiVersion,
 	// Published traffic can use the CDN, but preview must read fresh draft content directly.
-	useCdn: !previewEnabled,
+	useCdn: !previewEnabled
 });
 
 /**
@@ -45,6 +45,7 @@ export async function loadQuery<QueryResult>(
 	if (!previewEnabled) {
 		return client.fetch<QueryResult>(query, params ?? {}, {
 			perspective: 'published',
+			stega: false
 		});
 	}
 
@@ -58,5 +59,6 @@ export async function loadQuery<QueryResult>(
 	return client.fetch<QueryResult>(query, params ?? {}, {
 		perspective: 'drafts',
 		token,
+		stega: true
 	});
 }

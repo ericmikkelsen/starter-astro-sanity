@@ -52,7 +52,7 @@ test('resolveDocumentProductionUrl maps page documents to top-level routes', () 
 				processEnv: {}
 			}
 		),
-		'http://localhost:4321/about'
+		'http://localhost:4321/preview/about'
 	);
 });
 
@@ -70,7 +70,7 @@ test('resolveDocumentProductionUrl maps blog documents to blog routes', () => {
 				processEnv: {}
 			}
 		),
-		'https://example.com/blog/hello-world'
+		'https://example.com/preview/blog/hello-world'
 	);
 });
 

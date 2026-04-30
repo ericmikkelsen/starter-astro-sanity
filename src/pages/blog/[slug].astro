@@ -1,20 +1,11 @@
 ---
-import '../../styles/global.css';
-import HTML from '../../layouts/html.astro';
-import BlogPostTemplate from '../../components/templates/BlogPostTemplate.astro';
-import { getAstroBlogPosts } from '../../lib/content/blog';
+import { getBlogStaticPaths } from '../../lib/content/routeData';
+import BlogPost from '../../layouts/BlogPost.astro';
 
-export async function getStaticPaths() {
-	const posts = await getAstroBlogPosts();
-	return posts.map((post) => ({
-		params: { slug: post.slug },
-		props: { post, title: post.title, description: post.description },
-	}));
-}
+export const prerender = true;
+export const getStaticPaths = getBlogStaticPaths;
 
 const { post, title = '', description = '' } = Astro.props;
 ---
 
-<HTML title={title} description={description}>
-	<BlogPostTemplate post={post} />
-</HTML>
+<BlogPost title={title} description={description} post={post} />

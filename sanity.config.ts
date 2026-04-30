@@ -1,7 +1,8 @@
 import { defineConfig } from 'sanity';
+import { defineLocations, presentationTool, type PresentationPluginOptions } from 'sanity/presentation';
 import { structureTool } from 'sanity/structure';
 
-import { resolveDocumentProductionUrl } from './sanity/previewLinks';
+import { resolveDocumentProductionUrl, resolvePreviewSiteUrl } from './sanity/previewLinks';
 import { schemaTypes } from './sanity/schemaTypes';
 
 declare const __SANITY_STUDIO_PROJECT_ID__: string;
@@ -71,6 +72,41 @@ const dataset = resolveStudioEnvValue('PUBLIC_SANITY_DATASET');
  * Embedded Studio configuration served through the Astro app.
  *
  * The shared schema type registry is imported from `sanity/schemaTypes` so
+/**
+ * Maps Sanity document types to their preview routes in the Astro frontend.
+ * The Presentation Tool uses this to navigate the iframe when an editor selects a document.
+ */
+const presentationResolve: PresentationPluginOptions['resolve'] = {
+	locations: {
+		page: defineLocations({
+			select: { title: 'title', slug: 'slug.current' },
+			resolve: (doc) => ({
+				locations: [
+					{
+						title: doc?.title ?? 'Untitled',
+						href: `/preview/${doc?.slug}`
+					}
+				]
+			})
+		}),
+		blog: defineLocations({
+			select: { title: 'title', slug: 'slug.current' },
+			resolve: (doc) => ({
+				locations: [
+					{
+						title: doc?.title ?? 'Untitled',
+						href: `/preview/blog/${doc?.slug}`
+					}
+				]
+			})
+		})
+	}
+};
+
+/**
+ * Embedded Studio configuration served through the Astro app.
+ *
+ * The shared schema type registry is imported from `sanity/schemaTypes` so
  * document and object definitions are composed in one place.
  */
 export default defineConfig({
@@ -78,7 +114,23 @@ export default defineConfig({
 	title: 'Astro + Sanity Starter',
 	projectId,
 	dataset,
-	plugins: [structureTool()],
+	plugins: [
+		structureTool(),
+		presentationTool({
+			resolve: presentationResolve,
+			previewUrl: {
+				// When Studio is embedded in the Astro app, use the current origin;
+				// otherwise fall back to PUBLIC_SITE_URL / localhost.
+				initial:
+					typeof location !== 'undefined'
+						? location.origin
+						: resolvePreviewSiteUrl(),
+				previewMode: {
+					enable: '/api/draft-mode/enable'
+				}
+			}
+		})
+	],
 	document: {
 		productionUrl: async (previousUrl, context) =>
 			previousUrl ?? resolveDocumentProductionUrl(context.document)

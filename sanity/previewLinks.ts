@@ -12,8 +12,8 @@ const PREVIEW_SITE_URL_ENV_KEY = 'PUBLIC_SITE_URL';
 const DEFAULT_PREVIEW_SITE_URL = 'http://localhost:4321';
 
 const DOCUMENT_ROUTE_PREFIXES: Record<string, string> = {
-	page: '',
-	blog: '/blog'
+	page: '/preview',
+	blog: '/preview/blog'
 };
 
 /**

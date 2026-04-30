@@ -4,6 +4,9 @@ import '../styles/global.css';
 import { getAstroPages } from '../lib/content/pages';
 import { isPreviewEnabled } from '../lib/content/preview';
 import HTML from '../layouts/html.astro';
+
+export const prerender = true;
+
 const pages = await getAstroPages();
 const previewEnabled = isPreviewEnabled();
 ---

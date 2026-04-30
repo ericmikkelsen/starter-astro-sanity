@@ -44,8 +44,9 @@ and reusable components can be created quickly with aligned Sanity + Astro contr
 | 15  | `chapter/the-big-content-story/15-scaffold-component`                   | Implement component scaffold with prompt-selectable body type and fixed output dirs (`atom`/`molecule`/etc). |
 | 16  | `chapter/the-big-content-story/16-studio-preview-links`                 | Add Studio preview link generation for supported document types.                                             |
 | 17  | `chapter/the-big-content-story/17-visual-editing-integration`           | Wire visual editing behavior for array-based and portable-text content types.                                |
-| 18  | `chapter/the-big-content-story/18-docs-and-generator-contract-tests`    | Add `docs/scaffolds.md` plus tests for scaffold outputs, route-prefix behavior, and loader preview behavior. |
-| 19  | `chapter/the-big-content-story/19-story-hardening-and-regression-guard` | Add final polish, migration-safety checks, and regression validation for existing page behavior.             |
+| 18  | chapter/the-big-content-story/18-scaffolded-preview-routes              | Scaffolded content types generate a working preview route/component for visual editing.                      |
+| 19  | `chapter/the-big-content-story/19-docs-and-generator-contract-tests`    | Add `docs/scaffolds.md` plus tests for scaffold outputs, route-prefix behavior, and loader preview behavior. |
+| 20  | `chapter/the-big-content-story/20-story-hardening-and-regression-guard` | Add final polish, migration-safety checks, and regression validation for existing page behavior.             |
 
 ## Out of Scope
 

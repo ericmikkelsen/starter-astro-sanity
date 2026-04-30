@@ -9,6 +9,7 @@ import {
 	createPromptSession,
 	writeGeneratedFile
 } from './scaffold-utils';
+import { writePreviewRoute } from './scaffold-preview-route';
 
 // Re-export shared utilities so tests and consumers can import them
 // from this module without needing to know they live in scaffold-utils.
@@ -227,11 +228,8 @@ export function generatePortablePageRoute(
 	const pascal = toPascalCase(name);
 	return `---
 import '../../styles/global.css';
-
 import { getCollection } from 'astro:content';
-import { PortableText } from 'astro-portabletext';
-import HTML from '../../layouts/html.astro';
-import PortableTextLinkMark from '../../components/portableText/PortableTextLinkMark.astro';
+import PortablePage from '../../layouts/PortablePage.astro';
 import type { ${pascal}CollectionEntryData } from '../../lib/content/${name}Collection';
 
 interface Props {
@@ -253,37 +251,14 @@ export async function getStaticPaths() {
 }
 
 const { entry, title = '', description = '' } = Astro.props as Props;
-const components = {
-	mark: {
-		portableTextLink: PortableTextLinkMark
-	}
-};
 ---
 
-<HTML title={title} description={description}>
-	<div class="mx-auto flex min-h-screen max-w-3xl flex-col gap-4 px-6 py-14">
-		<a
-			class="text-sm font-semibold tracking-[0.14em] text-emerald-700 uppercase"
-			href="/${urlPrefix}/">Back to ${urlPrefix}</a
-		>
-		<h1 class="text-4xl leading-tight font-bold">{entry.title}</h1>
-		{
-			entry.description ? (
-				<p class="text-lg text-stone-700">{entry.description}</p>
-			) : null
-		}
-		<article class="prose prose-stone mt-4 max-w-none">
-			<PortableText value={entry.body} {components} />
-		</article>
-		{
-			entry.body.length === 0 ? (
-				<p class="text-sm text-stone-600">
-					No portable text body configured for this ${title} yet.
-				</p>
-			) : null
-		}
-	</div>
-</HTML>
+<PortablePage
+	title={entry.title}
+	description={entry.description}
+	body={entry.body}
+	urlPrefix={urlPrefix}
+/>
 `;
 }
 
@@ -320,6 +295,7 @@ export function writeScaffoldFiles(
 		resolve(`src/pages/${urlPrefix}/[slug].astro`),
 		generatePortablePageRoute(name, title, urlPrefix)
 	);
+	writePreviewRoute(name, urlPrefix, 'portable');
 }
 
 // ---------------------------------------------------------------------------

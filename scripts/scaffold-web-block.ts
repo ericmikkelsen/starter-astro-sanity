@@ -9,6 +9,7 @@ import {
 	createPromptSession,
 	writeGeneratedFile
 } from './scaffold-utils';
+import { writePreviewRoute } from './scaffold-preview-route';
 
 // Re-export shared utilities so tests and consumers can import them
 // from this module without needing to know they live in scaffold-utils.
@@ -243,14 +244,12 @@ export function generateBlockPageRoute(
 	const pascal = toPascalCase(name);
 	return `---
 import '../../styles/global.css';
-
 import { getCollection } from 'astro:content';
-import Blocks from '../../components/blocks/_blocks.astro';
-import HTML from '../../layouts/html.astro';
+import BlockPage from '../../layouts/BlockPage.astro';
 import type { ${pascal}CollectionEntryData } from '../../lib/content/${name}Collection';
 
 interface Props {
-\tentry: ${pascal}CollectionEntryData;
+	entry: ${pascal}CollectionEntryData;
 	title?: string;
 	description?: string;
 }
@@ -268,33 +267,13 @@ export async function getStaticPaths() {
 }
 
 const { entry, title = '', description = '' } = Astro.props as Props;
-const hasBlocks = Boolean(entry.blocks?.length);
 ---
 
-<HTML title={title} description={description}>
-	<div class="mx-auto flex min-h-screen max-w-3xl flex-col gap-4 px-6 py-14">
-		<a
-			class="text-sm font-semibold tracking-[0.14em] text-emerald-700 uppercase"
-			href="/${urlPrefix}">Back to ${urlPrefix}</a
-		>
-		<h1 class="text-4xl leading-tight font-bold">{entry.title}</h1>
-		{
-			entry.description ? (
-				<p class="text-lg text-stone-700">{entry.description}</p>
-			) : null
-		}
-		<div class="mt-4 grid gap-5">
-			<Blocks blockData={entry.blocks} />
-			{
-				hasBlocks ? null : (
-					<p class="text-sm text-stone-600">
-						No blocks configured for this ${title} yet.
-					</p>
-				)
-			}
-		</div>
-	</div>
-</HTML>
+<BlockPage
+	title={entry.title}
+	description={entry.description}
+	page={entry}
+/>
 `;
 }
 
@@ -331,6 +310,7 @@ export function writeScaffoldFiles(
 		resolve(`src/pages/${urlPrefix}/[slug].astro`),
 		generateBlockPageRoute(name, title, urlPrefix)
 	);
+	writePreviewRoute(name, urlPrefix, 'block');
 }
 
 // ---------------------------------------------------------------------------

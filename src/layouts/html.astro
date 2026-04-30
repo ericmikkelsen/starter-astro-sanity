@@ -1,13 +1,23 @@
 ---
-import { VisualEditing } from '@sanity/astro/visual-editing';
+import { perspectiveCookieName } from '@sanity/preview-url-secret/constants';
+import SanityVisualEditing from '../components/SanityVisualEditing';
+import DisableDraftMode from '../components/DisableDraftMode';
 
 interface Props {
 	title: string;
 	description?: string;
 }
 const { title, description = '' } = Astro.props;
+
+// SanityVisualEditing must be mounted whenever visual editing is configured so it
+// can respond to the Studio's PresentationToolGrantsCheck postMessage handshake,
+// which fires before the draft-mode cookie is set.
 const visualEditingEnabled =
-	import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === 'true';
+	import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === 'true' ||
+	import.meta.env.PUBLIC_SANITY_ENABLE_PREVIEW === 'true';
+
+// DisableDraftMode is only needed once the draft-mode cookie has been set.
+const draftMode = Astro.cookies.has(perspectiveCookieName);
 ---
 
 <!doctype html>
@@ -22,6 +32,7 @@ const visualEditingEnabled =
 		<main>
 			<slot />
 		</main>
-		<VisualEditing enabled={visualEditingEnabled} />
+		{visualEditingEnabled && <SanityVisualEditing client:only="react" />}
+		{draftMode && <DisableDraftMode client:only="react" />}
 	</body>
 </html>

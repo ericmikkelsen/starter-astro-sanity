@@ -3,7 +3,7 @@ import type { ArrayPageBuilderBlock } from './pageBuilderTypes';
 import {
 	projectObjectFields,
 	SANITY_IMAGE_ASSET_REF_FIELDS,
-	SANITY_IMAGE_METADATA_PROJECTION,
+	SANITY_IMAGE_METADATA_PROJECTION
 } from './groqProjections';
 import { loadQuery } from './preview';
 
@@ -16,20 +16,6 @@ const PAGE_QUERY = `*[_type == "page" && defined(slug.current)]{
 	${projectObjectFields('metaImage', SANITY_IMAGE_ASSET_REF_FIELDS)},
   metaImageAlt,
 	blocks[]{
-		_type,
-		heading,
-		body,
-		richText,
-		items,
-		image {
-			${SANITY_IMAGE_METADATA_PROJECTION}
-		},
-		people[]->{
-			_id,
-			name
-		}
-	},
-	pageBuilder[]{
 		_type,
 		heading,
 		body,
@@ -58,7 +44,6 @@ type SanityPageQueryResult = {
 	};
 	metaImageAlt?: string;
 	blocks?: ArrayPageBuilderBlock[];
-	pageBuilder?: ArrayPageBuilderBlock[];
 };
 
 export type AstroPage = WebDocumentCore & {
@@ -90,14 +75,14 @@ export function mapSanityPageToAstroPage(
 			? {
 					// The frontend only needs the asset reference here so image URL building can stay centralized.
 					assetRef: entry.metaImage.asset._ref,
-					alt: entry.metaImageAlt,
+					alt: entry.metaImageAlt
 				}
 			: undefined,
 		metaImageAlt: entry.metaImageAlt,
 		documentType: entry._type,
-		blocks: entry.blocks ?? entry.pageBuilder,
+		blocks: entry.blocks,
 		// Astro routes are emitted with trailing slashes, so the mapped path mirrors build output.
-		path: `/${entry.slug}/`,
+		path: `/${entry.slug}/`
 	};
 }
 

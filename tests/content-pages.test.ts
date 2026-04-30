@@ -25,10 +25,10 @@ test('mapSanityPageToAstroPage maps valid page records', () => {
 		description: 'About page',
 		metaImage: {
 			asset: {
-				_ref: 'image-ref',
-			},
+				_ref: 'image-ref'
+			}
 		},
-		metaImageAlt: 'Alt text',
+		metaImageAlt: 'Alt text'
 	});
 
 	assert.ok(mapped);
@@ -44,7 +44,7 @@ test('mapSanityPageToAstroPage maps valid page records', () => {
 test('mapSanityPageToAstroPage skips invalid entries', () => {
 	const mapped = mapSanityPageToAstroPage({
 		_id: 'page-2',
-		title: 'Missing slug',
+		title: 'Missing slug'
 	});
 
 	assert.equal(mapped, null);
@@ -61,10 +61,10 @@ test('mapSanityPageToCollectionEntry maps valid page records', () => {
 		description: 'Contact page',
 		metaImage: {
 			asset: {
-				_ref: 'image-ref',
-			},
+				_ref: 'image-ref'
+			}
 		},
-		metaImageAlt: 'Contact image',
+		metaImageAlt: 'Contact image'
 	});
 
 	assert.ok(mapped);
@@ -84,9 +84,9 @@ test('mapSanityPageToAstroPage maps blocks records on page documents', () => {
 			{
 				_type: 'billboard',
 				heading: 'Hero heading',
-				body: 'Hero body',
-			},
-		],
+				body: 'Hero body'
+			}
+		]
 	});
 
 	assert.ok(mapped);
@@ -96,7 +96,7 @@ test('mapSanityPageToAstroPage maps blocks records on page documents', () => {
 	assert.equal(mapped?.path, '/landing/');
 });
 
-test('mapSanityPageToAstroPage supports legacy pageBuilder records', () => {
+test('mapSanityPageToAstroPage ignores legacy pageBuilder fallback', () => {
 	const mapped = mapSanityPageToAstroPage({
 		_type: 'page',
 		_id: 'legacy-page-builder-1',
@@ -106,14 +106,14 @@ test('mapSanityPageToAstroPage supports legacy pageBuilder records', () => {
 			{
 				_type: 'billboard',
 				heading: 'Legacy hero heading',
-				body: 'Legacy hero body',
-			},
-		],
+				body: 'Legacy hero body'
+			}
+		]
 	});
 
 	assert.ok(mapped);
 	assert.equal(mapped?.id, 'legacy-page-builder-1');
-	assert.equal(mapped?.blocks?.[0]?._type, 'billboard');
+	assert.equal(mapped?.blocks, undefined);
 	assert.equal(mapped?.path, '/legacy-landing/');
 });
 
@@ -143,9 +143,9 @@ test('sanity:typegen skip does not create placeholder artifacts', () => {
 		const result = spawnSync(process.execPath, [scriptPath], {
 			cwd: tempDir,
 			env: {
-				PATH: process.env.PATH,
+				PATH: process.env.PATH
 			},
-			encoding: 'utf8',
+			encoding: 'utf8'
 		});
 
 		assert.equal(result.status, 0);

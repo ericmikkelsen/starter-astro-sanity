@@ -68,6 +68,13 @@ export function printScaffoldGuidance(name: string, urlPrefix: string): void {
 	const pascal = toPascalCase(name);
 	const pink = '\x1b[95m';
 	const reset = '\x1b[0m';
+	const previewLinksExample = `
+	// Add your new document type to DOCUMENT_ROUTE_PREFIXES for Studio preview button support:
+  	const DOCUMENT_ROUTE_PREFIXES: Record<string, string> = {
+    	page: '/preview',
+    	blog: '/preview/blog',
+    	${name}: '/preview/${urlPrefix}', // ← add this line
+  	};`;
 	console.log(`
 ✔  Generated 5 files for "${name}".
 →  Schema:     sanity/schemaTypes/documents/${name}.ts
@@ -86,6 +93,9 @@ ${pink}  import { ${name}Type } from './documents/${name}';
 ${pink}  import { create${pascal}CollectionLoader } from './lib/content/${name}CollectionLoader';
 	const ${name} = defineCollection({ loader: create${pascal}CollectionLoader() });
 	// add ${name} to the collections export${reset}
+
+	sanity/previewLinks.ts
+${pink}${previewLinksExample}${reset}
 	`);
 }
 

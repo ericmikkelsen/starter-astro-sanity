@@ -28,8 +28,9 @@ const requiredEnv = (key) => {
 const projectId = requiredEnv('PUBLIC_SANITY_PROJECT_ID');
 const dataset = requiredEnv('PUBLIC_SANITY_DATASET');
 const apiVersion = env.PUBLIC_SANITY_API_VERSION || '2026-01-01';
+const previewDataEnabled = env.PUBLIC_SANITY_ENABLE_PREVIEW === 'true';
 const visualEditingEnabled =
-	env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === 'true';
+	env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === 'true' || previewDataEnabled;
 const studioBasePath =
 	process.env.NODE_ENV === 'production' ? undefined : '/studio';
 
@@ -65,9 +66,19 @@ export default defineConfig({
 			__SANITY_STUDIO_PROJECT_ID__: JSON.stringify(projectId),
 			__SANITY_STUDIO_DATASET__: JSON.stringify(dataset)
 		},
-		// Keep Sanity and React compiler runtime pre-bundled so Studio can import named exports reliably.
+		// Keep Sanity, React compiler runtime, and visual-editing CJS modules pre-bundled for dev server.
 		optimizeDeps: {
-			include: ['sanity', 'react/compiler-runtime']
+			include: [
+				'sanity',
+				'react/compiler-runtime',
+				'@sanity/visual-editing/react',
+				'@sanity/preview-url-secret/constants',
+				'lodash/isObject.js',
+				'lodash/groupBy.js',
+				'lodash/keyBy.js',
+				'lodash/partition.js',
+				'lodash/sortedIndex.js'
+			]
 		},
 		plugins: [tailwindcss()]
 	}

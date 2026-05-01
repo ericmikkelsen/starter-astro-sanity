@@ -22,7 +22,7 @@ export function generatePreviewRoute(
 
 	const sharedFrontmatterTop = `import { loadQuery } from '../../../lib/content/preview';
 import {
-	SANITY_${upper}_COLLECTION_QUERY,
+	SANITY_${upper}_PREVIEW_QUERY,
 	mapSanity${pascal}ToCollectionEntry,
 	type Sanity${pascal}QueryResult
 } from '../../../lib/content/${name}Collection';
@@ -34,11 +34,11 @@ const slug = Astro.params.slug;
 let entry: ReturnType<typeof mapSanity${pascal}ToCollectionEntry> = null;
 
 if (slug) {
-	const results = await loadQuery<Sanity${pascal}QueryResult[]>(
-		SANITY_${upper}_COLLECTION_QUERY
+	const result = await loadQuery<Sanity${pascal}QueryResult | null>(
+		SANITY_${upper}_PREVIEW_QUERY,
+		{ slug }
 	);
-	const match = results.find((result) => result.slug === slug);
-	entry = match ? mapSanity${pascal}ToCollectionEntry(match) : null;
+	entry = result ? mapSanity${pascal}ToCollectionEntry(result) : null;
 }
 
 if (!entry) {

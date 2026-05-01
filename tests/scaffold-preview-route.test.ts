@@ -40,8 +40,9 @@ test('preview routes use loadQuery + collection mapper for fresh draft data', ()
 		portable,
 		/import \{ loadQuery \} from '\.\.\/\.\.\/\.\.\/lib\/content\/preview'/
 	);
-	assert.match(portable, /SANITY_ARTICLE_COLLECTION_QUERY/);
+	assert.match(portable, /SANITY_ARTICLE_PREVIEW_QUERY/);
 	assert.match(portable, /mapSanityArticleToCollectionEntry/);
+	assert.doesNotMatch(portable, /SANITY_ARTICLE_COLLECTION_QUERY/);
 });
 
 test('block preview route imports BlockPage layout', () => {
@@ -52,6 +53,14 @@ test('block preview route imports BlockPage layout', () => {
 		source,
 		/from '\.\.\/\.\.\/\.\.\/lib\/content\/campaignCollection'/
 	);
+});
+
+test('preview route passes slug param to loadQuery instead of filtering in JS', () => {
+	const portable = generatePreviewRoute('article', 'articles', 'portable');
+
+	assert.match(portable, /loadQuery<SanityArticleQueryResult \| null>/);
+	assert.match(portable, /SANITY_ARTICLE_PREVIEW_QUERY,\s*\{ slug \}/);
+	assert.doesNotMatch(portable, /\.find\(/);
 });
 
 test('preview route emits exactly one frontmatter block', () => {

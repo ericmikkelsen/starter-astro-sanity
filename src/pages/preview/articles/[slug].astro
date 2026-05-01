@@ -1,7 +1,7 @@
 ---
 import { loadQuery } from '../../../lib/content/preview';
 import {
-	SANITY_ARTICLE_COLLECTION_QUERY,
+	SANITY_ARTICLE_PREVIEW_QUERY,
 	mapSanityArticleToCollectionEntry,
 	type SanityArticleQueryResult
 } from '../../../lib/content/articleCollection';
@@ -14,11 +14,11 @@ const slug = Astro.params.slug;
 let entry: ReturnType<typeof mapSanityArticleToCollectionEntry> = null;
 
 if (slug) {
-	const results = await loadQuery<SanityArticleQueryResult[]>(
-		SANITY_ARTICLE_COLLECTION_QUERY
+	const result = await loadQuery<SanityArticleQueryResult | null>(
+		SANITY_ARTICLE_PREVIEW_QUERY,
+		{ slug }
 	);
-	const match = results.find((result) => result.slug === slug);
-	entry = match ? mapSanityArticleToCollectionEntry(match) : null;
+	entry = result ? mapSanityArticleToCollectionEntry(result) : null;
 }
 
 if (!entry) {

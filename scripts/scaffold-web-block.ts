@@ -106,6 +106,33 @@ export const SANITY_${upper}_COLLECTION_QUERY = \`*[_type == "${name}" && define
   }
 } | order(title asc)\`;
 
+/** Single-document query for preview routes. Accepts a $slug GROQ param. */
+export const SANITY_${upper}_PREVIEW_QUERY = \`*[_type == "${name}" && slug.current == $slug][0]{
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  \${projectObjectFields('metaImage', SANITY_IMAGE_ASSET_REF_FIELDS)},
+  metaImageAlt,
+  blocks[]{
+    _type,
+    heading,
+    body,
+    richText,
+    items,
+    image {
+      alt,
+      "src": asset->url,
+      "width": asset->metadata.dimensions.width,
+      "height": asset->metadata.dimensions.height
+    },
+    people[]->{
+      _id,
+      name
+    }
+  }
+}\`;
+
 export type Sanity${pascal}QueryResult = {
 \t_id: string;
 \ttitle?: string;

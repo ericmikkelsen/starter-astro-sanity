@@ -15,6 +15,17 @@ export const SANITY_ARTICLE_COLLECTION_QUERY = `*[_type == "article" && defined(
   richText
 } | order(title asc)`;
 
+/** Single-document query for preview routes. Accepts a \`$slug\` GROQ param. */
+export const SANITY_ARTICLE_PREVIEW_QUERY = `*[_type == "article" && slug.current == $slug][0]{
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  ${projectObjectFields('metaImage', SANITY_IMAGE_ASSET_REF_FIELDS)},
+  metaImageAlt,
+  richText
+}`;
+
 export type SanityArticleQueryResult = {
 	_id: string;
 	title?: string;

@@ -11,11 +11,11 @@ import { createSanityPeopleCollectionLoader } from './lib/content/peopleCollecti
  * are introduced.
  */
 const pages = defineCollection({
-	loader: createSanityPageCollectionLoader(),
+	loader: createSanityPageCollectionLoader()
 });
 
 const people = defineCollection({
-	loader: createSanityPeopleCollectionLoader(),
+	loader: createSanityPeopleCollectionLoader()
 });
 
 export const collections = { pages, people };

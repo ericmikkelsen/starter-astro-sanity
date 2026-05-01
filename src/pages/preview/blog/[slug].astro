@@ -1,12 +1,12 @@
 ---
-import { getAstroBlogPostBySlug } from '../../../lib/content/blog';
+import { getAstroBlogPostBySlugDirect } from '../../../lib/content/blog';
 import BlogPost from '../../../layouts/BlogPost.astro';
 import HTML from '../../../layouts/html.astro';
 
 export const prerender = false;
 
 const slug = Astro.params.slug;
-const post = slug ? await getAstroBlogPostBySlug(slug) : undefined;
+const post = slug ? await getAstroBlogPostBySlugDirect(slug) : undefined;
 if (!post) {
 	Astro.response.status = 404;
 }

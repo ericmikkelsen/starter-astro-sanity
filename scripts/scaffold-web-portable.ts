@@ -268,7 +268,7 @@ export async function getStaticPaths() {
 	}));
 }
 
-const { entry, title = '', description = '' } = Astro.props as Props;
+const { entry } = Astro.props as Props;
 ---
 
 <PortablePage

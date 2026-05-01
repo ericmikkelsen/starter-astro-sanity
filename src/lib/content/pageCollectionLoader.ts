@@ -30,9 +30,6 @@ const pageCollectionSchema = z.object({
 /**
  * Loads published Sanity pages into Astro's build-time content layer.
  *
- * Preview behavior is intentionally deferred so this loader can focus on the
- * build-time published path in isolation.
- *
  * @returns An Astro build-time loader for the `pages` collection.
  */
 export function createSanityPageCollectionLoader() {
@@ -42,7 +39,7 @@ export function createSanityPageCollectionLoader() {
 		load: async ({ store, parseData, generateDigest, logger }) => {
 			const mode = resolvePageCollectionLoaderMode();
 			logger.info(
-				`Loading ${mode} Sanity pages into Astro content layer.`
+				`Loading Sanity pages into Astro content layer (mode: ${mode}).`
 			);
 
 			let results: SanityPageQueryResult[];

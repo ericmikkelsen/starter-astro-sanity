@@ -1,12 +1,12 @@
 ---
-import { getAstroPageBySlug } from '../../lib/content/pages';
+import { getAstroPageBySlugDirect } from '../../lib/content/pages';
 import BlocksPage from '../../layouts/BlocksPage.astro';
 import HTML from '../../layouts/html.astro';
 
 export const prerender = false;
 
 const slug = Astro.params.slug;
-const page = slug ? await getAstroPageBySlug(slug) : undefined;
+const page = slug ? await getAstroPageBySlugDirect(slug) : undefined;
 if (!page) {
 	Astro.response.status = 404;
 }

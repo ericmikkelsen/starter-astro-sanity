@@ -44,10 +44,11 @@ export const GET: APIRoute = async ({ request, cookies, redirect }) => {
 		return new Response('Invalid secret', { status: 401 });
 	}
 
+	const isSecure = new URL(request.url).protocol === 'https:';
 	cookies.set(perspectiveCookieName, studioPreviewPerspective ?? 'drafts', {
 		httpOnly: false,
-		sameSite: 'none',
-		secure: true,
+		sameSite: isSecure ? 'none' : 'lax',
+		secure: isSecure,
 		path: '/'
 	});
 

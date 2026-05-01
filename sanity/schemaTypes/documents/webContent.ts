@@ -1,4 +1,4 @@
-import { defineArrayMember, defineField, defineType } from 'sanity';
+import { defineField } from 'sanity';
 import { RICH_TEXT_FIELD_ARGS } from '../objects/componentFields';
 
 import { WEB_PAGE_FIELDS } from '../webPageFields';

@@ -31,6 +31,30 @@ const PAGE_QUERY = `*[_type == "page" && defined(slug.current)]{
 	}
 } | order(title asc)`;
 
+const PAGE_BY_SLUG_QUERY = `*[_type == "page" && slug.current == $slug][0]{
+	_type,
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+	${projectObjectFields('metaImage', SANITY_IMAGE_ASSET_REF_FIELDS)},
+  metaImageAlt,
+	blocks[]{
+		_type,
+		heading,
+		body,
+		richText,
+		items,
+		image {
+			${SANITY_IMAGE_METADATA_PROJECTION}
+		},
+		people[]->{
+			_id,
+			name
+		}
+	}
+}`;
+
 type SanityPageQueryResult = {
 	_type?: 'page';
 	_id: string;
@@ -101,6 +125,29 @@ export async function getAstroPages(): Promise<AstroPage[]> {
 	} catch {
 		// Static generation should degrade to no dynamic pages instead of failing the whole build.
 		return [];
+	}
+}
+
+/**
+ * Fetches a single page by slug directly from Sanity using a slug-parameterized query.
+ * Preferred over `getAstroPageBySlug` for preview routes where fetching the full
+ * collection per request would be unnecessarily expensive.
+ *
+ * @param slug The page slug to fetch.
+ * @returns The mapped page, or `undefined` when not found or on error.
+ */
+export async function getAstroPageBySlugDirect(
+	slug: string
+): Promise<AstroPage | undefined> {
+	try {
+		const result = await loadQuery<SanityPageQueryResult | null>(
+			PAGE_BY_SLUG_QUERY,
+			{ slug }
+		);
+		if (!result) return undefined;
+		return mapSanityPageToAstroPage(result) ?? undefined;
+	} catch {
+		return undefined;
 	}
 }
 

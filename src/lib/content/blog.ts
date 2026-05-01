@@ -16,6 +16,16 @@ const BLOG_QUERY = `*[_type == "blog" && defined(slug.current)]{
   richText
 } | order(title asc)`;
 
+const BLOG_BY_SLUG_QUERY = `*[_type == "blog" && slug.current == $slug][0]{
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  ${projectObjectFields('metaImage', SANITY_IMAGE_ASSET_REF_FIELDS)},
+  metaImageAlt,
+  richText
+}`;
+
 type SanityBlogQueryResult = {
 	_id: string;
 	title?: string;
@@ -82,6 +92,29 @@ export async function getAstroBlogPosts(): Promise<AstroBlogPost[]> {
 	} catch {
 		// Static generation should degrade to no dynamic pages instead of failing the whole build.
 		return [];
+	}
+}
+
+/**
+ * Fetches a single blog post by slug directly from Sanity using a slug-parameterized query.
+ * Preferred over `getAstroBlogPostBySlug` for preview routes where fetching the full
+ * collection per request would be unnecessarily expensive.
+ *
+ * @param slug The blog slug to fetch.
+ * @returns The mapped post, or `undefined` when not found or on error.
+ */
+export async function getAstroBlogPostBySlugDirect(
+	slug: string
+): Promise<AstroBlogPost | undefined> {
+	try {
+		const result = await loadQuery<SanityBlogQueryResult | null>(
+			BLOG_BY_SLUG_QUERY,
+			{ slug }
+		);
+		if (!result) return undefined;
+		return mapSanityBlogToAstroPost(result) ?? undefined;
+	} catch {
+		return undefined;
 	}
 }
 

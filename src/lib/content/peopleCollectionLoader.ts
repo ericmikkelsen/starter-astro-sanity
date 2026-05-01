@@ -28,11 +28,20 @@ export function createSanityPeopleCollectionLoader() {
 		schema: peopleCollectionSchema,
 		load: async ({ store, parseData, generateDigest, logger }) => {
 			logger.info('Loading Sanity people into Astro content layer.');
-			store.clear();
 
-			const results = await loadQuery<SanityPersonQueryResult[]>(
-				SANITY_PEOPLE_COLLECTION_QUERY
-			);
+			let results: SanityPersonQueryResult[];
+			try {
+				results = await loadQuery<SanityPersonQueryResult[]>(
+					SANITY_PEOPLE_COLLECTION_QUERY
+				);
+			} catch (err) {
+				logger.warn(
+					`Failed to load Sanity people – keeping previous store. Error: ${err instanceof Error ? err.message : String(err)}`
+				);
+				return;
+			}
+
+			store.clear();
 
 			for (const result of results) {
 				const mapped = mapSanityPersonToCollectionEntry(result);

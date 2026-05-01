@@ -22,7 +22,9 @@ function setPerspectiveCookie(perspective: ClientPerspective): boolean {
 	const next = serializePerspective(perspective);
 	const current = getCookie(perspectiveCookieName);
 	if (current === next) return false;
-	document.cookie = `${perspectiveCookieName}=${encodeURIComponent(next)}; path=/; SameSite=None; Secure`;
+	const isSecure = location.protocol === 'https:';
+	const cookieFlags = isSecure ? 'SameSite=None; Secure' : 'SameSite=Lax';
+	document.cookie = `${perspectiveCookieName}=${encodeURIComponent(next)}; path=/; ${cookieFlags}`;
 	return true;
 }
 

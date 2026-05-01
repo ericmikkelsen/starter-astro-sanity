@@ -30,10 +30,10 @@ clear acceptance criteria.
 - Generate practical starter Astro templates with default props and conditional rendering patterns.
 - Make `body` field type prompt-selectable in component scaffold.
 - Use fixed component output folders by type:
-    - `src/components/atom`
-    - `src/components/molecule`
-    - `src/components/organism`
-    - `src/components/block`
+    - `src/components/atoms`
+    - `src/components/molecules`
+    - `src/components/organisms`
+    - `src/components/blocks`
 - Keep a post-core idea in backlog for Sanity Agent Actions: “Make me a page like X”.
 
 ### Known follow-up from chapter 01 review

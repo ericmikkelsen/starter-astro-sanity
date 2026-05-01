@@ -34,11 +34,20 @@ export function createArticleCollectionLoader() {
 		schema: articleCollectionSchema,
 		load: async ({ store, parseData, generateDigest, logger }) => {
 			logger.info('Loading Sanity articles into Astro content layer.');
-			store.clear();
 
-			const results = await loadQuery<SanityArticleQueryResult[]>(
-				SANITY_ARTICLE_COLLECTION_QUERY
-			);
+			let results: SanityArticleQueryResult[];
+			try {
+				results = await loadQuery<SanityArticleQueryResult[]>(
+					SANITY_ARTICLE_COLLECTION_QUERY
+				);
+			} catch (err) {
+				logger.warn(
+					`Failed to load Sanity articles – keeping previous store. Error: ${err instanceof Error ? err.message : String(err)}`
+				);
+				return;
+			}
+
+			store.clear();
 
 			for (const result of results) {
 				const mapped = mapSanityArticleToCollectionEntry(result);

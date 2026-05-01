@@ -4,6 +4,7 @@ import {
 	BODY_FIELD_ARGS,
 	HEADING_FIELD_ARGS,
 	IMAGE_FIELD_ARGS,
+	LINK_FIELD_ARGS,
 	RICH_TEXT_FIELD_ARGS
 } from './componentFields';
 
@@ -17,6 +18,7 @@ export const billboardType = defineType({
 	fields: [
 		defineField(HEADING_FIELD_ARGS),
 		defineField(BODY_FIELD_ARGS),
+		defineField(LINK_FIELD_ARGS),
 		defineField(IMAGE_FIELD_ARGS)
 	],
 	preview: {

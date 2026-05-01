@@ -84,6 +84,17 @@ export default defineConfig({
 				'lodash/sortedIndex.js'
 			]
 		},
+		// Pre-warm the lazy chunks that sanity/presentation loads via React.lazy().
+		// Without this, Vite discovers them at runtime and throws a 504 Outdated Optimize Dep
+		// the first time the Presentation tool is opened.
+		server: {
+			warmup: {
+				clientFiles: [
+					'./node_modules/sanity/lib/_chunks-es/PresentationToolGrantsCheck.js',
+					'./node_modules/sanity/lib/_chunks-es/BroadcastDisplayedDocument.js'
+				]
+			}
+		},
 		plugins: [tailwindcss()]
 	}
 });

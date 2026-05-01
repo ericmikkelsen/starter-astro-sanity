@@ -132,11 +132,11 @@ test('generateBlockCollectionLoader names the loader with the document name', ()
 
 // --- generateBlockPageRoute ---
 
-test('generateBlockPageRoute imports BlockPage layout', () => {
+test('generateBlockPageRoute imports BlocksPage layout', () => {
 	const src = generateBlockPageRoute('campaign', 'Campaign', 'campaign');
 	assert.ok(
-		src.includes("import BlockPage from '../../layouts/BlockPage.astro'"),
-		'should import BlockPage layout'
+		src.includes("import BlocksPage from '../../layouts/BlocksPage.astro'"),
+		'should import BlocksPage layout'
 	);
 });
 
@@ -152,9 +152,12 @@ test('generateBlockPageRoute imports the generated entry type', () => {
 	);
 });
 
-test('generateBlockPageRoute renders the entry via BlockPage', () => {
+test('generateBlockPageRoute renders the entry via BlocksPage', () => {
 	const src = generateBlockPageRoute('campaign', 'Campaign', 'events');
-	assert.ok(src.includes('<BlockPage'), 'should render via BlockPage layout');
+	assert.ok(
+		src.includes('<BlocksPage'),
+		'should render via BlocksPage layout'
+	);
 });
 
 test('generateBlockPageRoute renders entry title and description', () => {
@@ -171,7 +174,7 @@ test('generateBlockPageRoute uses a static path route file shape', () => {
 	assert.ok(src.includes('export async function getStaticPaths()'));
 	assert.ok(src.includes("getCollection('campaign')"));
 	assert.ok(
-		src.includes('<BlockPage'),
-		'should use BlockPage layout component'
+		src.includes('<BlocksPage'),
+		'should use BlocksPage layout component'
 	);
 });

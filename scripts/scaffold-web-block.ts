@@ -274,7 +274,7 @@ export function generateBlockPageRoute(
 	return `---
 import '../../styles/global.css';
 import { getCollection } from 'astro:content';
-import BlockPage from '../../layouts/BlockPage.astro';
+import BlocksPage from '../../layouts/BlocksPage.astro';
 import type { ${pascal}CollectionEntryData } from '../../lib/content/${name}Collection';
 
 interface Props {
@@ -298,7 +298,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props as Props;
 ---
 
-<BlockPage
+	<BlocksPage
 	title={entry.title}
 	description={entry.description}
 	page={entry}

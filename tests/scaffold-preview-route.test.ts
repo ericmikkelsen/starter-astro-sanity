@@ -45,10 +45,10 @@ test('preview routes use loadQuery + collection mapper for fresh draft data', ()
 	assert.doesNotMatch(portable, /SANITY_ARTICLE_COLLECTION_QUERY/);
 });
 
-test('block preview route imports BlockPage layout', () => {
+test('block preview route imports BlocksPage layout', () => {
 	const source = generatePreviewRoute('campaign', 'campaigns', 'block');
 
-	assert.match(source, /from '\.\.\/\.\.\/\.\.\/layouts\/BlockPage\.astro'/);
+	assert.match(source, /from '\.\.\/\.\.\/\.\.\/layouts\/BlocksPage\.astro'/);
 	assert.match(
 		source,
 		/from '\.\.\/\.\.\/\.\.\/lib\/content\/campaignCollection'/

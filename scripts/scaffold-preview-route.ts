@@ -52,14 +52,14 @@ const description =
 	if (type === 'block') {
 		return `---
 ${sharedFrontmatterTop}
-import BlockPage from '../../../layouts/BlockPage.astro';
+import BlocksPage from '../../../layouts/BlocksPage.astro';
 
 ${sharedFrontmatterBottom}
 ---
 
 {
 	entry ? (
-		<BlockPage
+		<BlocksPage
 			title={entry.data.title}
 			description={entry.data.description}
 			page={entry.data}

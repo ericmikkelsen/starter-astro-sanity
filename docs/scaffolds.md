@@ -45,7 +45,7 @@ That's it — the component is now available to reference from other schemas.
 
 ---
 
-## Block based webpage Scaffold
+## Block-based Webpage Scaffold
 
 ### What it does
 
@@ -61,7 +61,7 @@ Run the command and answer the prompts:
 npm run scaffold:web-block
 ```
 
-- **name** — a camelCase identifier for the document type, e.g. `landingPage` or `casestudy`
+- **name** — a camelCase identifier for the document type, e.g. `landingPage` or `caseStudy`
 - **urlPrefix** — the URL path segment where these pages will live, e.g. `case-studies` (produces `/case-studies/[slug]`)
 
 The command creates:
@@ -70,6 +70,7 @@ The command creates:
 - `src/lib/content/<name>Collection.ts` — GROQ query, TypeScript result types, and a mapper function
 - `src/lib/content/<name>CollectionLoader.ts` — an Astro Content Layer loader that runs the query
 - `src/pages/<urlPrefix>/[slug].astro` — the public-facing page route
+- `src/pages/preview/<urlPrefix>/[slug].astro` — the draft preview route
 
 ### After it runs
 
@@ -100,7 +101,7 @@ const DOCUMENT_ROUTE_PREFIXES: Record<string, string> = {
 
 ---
 
-## Portable text based webpage Scaffold
+## Portable-text-based Webpage Scaffold
 
 ### What it does
 
@@ -125,6 +126,7 @@ The command creates:
 - `src/lib/content/<name>Collection.ts` — GROQ query, TypeScript result types, and a mapper function
 - `src/lib/content/<name>CollectionLoader.ts` — an Astro Content Layer loader that runs the query
 - `src/pages/<urlPrefix>/[slug].astro` — the public-facing page route
+- `src/pages/preview/<urlPrefix>/[slug].astro` — the draft preview route
 
 ### After it runs
 
@@ -155,33 +157,32 @@ const DOCUMENT_ROUTE_PREFIXES: Record<string, string> = {
 
 ---
 
-## Preview Route Scaffold
+## Preview Routes
 
 ### What it does
 
-Creates a draft preview route for an existing content type. The preview route is a special Astro page that loads unpublished draft content at request time instead of at build time — it's what powers the "Open preview" button in Sanity Studio.
+Draft preview routes are generated automatically by the Web Block and Web Portable scaffolds. A preview route is a special Astro page that loads unpublished draft content at request time instead of at build time — it's what powers the "Open preview" button in Sanity Studio.
 
-Use this if you already have the schema, collection, and loader set up (e.g. from a Web Block or Web Portable scaffold) but don't yet have a preview route, or if you want to add preview support to a manually-created content type.
+There is currently no standalone `npm run scaffold:preview-route` command. The reusable helper lives in `scripts/scaffold-preview-route.ts` and is called by the document scaffolds.
 
 ### How to use it
 
-Run the command and answer the prompts:
+Generate a preview route by running one of the document scaffolds:
 
 ```
-npm run scaffold:preview-route
+npm run scaffold:web-block
+npm run scaffold:web-portable
 ```
 
-- **name** — the camelCase name of the existing document type (must match your collection)
-- **urlPrefix** — the URL path segment, e.g. `articles` (must match what you used in the loader)
-- **type** — `block` or `portable`, depending on which page layout template to use
+Each command asks for the document `name` and `urlPrefix`, then creates the matching preview route automatically.
 
-The command creates:
+Those commands create:
 
 - `src/pages/preview/<urlPrefix>/[slug].astro` — the draft preview page
 
 ### After it runs
 
-No config files need updating. However, before testing the preview, double-check that:
+No extra preview-specific config files need updating beyond the normal scaffold wiring. Before testing the preview, double-check that:
 
 1. The collection and loader are registered in `src/content.config.ts` (see the wiring steps in Web Block or Web Portable above).
 2. The document type is added to `DOCUMENT_ROUTE_PREFIXES` in `sanity/previewLinks.ts` (also in the wiring steps above).

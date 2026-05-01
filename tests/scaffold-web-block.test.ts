@@ -2,41 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
-	toPascalCase,
-	validateScaffoldInputs,
 	generateSanityBlockSchema,
 	generateBlockCollectionModule,
 	generateBlockCollectionLoader,
 	generateBlockPageRoute
 } from '../scripts/scaffold-web-block';
 
-// --- toPascalCase ---
-
-test('toPascalCase capitalizes the first letter', () => {
-	assert.equal(toPascalCase('campaign'), 'Campaign');
-	assert.equal(toPascalCase('landingPage'), 'LandingPage');
-	assert.equal(toPascalCase('a'), 'A');
-});
-
-// --- validateScaffoldInputs ---
-
-test('validateScaffoldInputs accepts valid name and urlPrefix', () => {
-	assert.doesNotThrow(() => {
-		validateScaffoldInputs('campaign', 'campaigns');
-	});
-});
-
-test('validateScaffoldInputs rejects invalid document type name', () => {
-	assert.throws(() => {
-		validateScaffoldInputs('../campaign', 'campaigns');
-	});
-});
-
-test('validateScaffoldInputs rejects invalid urlPrefix', () => {
-	assert.throws(() => {
-		validateScaffoldInputs('campaign', '../campaigns');
-	});
-});
+// Shared utilities (toPascalCase, validateScaffoldInputs) are tested in scaffold-utils.test.ts.
 
 // --- generateSanityBlockSchema ---
 

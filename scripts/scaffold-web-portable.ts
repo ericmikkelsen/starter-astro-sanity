@@ -69,77 +69,84 @@ export function generatePortableCollectionModule(
 ): string {
 	const pascal = toPascalCase(name);
 	const upper = name.toUpperCase();
-	return `import type { WebDocumentCore } from './shared';
-import type { TypedObject } from 'astro-portabletext/types';
-import {
-	projectObjectFields,
-	SANITY_IMAGE_ASSET_REF_FIELDS
-} from './groqProjections';
-
-export const SANITY_${upper}_COLLECTION_QUERY = \`*[_type == "${name}" && defined(slug.current)]{
-  _id,
-  title,
-  "slug": slug.current,
-  description,
-  \${projectObjectFields('metaImage', SANITY_IMAGE_ASSET_REF_FIELDS)},
-  metaImageAlt,
-  richText
-} | order(title asc)\`;
-
-export type Sanity${pascal}QueryResult = {
-	_id: string;
-	title?: string;
-	slug?: string;
-	description?: string;
-	metaImage?: {
-		asset?: {
-			_ref?: string;
-		};
-	};
-	metaImageAlt?: string;
-	richText?: TypedObject[];
-};
-
-export type ${pascal}CollectionEntryData = WebDocumentCore & {
-	body: TypedObject[];
-	path: string;
-};
-
-export type ${pascal}CollectionEntry = {
-	id: string;
-	data: ${pascal}CollectionEntryData;
-};
-
-/**
- * Maps a Sanity document into the generated Astro collection entry contract.
- * Invalid records are dropped by returning null when required values are missing.
- */
-export function mapSanity${pascal}ToCollectionEntry(
-	entry: Sanity${pascal}QueryResult
-): ${pascal}CollectionEntry | null {
-	if (!entry._id || !entry.slug || !entry.title) {
-		return null;
-	}
-
-	return {
-		id: entry._id,
-		data: {
-			title: entry.title,
-			slug: entry.slug,
-			description: entry.description,
-			metaImage: entry.metaImage?.asset?._ref
-				? {
-						assetRef: entry.metaImage.asset._ref,
-						alt: entry.metaImageAlt
-					}
-				: undefined,
-			metaImageAlt: entry.metaImageAlt,
-			body: entry.richText ?? [],
-			path: \`/${urlPrefix}/\${entry.slug}/\`
-		}
-	};
-}
-`;
+	return [
+		`import type { WebDocumentCore } from './shared';`,
+		`import type { TypedObject } from 'astro-portabletext/types';`,
+		`import {`,
+		`  projectObjectFields,`,
+		`  SANITY_IMAGE_ASSET_REF_FIELDS`,
+		`} from './groqProjections';`,
+		'',
+		`export const SANITY_${upper}_COLLECTION_QUERY = \`*[_type == "${name}" && defined(slug.current)]{`,
+		`  _id,`,
+		`  title,`,
+		`  "slug": slug.current,`,
+		`  description,`,
+		`  \${projectObjectFields('metaImage', SANITY_IMAGE_ASSET_REF_FIELDS)},`,
+		`  metaImageAlt,`,
+		`  richText`,
+		`} | order(title asc)\`;`,
+		'',
+		`export type Sanity${pascal}QueryResult = {`,
+		`  _id: string;`,
+		`  title?: string;`,
+		`  slug?: string;`,
+		`  description?: string;`,
+		`  metaImage?: {`,
+		`    asset?: {`,
+		`      _ref?: string;`,
+		`    };`,
+		`  };`,
+		`  metaImageAlt?: unknown;`,
+		`  richText?: TypedObject[];`,
+		`};`,
+		'',
+		`export type ${pascal}CollectionEntryData = WebDocumentCore & {`,
+		`  body: TypedObject[];`,
+		`  path: string;`,
+		`};`,
+		'',
+		`export type ${pascal}CollectionEntry = {`,
+		`  id: string;`,
+		`  data: ${pascal}CollectionEntryData;`,
+		`};`,
+		'',
+		'/**',
+		' * Maps a Sanity document into the generated Astro collection entry contract.',
+		' * Invalid records are dropped by returning null when required values are missing.',
+		' */',
+		`export function mapSanity${pascal}ToCollectionEntry(`,
+		`  entry: Sanity${pascal}QueryResult`,
+		`): ${pascal}CollectionEntry | null {`,
+		`  if (!entry._id || !entry.slug || !entry.title) {`,
+		`    return null;`,
+		`  }`,
+		'',
+		`  // Ensure metaImageAlt is always a string (handle object/array/null)`,
+		`  let metaImageAlt: string | undefined = undefined;`,
+		`  if (typeof entry.metaImageAlt === 'string') {`,
+		`    metaImageAlt = entry.metaImageAlt;`,
+		`  } else if (entry.metaImageAlt && typeof entry.metaImageAlt === 'object') {`,
+		`    metaImageAlt = JSON.stringify(entry.metaImageAlt);`,
+		`  } else if (entry.metaImageAlt != null) {`,
+		`    metaImageAlt = String(entry.metaImageAlt);`,
+		`  }`,
+		'',
+		`  return {`,
+		`    id: entry._id,`,
+		`    data: {`,
+		`      title: entry.title,`,
+		`      slug: entry.slug,`,
+		`      description: entry.description,`,
+		`      metaImage: (entry.metaImage && entry.metaImage.asset && entry.metaImage.asset._ref) ? { assetRef: entry.metaImage.asset._ref, alt: metaImageAlt } : undefined,`,
+		`      metaImageAlt: metaImageAlt,`,
+		`      body: entry.richText ?? [],`,
+		`      path: '/' + '${urlPrefix}/' + entry.slug + '/'`,
+		`    }`,
+		`  };`,
+		`}`,
+		''
+	].join('\n');
 }
 
 /**
@@ -254,11 +261,11 @@ const { entry, title = '', description = '' } = Astro.props as Props;
 ---
 
 <PortablePage
-	title={entry.title}
-	description={entry.description}
-	body={entry.body}
-	urlPrefix={urlPrefix}
-/>
+  title={entry.title}
+  description={entry.description}
+  body={entry.body}
+  urlPrefix="${urlPrefix}"
+/> 
 `;
 }
 

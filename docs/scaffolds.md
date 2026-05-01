@@ -15,7 +15,8 @@ Outputs:
 
 - sanity/schemaTypes/objects/<name>.ts
 - src/components/<category>/<PascalName>.astro
-  Wiring: Add printed import to sanity/schemaTypes/index.ts and export `<name>Type`.
+
+Wiring: Add printed import to sanity/schemaTypes/index.ts and export `<name>Type`.
 
 ---
 
@@ -32,7 +33,8 @@ Outputs:
 - src/lib/content/<name>Collection.ts
 - src/lib/content/<name>CollectionLoader.ts
 - src/pages/<urlPrefix>/[slug].astro
-  Wiring: Add printed import to sanity/schemaTypes/index.ts and register collection in src/content.config.ts.
+
+Wiring: Add printed import to sanity/schemaTypes/index.ts and register collection in src/content.config.ts.
 
 ---
 
@@ -49,7 +51,8 @@ Outputs:
 - src/lib/content/<name>Collection.ts
 - src/lib/content/<name>CollectionLoader.ts
 - src/pages/<urlPrefix>/[slug].astro
-  Wiring: Add printed import to sanity/schemaTypes/index.ts and register collection in src/content.config.ts.
+
+Wiring: Add printed import to sanity/schemaTypes/index.ts and register collection in src/content.config.ts.
 
 ---
 
@@ -63,9 +66,8 @@ Prompts: name, urlPrefix, type (block/portable)
 Outputs:
 
 - src/pages/preview/<urlPrefix>/[slug].astro
-  Wiring: No manual wiring; just ensure collection/loader are registered in src/content.config.ts.
 
----
+Wiring: No manual wiring; just ensure collection/loader are registered in src/content.config.ts.
 
 ---
 

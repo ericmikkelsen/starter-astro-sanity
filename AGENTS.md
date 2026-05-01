@@ -21,6 +21,17 @@ These assumptions apply to agent-driven work in this repository.
 - Keep chapter/story sequencing language in Markdown files only.
 - Do not add chapter/story wording to non-Markdown files (source code, tests, config, generated artifacts, or inline code comments).
 
+## Review Tools
+
+- Use `scripts/git-diff-summary.sh [target-branch]` to quickly summarize files and lines changed versus another branch.
+    - This script automatically skips deleted files, `package-lock.json`, and Sanity typegen files (`src/sanity/extract.json`, `src/sanity/types.ts`).
+    - Useful for reviewers to check the true reviewability budget and ignore generated artifacts.
+    - Example: `./scripts/git-diff-summary.sh main`
+
+- For reviewability budget details, see `.github/skills/code-review-and-quality/SKILL.md`.
+
+- Always check the diff summary before finalizing a PR or chapter branch.
+
 ## Source of Truth
 
 - Keep this file aligned with [.github/copilot-instructions.md](.github/copilot-instructions.md) when shared assumptions change.

@@ -1,4 +1,5 @@
 import type ImageType from '../../types/image';
+import type { Page as SanityPage } from '../../sanity/types';
 
 /**
  * Narrow portable text block representation used by the scaffolded rich-text block.
@@ -7,6 +8,8 @@ export type PortableTextBlock = {
 	_type: string;
 	[key: string]: unknown;
 };
+
+type SanityPageBuilderBlock = SanityPage['blocks'][number];
 
 /**
  * Shared rendering settings applied to all block components by the renderer.
@@ -20,30 +23,25 @@ export type BlockSettings = {
 };
 
 export type ArrayPageBuilderBlock =
-	| {
-			_type: 'billboard';
-			heading?: string;
-			body?: string;
+	| (Omit<
+			Extract<SanityPageBuilderBlock, { _type: 'billboard' }>,
+			'image'
+	  > & {
 			image?: ImageType;
-	  }
-	| {
-			_type: 'listScroller';
-			heading?: string;
-			body?: string;
-			items?: string[];
-	  }
-	| {
-			_type: 'peopleRefs';
-			heading?: string;
-			body?: string;
+	  })
+	| Extract<SanityPageBuilderBlock, { _type: 'listScroller' }>
+	| (Omit<
+			Extract<SanityPageBuilderBlock, { _type: 'peopleRefs' }>,
+			'people'
+	  > & {
 			people?: Array<{ _id: string; name?: string }>;
-	  }
-	| {
-			_type: 'richText';
-			heading?: string;
-			body?: string;
+	  })
+	| (Omit<
+			Extract<SanityPageBuilderBlock, { _type: 'richText' }>,
+			'richText'
+	  > & {
 			richText?: PortableTextBlock[];
-	  };
+	  });
 
 /**
  * Utility type to derive a specific block shape by `_type` key.

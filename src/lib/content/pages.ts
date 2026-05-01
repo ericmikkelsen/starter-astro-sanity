@@ -16,11 +16,7 @@ const PAGE_QUERY = `*[_type == "page" && defined(slug.current)]{
 	${projectObjectFields('metaImage', SANITY_IMAGE_ASSET_REF_FIELDS)},
   metaImageAlt,
 	blocks[]{
-		_type,
-		heading,
-		body,
-		richText,
-		items,
+		...,
 		image {
 			${SANITY_IMAGE_METADATA_PROJECTION}
 		},
@@ -40,11 +36,7 @@ const PAGE_BY_SLUG_QUERY = `*[_type == "page" && slug.current == $slug][0]{
 	${projectObjectFields('metaImage', SANITY_IMAGE_ASSET_REF_FIELDS)},
   metaImageAlt,
 	blocks[]{
-		_type,
-		heading,
-		body,
-		richText,
-		items,
+		...,
 		image {
 			${SANITY_IMAGE_METADATA_PROJECTION}
 		},

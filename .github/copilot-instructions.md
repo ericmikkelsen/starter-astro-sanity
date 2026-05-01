@@ -40,6 +40,11 @@
 - **Ask first:** Database schema changes, new dependencies, breaking API changes
 - **Never:** Commit secrets, remove failing tests without approval, skip CI verification
 
+## Language Scope
+
+- Keep chapter/story sequencing language in Markdown files only.
+- Do not add chapter/story wording to non-Markdown files (source code, tests, config, generated artifacts, or inline code comments).
+
 ## Skills
 
 The following [Addy Osmani agent skills](https://github.com/addyosmani/agent-skills) are available in `.github/skills/`:

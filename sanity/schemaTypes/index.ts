@@ -1,13 +1,21 @@
-import type { SchemaTypeDefinition } from 'sanity';
+import { defineType, type SchemaTypeDefinition } from 'sanity';
 
 import { pageType } from './documents/page';
+import { personType } from './documents/person';
+import { scaffoldPortableTextDocument } from './documents/webContent';
+import {
+	billboardType,
+	listScrollerType,
+	peopleRefsType,
+	richTextType
+} from './objects/arrayBlockPrimitives';
 import {
 	bodyTextType,
 	headingType,
 	imageObjectType,
 	linkType,
 	listType,
-	subheadingType,
+	subheadingType
 } from './objects/bodyBlocks';
 
 /**
@@ -18,10 +26,20 @@ import {
  */
 export const schemaTypes: SchemaTypeDefinition[] = [
 	pageType,
+	personType,
+	defineType({
+		name: 'blog',
+		title: 'Blog',
+		...scaffoldPortableTextDocument
+	}),
 	headingType,
 	subheadingType,
 	bodyTextType,
 	linkType,
 	listType,
 	imageObjectType,
+	billboardType,
+	listScrollerType,
+	peopleRefsType,
+	richTextType
 ];

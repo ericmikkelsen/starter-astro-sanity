@@ -1,41 +1,11 @@
 ---
-import '../styles/global.css';
+import { getPageStaticPaths } from '../lib/content/routeData';
+import BlocksPage from '../layouts/BlocksPage.astro';
 
-import { getAstroPages } from '../lib/content/pages';
+export const prerender = true;
+export const getStaticPaths = getPageStaticPaths;
 
-export async function getStaticPaths() {
-	const pages = await getAstroPages();
-
-	return pages.map((page) => ({
-		params: { slug: page.slug },
-		props: { page },
-	}));
-}
-
-const { page } = Astro.props;
+const { title = '', description = '', page } = Astro.props;
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<title>{page.title}</title>
-	</head>
-	<body class="bg-stone-50 text-stone-900">
-		<main
-			class="mx-auto flex min-h-screen max-w-3xl flex-col gap-4 px-6 py-14"
-		>
-			<a
-				class="text-sm font-semibold tracking-[0.14em] text-emerald-700 uppercase"
-				href="/">Back to home</a
-			>
-			<h1 class="text-4xl leading-tight font-bold">{page.title}</h1>
-			{
-				page.description ? (
-					<p class="text-lg text-stone-700">{page.description}</p>
-				) : null
-			}
-		</main>
-	</body>
-</html>
+<BlocksPage title={title} description={description} page={page} />

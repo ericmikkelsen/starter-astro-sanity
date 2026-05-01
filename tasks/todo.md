@@ -7,7 +7,7 @@ This file is a starter example. Copy and adapt it for your feature.
 - [ ] Task 3: Add quality gates and checks
 - [ ] Task 4: Prepare PR communication
 
-## Next Story Prep (Content-Focused)
+## LLM integration
 
-- [ ] Evaluate Astro Content Layer API with a custom Sanity loader instead of file-based content collections
-- [ ] Validate preview-mode compatibility (draft perspective and token handling) in the loader design
+- [ ] agent mcp integration
+- [ ] agent actions

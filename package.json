@@ -12,6 +12,9 @@
 		"astro": "astro",
 		"sanity:schema:extract": "sanity schema extract --enforce-required-fields --path=./src/sanity/extract.json",
 		"sanity:typegen": "node scripts/run-sanity-typegen.mjs",
+		"scaffold:web-block": "node --import tsx scripts/scaffold-web-block.ts",
+		"scaffold:web-portable": "node --import tsx scripts/scaffold-web-portable.ts",
+		"scaffold:component": "node --import tsx scripts/scaffold-component.ts",
 		"start": "npm run dev",
 		"test": "node --import tsx --test tests/**/*.test.ts",
 		"prepare": "husky",
@@ -42,18 +45,21 @@
 		"typescript": "^5.9.3"
 	},
 	"dependencies": {
+		"@astrojs/node": "^10.0.6",
 		"@astrojs/react": "^5.0.4",
 		"@sanity/astro": "^3.3.1",
 		"@sanity/client": "^7.22.0",
+		"@sanity/visual-editing": "5.3.4",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
 		"@types/react-is": "^19.2.0",
 		"@types/styled-components": "^5.1.36",
 		"astro": "^6.1.9",
+		"astro-portabletext": "^0.13.0",
 		"react": "^19.2.5",
 		"react-dom": "^19.2.5",
 		"react-is": "^19.2.5",
-		"sanity": "^5.22.0",
+		"sanity": "^5.23.0",
 		"styled-components": "^6.4.1"
 	}
 }

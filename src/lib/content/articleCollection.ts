@@ -77,7 +77,7 @@ export function mapSanityArticleToCollectionEntry(
 					: undefined,
 			metaImageAlt: metaImageAlt,
 			body: entry.richText ?? [],
-			path: '/' + 'article/' + entry.slug + '/'
+			path: '/' + 'articles/' + entry.slug + '/'
 		}
 	};
 }

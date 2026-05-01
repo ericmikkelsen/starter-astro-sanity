@@ -7,7 +7,7 @@ import {
 	billboardType,
 	listScrollerType,
 	peopleRefsType,
-	richTextType,
+	richTextType
 } from './objects/arrayBlockPrimitives';
 import {
 	bodyTextType,
@@ -15,7 +15,7 @@ import {
 	imageObjectType,
 	linkType,
 	listType,
-	subheadingType,
+	subheadingType
 } from './objects/bodyBlocks';
 
 /**
@@ -30,7 +30,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
 	defineType({
 		name: 'blog',
 		title: 'Blog',
-		...scaffoldPortableTextDocument,
+		...scaffoldPortableTextDocument
 	}),
 	headingType,
 	subheadingType,
@@ -41,5 +41,5 @@ export const schemaTypes: SchemaTypeDefinition[] = [
 	billboardType,
 	listScrollerType,
 	peopleRefsType,
-	richTextType,
+	richTextType
 ];

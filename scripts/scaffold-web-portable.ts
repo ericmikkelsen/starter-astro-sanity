@@ -9,6 +9,7 @@ import {
 	createPromptSession,
 	writeGeneratedFile
 } from './scaffold-utils';
+import { writePreviewRoute } from './scaffold-preview-route';
 
 // Re-export shared utilities so tests and consumers can import them
 // from this module without needing to know they live in scaffold-utils.
@@ -68,77 +69,95 @@ export function generatePortableCollectionModule(
 ): string {
 	const pascal = toPascalCase(name);
 	const upper = name.toUpperCase();
-	return `import type { WebDocumentCore } from './shared';
-import type { TypedObject } from 'astro-portabletext/types';
-import {
-	projectObjectFields,
-	SANITY_IMAGE_ASSET_REF_FIELDS
-} from './groqProjections';
-
-export const SANITY_${upper}_COLLECTION_QUERY = \`*[_type == "${name}" && defined(slug.current)]{
-  _id,
-  title,
-  "slug": slug.current,
-  description,
-  \${projectObjectFields('metaImage', SANITY_IMAGE_ASSET_REF_FIELDS)},
-  metaImageAlt,
-  richText
-} | order(title asc)\`;
-
-export type Sanity${pascal}QueryResult = {
-	_id: string;
-	title?: string;
-	slug?: string;
-	description?: string;
-	metaImage?: {
-		asset?: {
-			_ref?: string;
-		};
-	};
-	metaImageAlt?: string;
-	richText?: TypedObject[];
-};
-
-export type ${pascal}CollectionEntryData = WebDocumentCore & {
-	body: TypedObject[];
-	path: string;
-};
-
-export type ${pascal}CollectionEntry = {
-	id: string;
-	data: ${pascal}CollectionEntryData;
-};
-
-/**
- * Maps a Sanity document into the generated Astro collection entry contract.
- * Invalid records are dropped by returning null when required values are missing.
- */
-export function mapSanity${pascal}ToCollectionEntry(
-	entry: Sanity${pascal}QueryResult
-): ${pascal}CollectionEntry | null {
-	if (!entry._id || !entry.slug || !entry.title) {
-		return null;
-	}
-
-	return {
-		id: entry._id,
-		data: {
-			title: entry.title,
-			slug: entry.slug,
-			description: entry.description,
-			metaImage: entry.metaImage?.asset?._ref
-				? {
-						assetRef: entry.metaImage.asset._ref,
-						alt: entry.metaImageAlt
-					}
-				: undefined,
-			metaImageAlt: entry.metaImageAlt,
-			body: entry.richText ?? [],
-			path: \`/${urlPrefix}/\${entry.slug}/\`
-		}
-	};
-}
-`;
+	return [
+		`import type { WebDocumentCore } from './shared';`,
+		`import type { TypedObject } from 'astro-portabletext/types';`,
+		`import {`,
+		`  projectObjectFields,`,
+		`  SANITY_IMAGE_ASSET_REF_FIELDS`,
+		`} from './groqProjections';`,
+		'',
+		`export const SANITY_${upper}_COLLECTION_QUERY = \`*[_type == "${name}" && defined(slug.current)]{`,
+		`  _id,`,
+		`  title,`,
+		`  "slug": slug.current,`,
+		`  description,`,
+		`  \${projectObjectFields('metaImage', SANITY_IMAGE_ASSET_REF_FIELDS)},`,
+		`  metaImageAlt,`,
+		`  richText`,
+		`} | order(title asc)\`;`,
+		'',
+		`/** Single-document query for preview routes. Accepts a \\$slug GROQ param. */`,
+		`export const SANITY_${upper}_PREVIEW_QUERY = \`*[_type == "${name}" && slug.current == $slug][0]{`,
+		`  _id,`,
+		`  title,`,
+		`  "slug": slug.current,`,
+		`  description,`,
+		`  \${projectObjectFields('metaImage', SANITY_IMAGE_ASSET_REF_FIELDS)},`,
+		`  metaImageAlt,`,
+		`  richText`,
+		`}\`;`,
+		'',
+		`export type Sanity${pascal}QueryResult = {`,
+		`  _id: string;`,
+		`  title?: string;`,
+		`  slug?: string;`,
+		`  description?: string;`,
+		`  metaImage?: {`,
+		`    asset?: {`,
+		`      _ref?: string;`,
+		`    };`,
+		`  };`,
+		`  metaImageAlt?: unknown;`,
+		`  richText?: TypedObject[];`,
+		`};`,
+		'',
+		`export type ${pascal}CollectionEntryData = WebDocumentCore & {`,
+		`  body: TypedObject[];`,
+		`  path: string;`,
+		`};`,
+		'',
+		`export type ${pascal}CollectionEntry = {`,
+		`  id: string;`,
+		`  data: ${pascal}CollectionEntryData;`,
+		`};`,
+		'',
+		'/**',
+		' * Maps a Sanity document into the generated Astro collection entry contract.',
+		' * Invalid records are dropped by returning null when required values are missing.',
+		' */',
+		`export function mapSanity${pascal}ToCollectionEntry(`,
+		`  entry: Sanity${pascal}QueryResult`,
+		`): ${pascal}CollectionEntry | null {`,
+		`  if (!entry._id || !entry.slug || !entry.title) {`,
+		`    return null;`,
+		`  }`,
+		'',
+		`  // Ensure metaImageAlt is always a string (handle object/array/null)`,
+		`  let metaImageAlt: string | undefined = undefined;`,
+		`  if (typeof entry.metaImageAlt === 'string') {`,
+		`    metaImageAlt = entry.metaImageAlt;`,
+		`  } else if (entry.metaImageAlt && typeof entry.metaImageAlt === 'object') {`,
+		`    metaImageAlt = JSON.stringify(entry.metaImageAlt);`,
+		`  } else if (entry.metaImageAlt != null) {`,
+		`    metaImageAlt = String(entry.metaImageAlt);`,
+		`  }`,
+		'',
+		`  return {`,
+		`    id: entry._id,`,
+		`    data: {`,
+		`      title: entry.title,`,
+		`      slug: entry.slug,`,
+		`      description: entry.description,`,
+		`      metaImage: (entry.metaImage && entry.metaImage.asset && entry.metaImage.asset._ref) ? { assetRef: entry.metaImage.asset._ref, alt: metaImageAlt } : undefined,`,
+		`      metaImageAlt: metaImageAlt,`,
+		`      body: entry.richText ?? [],`,
+		`      path: '/' + '${urlPrefix}/' + entry.slug + '/'`,
+		`    }`,
+		`  };`,
+		`}`,
+		''
+	].join('\n');
 }
 
 /**
@@ -227,11 +246,8 @@ export function generatePortablePageRoute(
 	const pascal = toPascalCase(name);
 	return `---
 import '../../styles/global.css';
-
 import { getCollection } from 'astro:content';
-import { PortableText } from 'astro-portabletext';
-import HTML from '../../layouts/html.astro';
-import PortableTextLinkMark from '../../components/portableText/PortableTextLinkMark.astro';
+import PortablePage from '../../layouts/PortablePage.astro';
 import type { ${pascal}CollectionEntryData } from '../../lib/content/${name}Collection';
 
 interface Props {
@@ -253,37 +269,14 @@ export async function getStaticPaths() {
 }
 
 const { entry, title = '', description = '' } = Astro.props as Props;
-const components = {
-	mark: {
-		portableTextLink: PortableTextLinkMark
-	}
-};
 ---
 
-<HTML title={title} description={description}>
-	<div class="mx-auto flex min-h-screen max-w-3xl flex-col gap-4 px-6 py-14">
-		<a
-			class="text-sm font-semibold tracking-[0.14em] text-emerald-700 uppercase"
-			href="/${urlPrefix}/">Back to ${urlPrefix}</a
-		>
-		<h1 class="text-4xl leading-tight font-bold">{entry.title}</h1>
-		{
-			entry.description ? (
-				<p class="text-lg text-stone-700">{entry.description}</p>
-			) : null
-		}
-		<article class="prose prose-stone mt-4 max-w-none">
-			<PortableText value={entry.body} {components} />
-		</article>
-		{
-			entry.body.length === 0 ? (
-				<p class="text-sm text-stone-600">
-					No portable text body configured for this ${title} yet.
-				</p>
-			) : null
-		}
-	</div>
-</HTML>
+<PortablePage
+  title={entry.title}
+  description={entry.description}
+  body={entry.body}
+  urlPrefix="${urlPrefix}"
+/> 
 `;
 }
 
@@ -320,6 +313,7 @@ export function writeScaffoldFiles(
 		resolve(`src/pages/${urlPrefix}/[slug].astro`),
 		generatePortablePageRoute(name, title, urlPrefix)
 	);
+	writePreviewRoute(name, urlPrefix, 'portable');
 }
 
 // ---------------------------------------------------------------------------

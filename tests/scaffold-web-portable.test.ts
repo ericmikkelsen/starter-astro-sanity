@@ -119,10 +119,10 @@ test('generatePortableCollectionModule exports a mapper function', () => {
 
 test('generatePortableCollectionModule builds the path from urlPrefix', () => {
 	const src = generatePortableCollectionModule('article', 'resources');
+	// Assert the full concatenation shape: leading slash, prefix, slug segment, and trailing slash
 	assert.ok(
-		src.includes('`/resources/${entry.slug}/`') ||
-			src.includes("'/resources/' + entry.slug"),
-		'path should include the url prefix'
+		src.includes("'/' + 'resources/' + entry.slug + '/'"),
+		'path should concatenate leading slash, urlPrefix, entry.slug, and trailing slash'
 	);
 });
 
@@ -154,11 +154,13 @@ test('generatePortableCollectionLoader includes body in schema validation', () =
 
 // --- generatePortablePageRoute ---
 
-test('generatePortablePageRoute imports PortableText component', () => {
+test('generatePortablePageRoute imports PortablePage layout', () => {
 	const src = generatePortablePageRoute('article', 'Article', 'articles');
 	assert.ok(
-		src.includes("import { PortableText } from 'astro-portabletext'"),
-		'should import PortableText renderer'
+		src.includes(
+			"import PortablePage from '../../layouts/PortablePage.astro'"
+		),
+		'should import PortablePage layout'
 	);
 });
 
@@ -174,19 +176,19 @@ test('generatePortablePageRoute imports the generated entry type', () => {
 	);
 });
 
-test('generatePortablePageRoute includes a back-link using the urlPrefix', () => {
+test('generatePortablePageRoute passes urlPrefix to PortablePage', () => {
 	const src = generatePortablePageRoute('article', 'Article', 'resources');
 	assert.ok(
-		src.includes('href="/resources/"'),
-		'back-link should use the url prefix'
+		src.includes('urlPrefix="resources"'),
+		'should pass urlPrefix prop to PortablePage'
 	);
 });
 
-test('generatePortablePageRoute renders portable body content', () => {
+test('generatePortablePageRoute passes body to PortablePage', () => {
 	const src = generatePortablePageRoute('article', 'Article', 'articles');
 	assert.ok(
-		src.includes('<PortableText value={entry.body} {components} />'),
-		'should render portable body from mapped entry data'
+		src.includes('body={entry.body}'),
+		'should pass body prop to PortablePage'
 	);
 });
 
@@ -194,5 +196,8 @@ test('generatePortablePageRoute uses static paths with the generated collection'
 	const src = generatePortablePageRoute('article', 'Article', 'articles');
 	assert.ok(src.includes('export async function getStaticPaths()'));
 	assert.ok(src.includes("getCollection('article')"));
-	assert.ok(src.includes('<HTML title={title} description={description}>'));
+	assert.ok(
+		src.includes('<PortablePage'),
+		'should render via PortablePage layout'
+	);
 });

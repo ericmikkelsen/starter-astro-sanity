@@ -1,36 +1,76 @@
-# Scaffold Commands
+# Scaffold Generators
 
-## Component Scaffold
+Scaffold commands automate Sanity schemas, Astro components, content loaders, and preview routes for new content types.
 
-Use this command to generate a reusable Sanity object schema and matching Astro component.
+---
 
-```bash
+**Component Scaffold**
+
+```
 npm run scaffold:component
 ```
 
-### Prompts
+Prompts: name, category, fields, body type
+Outputs:
 
-1. Component name (camelCase, example: `featureCard`)
-2. Component category (`atoms`, `molecules`, `organisms`, `blocks`)
-3. Field include prompts (`y/N`) for:
-    - `heading`
-    - `subheading`
-    - `body`
-    - `link`
-    - `image`
-    - `links`
-    - `cards`
-4. If `body` is selected: body type (`string` or `portable`)
+- sanity/schemaTypes/objects/<name>.ts
+- src/components/<category>/<PascalName>.astro
+  Wiring: Add printed import to sanity/schemaTypes/index.ts and export `<name>Type`.
 
-### Generated Files
+---
 
-- `sanity/schemaTypes/objects/<name>.ts`
-- `src/components/<category>/<PascalName>.astro`
+**Web Block Scaffold**
 
-### Follow-up Wiring
+```
+npm run scaffold:web-block
+```
 
-The command prints the exact import snippet to register the generated schema in:
+Prompts: name, urlPrefix
+Outputs:
 
-- `sanity/schemaTypes/index.ts`
+- sanity/schemaTypes/documents/<name>.ts
+- src/lib/content/<name>Collection.ts
+- src/lib/content/<name>CollectionLoader.ts
+- src/pages/<urlPrefix>/[slug].astro
+  Wiring: Add printed import to sanity/schemaTypes/index.ts and register collection in src/content.config.ts.
 
-Copy the printed import line and add `<name>Type` to the exported `schemaTypes` array.
+---
+
+**Web Portable Scaffold**
+
+```
+npm run scaffold:web-portable
+```
+
+Prompts: name, urlPrefix
+Outputs:
+
+- sanity/schemaTypes/documents/<name>.ts
+- src/lib/content/<name>Collection.ts
+- src/lib/content/<name>CollectionLoader.ts
+- src/pages/<urlPrefix>/[slug].astro
+  Wiring: Add printed import to sanity/schemaTypes/index.ts and register collection in src/content.config.ts.
+
+---
+
+**Preview Route Scaffold**
+
+```
+npm run scaffold:preview-route
+```
+
+Prompts: name, urlPrefix, type (block/portable)
+Outputs:
+
+- src/pages/preview/<urlPrefix>/[slug].astro
+  Wiring: No manual wiring; just ensure collection/loader are registered in src/content.config.ts.
+
+---
+
+---
+
+**Guidance**
+All scaffold commands print copy-pasteable import/registration snippets. Always follow printed instructions.
+
+**Testing**
+Contract tests for all generators are in `tests/` (see: scaffold-web-block.test.ts, scaffold-web-portable.test.ts, scaffold-component.test.ts, scaffold-preview-route.test.ts, scaffold-utils.test.ts). Tests cover input validation, file output, route-prefix, loader/preview integration, and guidance output.

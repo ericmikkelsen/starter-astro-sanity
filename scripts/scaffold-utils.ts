@@ -115,13 +115,14 @@ export function printScaffoldGuidance(name: string, urlPrefix: string): void {
 Next — copy and paste these into your config files:
 
 	sanity/schemaTypes/index.ts
-${pink}  import { ${name}Type } from './documents/${name}';
-	// add ${name}Type to the types array${reset}
+${pink}  import { ${name}Type } from './documents/${name}'; // ← add this line
+  // add to the types array:
+  export const schemaTypes = [..., ${name}Type]; // ← add ${name}Type${reset}
 
 	src/content.config.ts
-${pink}  import { create${pascal}CollectionLoader } from './lib/content/${name}CollectionLoader';
-	const ${name} = defineCollection({ loader: create${pascal}CollectionLoader() });
-	// add ${name} to the collections export${reset}
+${pink}  import { create${pascal}CollectionLoader } from './lib/content/${name}CollectionLoader'; // ← add this line
+  const ${name} = defineCollection({ loader: create${pascal}CollectionLoader() }); // ← add this line
+  export const collections = { ..., ${name} }; // ← add ${name}${reset}
 
 	sanity/previewLinks.ts
 ${pink}${previewLinksExample}${reset}

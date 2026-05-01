@@ -5,6 +5,7 @@ import {
 	SANITY_IMAGE_ASSET_REF_FIELDS,
 	SANITY_IMAGE_METADATA_PROJECTION
 } from './groqProjections';
+import { normalizePageSlug, toPagePath } from './pageSlug';
 import { loadQuery } from './preview';
 
 const PAGE_QUERY = `*[_type == "page" && defined(slug.current)]{
@@ -82,10 +83,15 @@ export function mapSanityPageToAstroPage(
 		return null;
 	}
 
+	const normalizedSlug = normalizePageSlug(entry.slug);
+	if (!normalizedSlug) {
+		return null;
+	}
+
 	return {
 		id: entry._id,
 		title: entry.title,
-		slug: entry.slug,
+		slug: normalizedSlug,
 		description: entry.description,
 		metaImage: entry.metaImage?.asset?._ref
 			? {
@@ -98,7 +104,7 @@ export function mapSanityPageToAstroPage(
 		documentType: entry._type,
 		blocks: entry.blocks,
 		// Astro routes are emitted with trailing slashes, so the mapped path mirrors build output.
-		path: `/${entry.slug}/`
+		path: toPagePath(normalizedSlug)
 	};
 }
 
@@ -131,10 +137,15 @@ export async function getAstroPages(): Promise<AstroPage[]> {
 export async function getAstroPageBySlugDirect(
 	slug: string
 ): Promise<AstroPage | undefined> {
+	const normalizedSlug = normalizePageSlug(slug);
+	if (!normalizedSlug) {
+		return undefined;
+	}
+
 	try {
 		const result = await loadQuery<SanityPageQueryResult | null>(
 			PAGE_BY_SLUG_QUERY,
-			{ slug }
+			{ slug: normalizedSlug }
 		);
 		if (!result) return undefined;
 		return mapSanityPageToAstroPage(result) ?? undefined;

@@ -1,5 +1,6 @@
 import { getAstroBlogPosts, type AstroBlogPost } from './blog';
 import { getAstroPages, type AstroPage } from './pages';
+import { toPageRouteParam } from './pageSlug';
 
 type SlugRouteParams = {
 	slug: string;
@@ -23,14 +24,23 @@ export type BlogRouteProps = {
 export async function getPageStaticPaths() {
 	const pages = await getAstroPages();
 
-	return pages.map((page) => ({
-		params: { slug: page.slug } satisfies SlugRouteParams,
-		props: {
-			page,
-			title: page.title,
-			description: page.description
-		} satisfies PageRouteProps
-	}));
+	return pages.flatMap((page) => {
+		const slug = toPageRouteParam(page.slug);
+		if (!slug) {
+			return [];
+		}
+
+		return [
+			{
+				params: { slug } satisfies SlugRouteParams,
+				props: {
+					page,
+					title: page.title,
+					description: page.description
+				} satisfies PageRouteProps
+			}
+		];
+	});
 }
 
 /**

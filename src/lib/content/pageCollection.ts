@@ -3,6 +3,7 @@ import {
 	projectObjectFields,
 	SANITY_IMAGE_ASSET_REF_FIELDS
 } from './groqProjections';
+import { normalizePageSlug, toPagePath } from './pageSlug';
 
 /**
  * Canonical published-page query used by the build-time Astro content loader.
@@ -60,11 +61,16 @@ export function mapSanityPageToCollectionEntry(
 		return null;
 	}
 
+	const normalizedSlug = normalizePageSlug(entry.slug);
+	if (!normalizedSlug) {
+		return null;
+	}
+
 	return {
 		id: entry._id,
 		data: {
 			title: entry.title,
-			slug: entry.slug,
+			slug: normalizedSlug,
 			description: entry.description,
 			// The content layer stores only the image fields current routes/renderers need.
 			metaImage: entry.metaImage?.asset?._ref
@@ -75,7 +81,7 @@ export function mapSanityPageToCollectionEntry(
 				: undefined,
 			metaImageAlt: entry.metaImageAlt,
 			// Route parity matters so existing page URLs keep matching the earlier fetch path.
-			path: `/${entry.slug}/`
+			path: toPagePath(normalizedSlug)
 		}
 	};
 }

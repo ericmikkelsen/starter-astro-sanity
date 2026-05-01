@@ -8,6 +8,11 @@ import { spawnSync } from 'node:child_process';
 import { mapSanityPageToAstroPage } from '../src/lib/content/pages';
 import { mapSanityPageToCollectionEntry } from '../src/lib/content/pageCollection';
 import { resolvePageCollectionLoaderMode } from '../src/lib/content/pageCollectionLoader';
+import {
+	normalizePageSlug,
+	toPagePath,
+	toPageRouteParam
+} from '../src/lib/content/pageSlug';
 
 /**
  * These tests cover the pure normalization helpers used by both the legacy page
@@ -115,6 +120,40 @@ test('mapSanityPageToAstroPage ignores legacy pageBuilder fallback', () => {
 	assert.equal(mapped?.id, 'legacy-page-builder-1');
 	assert.equal(mapped?.blocks, undefined);
 	assert.equal(mapped?.path, '/legacy-landing/');
+});
+
+test('mapSanityPageToAstroPage treats slash slug as homepage path', () => {
+	const mapped = mapSanityPageToAstroPage({
+		_type: 'page',
+		_id: 'home-page-1',
+		title: 'Home',
+		slug: '/'
+	});
+
+	assert.ok(mapped);
+	assert.equal(mapped?.slug, '/');
+	assert.equal(mapped?.path, '/');
+});
+
+test('mapSanityPageToCollectionEntry treats slash slug as homepage path', () => {
+	const mapped = mapSanityPageToCollectionEntry({
+		_id: 'home-page-2',
+		title: 'Home',
+		slug: '/'
+	});
+
+	assert.ok(mapped);
+	assert.equal(mapped?.data.slug, '/');
+	assert.equal(mapped?.data.path, '/');
+});
+
+test('page slug helpers normalize root and dynamic route params', () => {
+	assert.equal(normalizePageSlug('///'), '/');
+	assert.equal(normalizePageSlug('/about/'), 'about');
+	assert.equal(toPagePath('/'), '/');
+	assert.equal(toPagePath('/about/'), '/about/');
+	assert.equal(toPageRouteParam('/'), undefined);
+	assert.equal(toPageRouteParam('/about/'), 'about');
 });
 
 /**

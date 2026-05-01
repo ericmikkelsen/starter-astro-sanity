@@ -61,6 +61,19 @@ const resolveDocumentSlug = (
 	return undefined;
 };
 
+const normalizePreviewSlug = (slug: string): string => {
+	const trimmed = slug.trim();
+	if (!trimmed) {
+		return '';
+	}
+
+	if (/^\/+$/u.test(trimmed)) {
+		return '/';
+	}
+
+	return trimmed.replace(/^\/+|\/+$/gu, '');
+};
+
 /**
  * Resolves the production preview URL for supported routable document types.
  */
@@ -77,8 +90,15 @@ export const resolveDocumentProductionUrl = (
 		return undefined;
 	}
 
+	const normalizedSlug = normalizePreviewSlug(slug);
+	if (!normalizedSlug) {
+		return undefined;
+	}
+
 	const baseUrl = resolvePreviewSiteUrl(options);
 	const routePrefix = DOCUMENT_ROUTE_PREFIXES[document._type];
 
-	return `${baseUrl}${routePrefix}/${slug}`;
+	return normalizedSlug === '/'
+		? `${baseUrl}${routePrefix}`
+		: `${baseUrl}${routePrefix}/${normalizedSlug}`;
 };

@@ -56,6 +56,22 @@ test('resolveDocumentProductionUrl maps page documents to top-level routes', () 
 	);
 });
 
+test('resolveDocumentProductionUrl maps slash slug to preview root route', () => {
+	assert.equal(
+		resolveDocumentProductionUrl(
+			{
+				_type: 'page',
+				slug: { current: '/' }
+			},
+			{
+				importMetaEnv: {},
+				processEnv: {}
+			}
+		),
+		'http://localhost:4321/preview'
+	);
+});
+
 test('resolveDocumentProductionUrl maps blog documents to blog routes', () => {
 	assert.equal(
 		resolveDocumentProductionUrl(

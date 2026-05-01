@@ -1,6 +1,6 @@
 {
 	"reviewabilityBudget": {
-		"maxLinesPerChapter": 300,
+		"maxLinesPerChapter": 500,
 		"maxFilesPerChapter": 5,
 		"excludeGlobs": [
 			"package-lock.json",

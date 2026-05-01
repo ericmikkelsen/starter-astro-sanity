@@ -96,7 +96,7 @@ page: defineLocations({
 
 **`WEB_PAGE_FIELDS` schema composition**
 
-Shared metadata fields (`title`, `slug`, `description`, `metaImage`, `metaImageAlt`) are composed via a `WEB_PAGE_FIELDS` array in `sanity/schemaTypes/webPageFields.ts` and spread into every document schema. New document types from the scaffold CLI inherit these fields automatically, so SEO/meta field shape stays consistent across content types.
+Shared metadata fields (`title`, `slug`, `description`, `metaImage`, `metaImageAlt`) are defined in `sanity/schemaTypes/webPageFields.ts` as a `WEB_PAGE_FIELDS` object keyed by field name. When composing a document schema, spread `Object.values(WEB_PAGE_FIELDS)` into the schema `fields` array. New document types from the scaffold CLI inherit these fields automatically, so SEO/meta field shape stays consistent across content types.
 
 ## Requirements
 

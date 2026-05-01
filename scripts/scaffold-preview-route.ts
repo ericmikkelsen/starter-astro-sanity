@@ -4,6 +4,10 @@ import { writeGeneratedFile, toPascalCase } from './scaffold-utils';
 /**
  * Generates a preview route for a scaffolded content type.
  *
+ * The generated route fetches drafts at request time via `loadQuery` so that
+ * unpublished content is visible in Sanity's Presentation tool. It depends only
+ * on the exports the scaffold's collection module already provides.
+ *
  * @param name       Sanity document type name (e.g. 'article').
  * @param urlPrefix  URL path prefix for generated routes (e.g. 'articles').
  * @param type       'block' | 'portable' — determines which template to use.
@@ -14,28 +18,52 @@ export function generatePreviewRoute(
 	type: 'block' | 'portable'
 ) {
 	const pascal = toPascalCase(name);
-	if (type === 'block') {
-		return `---
-import { getAstro${pascal}BySlug } from '../../../lib/content/${name}';
-import BlocksPage from '../../../layouts/BlocksPage.astro';
-import HTML from '../../../layouts/html.astro';
+	const upper = name.toUpperCase();
 
-export const prerender = false;
+	const sharedFrontmatterTop = `import { loadQuery } from '../../../lib/content/preview';
+import {
+	SANITY_${upper}_COLLECTION_QUERY,
+	mapSanity${pascal}ToCollectionEntry,
+	type Sanity${pascal}QueryResult
+} from '../../../lib/content/${name}Collection';
+import HTML from '../../../layouts/html.astro';`;
+
+	const sharedFrontmatterBottom = `export const prerender = false;
 
 const slug = Astro.params.slug;
-const page = slug ? await getAstro${pascal}BySlug(slug) : undefined;
-if (!page) {
+let entry: ReturnType<typeof mapSanity${pascal}ToCollectionEntry> = null;
+
+if (slug) {
+	const results = await loadQuery<Sanity${pascal}QueryResult[]>(
+		SANITY_${upper}_COLLECTION_QUERY
+	);
+	const match = results.find((result) => result.slug === slug);
+	entry = match ? mapSanity${pascal}ToCollectionEntry(match) : null;
+}
+
+if (!entry) {
 	Astro.response.status = 404;
 }
 
-const title = page?.title ?? 'Preview not found';
+const title = entry?.data.title ?? 'Preview not found';
 const description =
-	page?.description ?? 'The requested preview page was not found.';
+	entry?.data.description ?? 'The requested preview page was not found.';`;
+
+	if (type === 'block') {
+		return `---
+${sharedFrontmatterTop}
+import BlockPage from '../../../layouts/BlockPage.astro';
+
+${sharedFrontmatterBottom}
 ---
 
 {
-	page ? (
-		<BlocksPage title={title} description={description} page={page} />
+	entry ? (
+		<BlockPage
+			title={entry.data.title}
+			description={entry.data.description}
+			page={entry.data}
+		/>
 	) : (
 		<HTML title={title} description={description}>
 			<div class="mx-auto max-w-3xl px-6 py-14 text-stone-700">
@@ -46,32 +74,22 @@ const description =
 }
 `;
 	}
-	// Portable text preview route uses shared PortablePage layout for DRYness
+
+	// Portable text preview route uses shared PortablePage layout.
 	return `---
-import { getAstro${pascal}BySlug } from '../../../lib/content/${name}';
+${sharedFrontmatterTop}
 import PortablePage from '../../../layouts/PortablePage.astro';
-import HTML from '../../../layouts/html.astro';
 
-export const prerender = false;
-
-const slug = Astro.params.slug;
-const entry = slug ? await getAstro${pascal}BySlug(slug) : undefined;
-if (!entry) {
-	Astro.response.status = 404;
-}
-
-const title = entry?.title ?? 'Preview not found';
-const description =
-	entry?.description ?? 'The requested preview page was not found.';
+${sharedFrontmatterBottom}
 ---
 
 {
 	entry ? (
 		<PortablePage
-			title={entry.title}
-			description={entry.description}
-			body={entry.body}
-			urlPrefix={urlPrefix}
+			title={entry.data.title}
+			description={entry.data.description}
+			body={entry.data.body}
+			urlPrefix="${urlPrefix}"
 		/>
 	) : (
 		<HTML title={title} description={description}>

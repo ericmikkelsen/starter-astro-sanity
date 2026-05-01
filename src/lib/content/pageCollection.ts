@@ -1,7 +1,7 @@
 import type { WebDocumentCore } from './shared';
 import {
 	projectObjectFields,
-	SANITY_IMAGE_ASSET_REF_FIELDS,
+	SANITY_IMAGE_ASSET_REF_FIELDS
 } from './groqProjections';
 
 /**
@@ -70,12 +70,12 @@ export function mapSanityPageToCollectionEntry(
 			metaImage: entry.metaImage?.asset?._ref
 				? {
 						assetRef: entry.metaImage.asset._ref,
-						alt: entry.metaImageAlt,
+						alt: entry.metaImageAlt
 					}
 				: undefined,
 			metaImageAlt: entry.metaImageAlt,
 			// Route parity matters so existing page URLs keep matching the earlier fetch path.
-			path: `/${entry.slug}/`,
-		},
+			path: `/${entry.slug}/`
+		}
 	};
 }

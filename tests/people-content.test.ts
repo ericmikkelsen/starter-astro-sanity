@@ -11,15 +11,15 @@ test('mapSanityPersonToCollectionEntry maps valid people records', () => {
 		name: 'Ada Lovelace',
 		bio: [
 			{
-				_type: 'block',
-			},
+				_type: 'block'
+			}
 		],
 		image: {
 			src: 'https://cdn.sanity.io/images/proj/dataset/ada.jpg',
 			alt: 'Portrait of Ada',
 			width: 800,
-			height: 600,
-		},
+			height: 600
+		}
 	});
 
 	assert.ok(mapped);
@@ -40,8 +40,8 @@ test('mapSanityPersonToCollectionEntry rejects records without required fields',
 		image: {
 			src: '',
 			width: 100,
-			height: 100,
-		},
+			height: 100
+		}
 	});
 
 	assert.equal(mapped, null);

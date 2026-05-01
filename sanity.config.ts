@@ -1,8 +1,15 @@
 import { defineConfig } from 'sanity';
-import { defineLocations, presentationTool, type PresentationPluginOptions } from 'sanity/presentation';
+import {
+	defineLocations,
+	presentationTool,
+	type PresentationPluginOptions
+} from 'sanity/presentation';
 import { structureTool } from 'sanity/structure';
 
-import { resolveDocumentProductionUrl, resolvePreviewSiteUrl } from './sanity/previewLinks';
+import {
+	resolveDocumentProductionUrl,
+	resolvePreviewSiteUrl
+} from './sanity/previewLinks';
 import { schemaTypes } from './sanity/schemaTypes';
 
 declare const __SANITY_STUDIO_PROJECT_ID__: string;

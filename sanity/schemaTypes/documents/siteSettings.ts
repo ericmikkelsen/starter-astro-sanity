@@ -8,24 +8,24 @@ export default defineType({
 		defineField({
 			name: 'title',
 			title: 'Site Title',
-			type: 'string',
+			type: 'string'
 		}),
 		defineField({
 			name: 'description',
 			title: 'Site Description',
-			type: 'text',
+			type: 'text'
 		}),
 		defineField({
 			name: 'favicon',
 			title: 'Favicon',
 			type: 'image',
 			options: { hotspot: false },
-			validation: (rule) => rule.required(),
+			validation: (rule) => rule.required()
 		}),
 		defineField({
 			...LINKS_FIELD_ARGS,
 			name: 'navigation',
-			title: 'Navigation',
-		}),
-	],
+			title: 'Navigation'
+		})
+	]
 });

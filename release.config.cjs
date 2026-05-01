@@ -3,11 +3,11 @@ module.exports = {
 	plugins: [
 		[
 			'@semantic-release/commit-analyzer',
-			{ preset: 'conventionalcommits' },
+			{ preset: 'conventionalcommits' }
 		],
 		[
 			'@semantic-release/release-notes-generator',
-			{ preset: 'conventionalcommits' },
+			{ preset: 'conventionalcommits' }
 		],
 		['@semantic-release/changelog', { changelogFile: 'CHANGELOG.md' }],
 		['@semantic-release/npm', { npmPublish: false }],
@@ -16,9 +16,9 @@ module.exports = {
 			{
 				assets: ['package.json', 'package-lock.json', 'CHANGELOG.md'],
 				message:
-					'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
-			},
+					'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
+			}
 		],
-		'@semantic-release/github',
-	],
+		'@semantic-release/github'
+	]
 };

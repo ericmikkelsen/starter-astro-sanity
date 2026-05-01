@@ -18,9 +18,12 @@ export const GET: APIRoute = async ({ request, cookies, redirect }) => {
 	const token = import.meta.env.SANITY_API_READ_TOKEN;
 
 	if (!token) {
-		return new Response('Server misconfigured: missing SANITY_API_READ_TOKEN', {
-			status: 500
-		});
+		return new Response(
+			'Server misconfigured: missing SANITY_API_READ_TOKEN',
+			{
+				status: 500
+			}
+		);
 	}
 
 	const clientWithToken = createClient({
@@ -31,10 +34,11 @@ export const GET: APIRoute = async ({ request, cookies, redirect }) => {
 		token
 	});
 
-	const { isValid, redirectTo = '/', studioPreviewPerspective } = await validatePreviewUrl(
-		clientWithToken,
-		request.url
-	);
+	const {
+		isValid,
+		redirectTo = '/',
+		studioPreviewPerspective
+	} = await validatePreviewUrl(clientWithToken, request.url);
 
 	if (!isValid) {
 		return new Response('Invalid secret', { status: 401 });

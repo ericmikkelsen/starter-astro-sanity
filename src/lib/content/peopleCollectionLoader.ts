@@ -4,7 +4,7 @@ import { z } from 'astro/zod';
 import {
 	mapSanityPersonToCollectionEntry,
 	SANITY_PEOPLE_COLLECTION_QUERY,
-	type SanityPersonQueryResult,
+	type SanityPersonQueryResult
 } from './peopleCollection';
 import { loadQuery } from './preview';
 
@@ -15,8 +15,8 @@ const peopleCollectionSchema = z.object({
 		src: z.string().url(),
 		alt: z.string().optional(),
 		width: z.number(),
-		height: z.number(),
-	}),
+		height: z.number()
+	})
 });
 
 /**
@@ -42,15 +42,15 @@ export function createSanityPeopleCollectionLoader() {
 
 				const data = await parseData({
 					id: mapped.id,
-					data: mapped.data,
+					data: mapped.data
 				});
 
 				store.set({
 					id: mapped.id,
 					data,
-					digest: generateDigest(data),
+					digest: generateDigest(data)
 				});
 			}
-		},
+		}
 	} satisfies Loader;
 }

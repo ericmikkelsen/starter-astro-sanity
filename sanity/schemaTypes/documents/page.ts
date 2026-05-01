@@ -16,15 +16,15 @@ export const pageType = defineType({
 				defineArrayMember({ type: 'billboard' }),
 				defineArrayMember({ type: 'listScroller' }),
 				defineArrayMember({ type: 'peopleRefs' }),
-				defineArrayMember({ type: 'richText' }),
+				defineArrayMember({ type: 'richText' })
 			],
-			validation: (rule) => rule.required().min(1),
-		}),
+			validation: (rule) => rule.required().min(1)
+		})
 	],
 	preview: {
 		select: {
 			title: 'title',
-			subtitle: 'slug.current',
-		},
-	},
+			subtitle: 'slug.current'
+		}
+	}
 });

@@ -17,13 +17,13 @@ export const scaffoldPortableTextDocument = {
 		...Object.values(WEB_PAGE_FIELDS),
 		defineField({
 			...RICH_TEXT_FIELD_ARGS,
-			title: 'Body',
-		}),
+			title: 'Body'
+		})
 	],
 	preview: {
 		select: {
 			title: 'title',
-			subtitle: 'slug.current',
-		},
-	},
+			subtitle: 'slug.current'
+		}
+	}
 };

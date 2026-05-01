@@ -7,7 +7,7 @@ import {
 	IMAGE_FIELD_ARGS,
 	LINK_FIELD_ARGS,
 	RICH_TEXT_BASIC_FIELD_ARGS,
-	RICH_TEXT_FIELD_ARGS,
+	RICH_TEXT_FIELD_ARGS
 } from '../sanity/schemaTypes/objects/componentFields';
 
 test('HEADING_FIELD_ARGS defines heading string field', () => {
@@ -53,7 +53,7 @@ test('RICH_TEXT_FIELD_ARGS excludes h1 style', () => {
 	const blockMember = (RICH_TEXT_FIELD_ARGS.of?.[0] as {
 		styles?: Array<{ value: string }>;
 	}) ?? {
-		styles: [],
+		styles: []
 	};
 	const styles = (blockMember.styles ?? []).map((style) => style.value);
 

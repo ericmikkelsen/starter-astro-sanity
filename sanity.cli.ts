@@ -13,11 +13,11 @@ const dataset = process.env.PUBLIC_SANITY_DATASET || 'production';
 export default defineCliConfig({
 	api: {
 		projectId,
-		dataset,
+		dataset
 	},
 	typegen: {
 		path: './src/**/*.{ts,tsx,js,jsx,astro}',
 		schema: './src/sanity/extract.json',
-		generates: './src/sanity/types.ts',
-	},
+		generates: './src/sanity/types.ts'
+	}
 });

@@ -35,7 +35,7 @@ test('pageType blocks allows expected primitive blocks', () => {
 		'billboard',
 		'listScroller',
 		'peopleRefs',
-		'richText',
+		'richText'
 	]);
 });
 

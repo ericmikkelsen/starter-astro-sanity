@@ -2,49 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
-	toPascalCase,
-	toStudioTitle,
-	validateScaffoldInputs,
 	generateSanityPortableSchema,
 	generatePortableCollectionModule,
 	generatePortableCollectionLoader,
 	generatePortablePageRoute
 } from '../scripts/scaffold-web-portable';
 
-// --- toPascalCase ---
-
-test('toPascalCase capitalizes the first letter', () => {
-	assert.equal(toPascalCase('article'), 'Article');
-	assert.equal(toPascalCase('supportPage'), 'SupportPage');
-	assert.equal(toPascalCase('a'), 'A');
-});
-
-// --- toStudioTitle ---
-
-test('toStudioTitle converts camelCase identifiers into editor-facing labels', () => {
-	assert.equal(toStudioTitle('article'), 'Article');
-	assert.equal(toStudioTitle('landingPage'), 'Landing Page');
-});
-
-// --- validateScaffoldInputs ---
-
-test('validateScaffoldInputs accepts valid name and urlPrefix', () => {
-	assert.doesNotThrow(() => {
-		validateScaffoldInputs('article', 'articles');
-	});
-});
-
-test('validateScaffoldInputs rejects invalid document type name', () => {
-	assert.throws(() => {
-		validateScaffoldInputs('../article', 'articles');
-	});
-});
-
-test('validateScaffoldInputs rejects invalid urlPrefix', () => {
-	assert.throws(() => {
-		validateScaffoldInputs('article', '../articles');
-	});
-});
+// Shared utilities (toPascalCase, toStudioTitle, validateScaffoldInputs) are tested in scaffold-utils.test.ts.
 
 // --- generateSanityPortableSchema ---
 

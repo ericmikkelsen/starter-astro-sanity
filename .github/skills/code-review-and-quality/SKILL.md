@@ -44,7 +44,7 @@ Any N+1 query patterns? Any unbounded loops? Any unnecessary re-renders?
 
 ```
 ~100 lines changed   → Good. Reviewable in one sitting.
-~300 lines changed   → Acceptable if it's a single logical change.
+~500 lines changed   → Acceptable if it's a single logical change.
 ~1000 lines changed  → Too large. Split it.
 ```
 
@@ -57,9 +57,13 @@ Team-wide limits are stored in `.github/review-config.json`:
 ```json
 {
 	"reviewabilityBudget": {
-		"maxLinesPerChapter": 300,
+		"maxLinesPerChapter": 500,
 		"maxFilesPerChapter": 5,
-		"excludeGlobs": ["src/sanity/extract.json", "src/sanity/types.ts"]
+		"excludeGlobs": [
+			"package-lock.json",
+			"src/sanity/extract.json",
+			"src/sanity/types.ts"
+		]
 	}
 }
 ```
@@ -73,7 +77,7 @@ git diff --staged --stat
 - If lines changed exceeds `maxLinesPerChapter` → split the branch.
 - If non-deleted files touched exceeds `maxFilesPerChapter` → split the branch.
 
-Both limits matter independently: a 300-line change spread across 15 non-deleted files is just as hard to review as a 1,000-line change in one file. Lines measure volume; files measure cognitive scatter. Deleted-only files are excluded from the file-count budget because they reduce surface area rather than expand it. Files matching `excludeGlobs` are also excluded from budget calculations.
+Both limits matter independently: a 500-line change spread across 15 non-deleted files is just as hard to review as a 1,000-line change in one file. Lines measure volume; files measure cognitive scatter. Deleted-only files are excluded from the file-count budget because they reduce surface area rather than expand it. Files matching `excludeGlobs` are also excluded from budget calculations.
 
 When a limit is exceeded, propose a split _before_ committing — not after. Use the `narrative-branching` skill to structure the split as story chapters.
 

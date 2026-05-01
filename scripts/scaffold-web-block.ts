@@ -76,11 +76,28 @@ export function generateBlockCollectionModule(
 	const pascal = toPascalCase(name);
 	const upper = name.toUpperCase();
 	return `import type { WebDocumentCore } from './shared';
-import type { ArrayPageBuilderBlock } from './pageBuilderTypes';
+import type { Page as SanityPage } from '../../sanity/types';
 import {
 	projectObjectFields,
 	SANITY_IMAGE_ASSET_REF_FIELDS
 } from './groqProjections';
+
+type SanityPageBuilderBlock = SanityPage['blocks'][number];
+
+type ArrayPageBuilderBlock =
+	| (Omit<Extract<SanityPageBuilderBlock, { _type: 'billboard' }>, 'image'> & {
+			image?: {
+				alt?: string;
+				src?: string;
+				width?: number;
+				height?: number;
+			};
+	  })
+	| Extract<SanityPageBuilderBlock, { _type: 'listScroller' }>
+	| (Omit<Extract<SanityPageBuilderBlock, { _type: 'peopleRefs' }>, 'people'> & {
+			people?: Array<{ _id: string; name?: string }>;
+	  })
+	| Extract<SanityPageBuilderBlock, { _type: 'richText' }>;
 
 export const SANITY_${upper}_COLLECTION_QUERY = \`*[_type == "${name}" && defined(slug.current)]{
   _id,

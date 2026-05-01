@@ -82,6 +82,10 @@ test('generateBlockCollectionModule exports the collection entry type', () => {
 		'should export entry type'
 	);
 	assert.ok(
+		src.includes("from '../../sanity/types'"),
+		'should derive block types from generated Sanity types'
+	);
+	assert.ok(
 		src.includes('ArrayPageBuilderBlock'),
 		'entry type should reference block type'
 	);

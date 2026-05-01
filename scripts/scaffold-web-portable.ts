@@ -98,6 +98,7 @@ export function generatePortableCollectionModule(
 		`  richText`,
 		`}\`;`,
 		'',
+		`export type Sanity${pascal}QueryResult = {`,
 		`  _id: string;`,
 		`  title?: string;`,
 		`  slug?: string;`,

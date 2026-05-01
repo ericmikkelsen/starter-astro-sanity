@@ -119,9 +119,10 @@ test('generatePortableCollectionModule exports a mapper function', () => {
 
 test('generatePortableCollectionModule builds the path from urlPrefix', () => {
 	const src = generatePortableCollectionModule('article', 'resources');
+	// Assert the full concatenation shape: leading slash, prefix, slug segment, and trailing slash
 	assert.ok(
-		src.includes("'resources/'"),
-		'path should include the url prefix'
+		src.includes("'/' + 'resources/' + entry.slug + '/'"),
+		'path should concatenate leading slash, urlPrefix, entry.slug, and trailing slash'
 	);
 });
 

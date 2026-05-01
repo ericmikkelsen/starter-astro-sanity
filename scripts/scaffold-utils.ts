@@ -15,6 +15,35 @@ export function toPascalCase(name: string): string {
 }
 
 /**
+ * Converts a human-readable label into a camelCase document type name.
+ * Used to derive a default Sanity schema name from a prompt answer.
+ *
+ * @param label Human-readable string (e.g. 'Campaign Page').
+ * @returns camelCase identifier (e.g. 'campaignPage').
+ */
+export function toDocumentTypeName(label: string): string {
+	const words = label.trim().split(/[\s-]+/);
+	return words
+		.map((word, i) =>
+			i === 0
+				? word.toLowerCase()
+				: word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+		)
+		.join('');
+}
+
+/**
+ * Derives a URL-safe plural path prefix from a camelCase document type name.
+ * Splits camelCase into kebab-case and appends 's' unless already plural.
+ *
+ * @param name camelCase document type name (e.g. 'campaignPage').
+ * @returns Kebab-case plural prefix (e.g. 'campaign-pages').
+ */
+export function toUrlPrefix(name: string): string {
+	return name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
+/**
  * Converts a camelCase document type identifier into a human-readable
  * Studio-facing title shown in the Sanity Studio UI.
  *
@@ -110,6 +139,16 @@ export function createPromptSession() {
 	return {
 		ask(question: string): Promise<string> {
 			return rl.question(question).then((a) => a.trim());
+		},
+		/**
+		 * Prompts with a pre-filled default shown in brackets.
+		 * Returns the default when the user presses Enter without typing.
+		 */
+		askWithDefault(question: string, defaultVal: string): Promise<string> {
+			return rl.question(`${question} [${defaultVal}]: `).then((a) => {
+				const trimmed = a.trim();
+				return trimmed === '' ? defaultVal : trimmed;
+			});
 		},
 		close() {
 			rl.close();

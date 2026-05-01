@@ -67,9 +67,13 @@ export default defineConfig({
 			__SANITY_STUDIO_DATASET__: JSON.stringify(dataset)
 		},
 		// Keep Sanity, React compiler runtime, and visual-editing CJS modules pre-bundled for dev server.
+		// Explicitly including the studio component prevents Vite from discovering it lazily
+		// at runtime, which would cause a 504 Outdated Optimize Dep on first load.
 		optimizeDeps: {
 			include: [
 				'sanity',
+				'sanity/desk',
+				'sanity/presentation',
 				'react/compiler-runtime',
 				'@sanity/visual-editing/react',
 				'@sanity/preview-url-secret/constants',

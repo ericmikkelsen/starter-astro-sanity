@@ -6,6 +6,7 @@ import {
 	NAME_RE,
 	toPascalCase,
 	toStudioTitle,
+	toDocumentTypeName,
 	writeGeneratedFile
 } from './scaffold-utils';
 
@@ -473,9 +474,9 @@ async function promptForFields(
 	const selected: ComponentFieldKey[] = [];
 
 	for (const field of DEFAULT_COMPONENT_FIELDS) {
-		const answer = await session.ask(`Include field "${field}"? (y/N): `);
+		const answer = await session.ask(`Include field "${field}"? (Y/n): `);
 		const normalized = answer.toLowerCase();
-		if (normalized === 'y' || normalized === 'yes') {
+		if (normalized !== 'n' && normalized !== 'no') {
 			selected.push(field);
 		}
 	}
@@ -490,24 +491,31 @@ async function main(): Promise<void> {
 	const session = createPromptSession();
 
 	try {
-		const name = await session.ask('Component name (e.g. featureCard): ');
+		const label = await session.ask('Name (e.g. Feature Card): ');
+		const defaultName = toDocumentTypeName(label);
+		const name = await session.askWithDefault(
+			'  Component name',
+			defaultName
+		);
 		validateComponentName(name);
 
-		const categoryInput = await session.ask(
-			`Component category (${COMPONENT_CATEGORIES.join('/')}): `
+		const categoryInput = await session.askWithDefault(
+			`  Category (${COMPONENT_CATEGORIES.join('/')})`,
+			'atoms'
 		);
 		validateComponentCategory(categoryInput);
 
 		const fields = await promptForFields(session);
 		validateComponentFields(fields);
 
-		let bodyType: ComponentBodyType = 'string';
+		let bodyType: ComponentBodyType = 'portable';
 		if (fields.includes('body')) {
-			const bodyTypeInput = await session.ask(
-				'Body type (string/portable): '
+			const bodyTypeInput = await session.askWithDefault(
+				'  Body type (string/portable)',
+				'portable'
 			);
-			validateComponentBodyType(bodyTypeInput);
-			bodyType = bodyTypeInput;
+			validateComponentBodyType(bodyTypeInput as ComponentBodyType);
+			bodyType = bodyTypeInput as ComponentBodyType;
 		}
 
 		const title = toStudioTitle(name);

@@ -4,6 +4,8 @@ import assert from 'node:assert/strict';
 import {
 	toPascalCase,
 	toStudioTitle,
+	toDocumentTypeName,
+	toUrlPrefix,
 	validateScaffoldInputs,
 	printScaffoldGuidance,
 	writeGeneratedFile
@@ -33,6 +35,38 @@ test('toStudioTitle capitalizes a single lowercase word', () => {
 test('toStudioTitle converts camelCase to spaced title case', () => {
 	assert.equal(toStudioTitle('landingPage'), 'Landing Page');
 	assert.equal(toStudioTitle('myContentType'), 'My Content Type');
+});
+
+// --- toDocumentTypeName ---
+
+test('toDocumentTypeName converts a single word to lowercase', () => {
+	assert.equal(toDocumentTypeName('Article'), 'article');
+});
+
+test('toDocumentTypeName converts a two-word label to camelCase', () => {
+	assert.equal(toDocumentTypeName('Campaign Page'), 'campaignPage');
+	assert.equal(toDocumentTypeName('Feature Card'), 'featureCard');
+});
+
+test('toDocumentTypeName handles all-lowercase label', () => {
+	assert.equal(toDocumentTypeName('blog post'), 'blogPost');
+});
+
+// --- toUrlPrefix ---
+
+test('toUrlPrefix appends s to a simple camelCase name', () => {
+	assert.equal(toUrlPrefix('article'), 'article');
+	assert.equal(toUrlPrefix('guide'), 'guide');
+});
+
+test('toUrlPrefix splits camelCase and pluralizes', () => {
+	assert.equal(toUrlPrefix('campaignPage'), 'campaign-page');
+	assert.equal(toUrlPrefix('blogPost'), 'blog-post');
+});
+
+test('toUrlPrefix does not double-append s when name already ends in s', () => {
+	assert.equal(toUrlPrefix('articles'), 'articles');
+	assert.equal(toUrlPrefix('news'), 'news');
 });
 
 // --- validateScaffoldInputs ---

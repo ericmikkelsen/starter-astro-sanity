@@ -4,6 +4,8 @@ import { resolve } from 'node:path';
 import {
 	toPascalCase,
 	toStudioTitle,
+	toDocumentTypeName,
+	toUrlPrefix,
 	validateScaffoldInputs,
 	printScaffoldGuidance,
 	createPromptSession,
@@ -217,7 +219,7 @@ const ${name}CollectionSchema = z.object({
 \t\t})
 \t\t.optional(),
 \tmetaImageAlt: z.string().optional(),
-\tblocks: z.array(z.record(z.unknown())).optional(),
+	blocks: z.array(z.record(z.string(), z.unknown())).optional(),
 \tpath: z.string()
 });
 
@@ -346,8 +348,17 @@ export function writeScaffoldFiles(
 
 async function main(): Promise<void> {
 	const prompter = createPromptSession();
-	const name = await prompter.ask('Document type name (e.g. campaign): ');
-	const urlPrefix = await prompter.ask('URL prefix (e.g. campaigns): ');
+	const label = await prompter.ask('Name (e.g. Campaign Page): ');
+	const defaultName = toDocumentTypeName(label);
+	const defaultUrlPrefix = toUrlPrefix(defaultName);
+	const name = await prompter.askWithDefault(
+		'  Document type name',
+		defaultName
+	);
+	const urlPrefix = await prompter.askWithDefault(
+		'  URL prefix',
+		defaultUrlPrefix
+	);
 	prompter.close();
 
 	validateScaffoldInputs(name, urlPrefix);

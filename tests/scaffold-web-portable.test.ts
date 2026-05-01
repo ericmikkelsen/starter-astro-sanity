@@ -111,7 +111,7 @@ test('generatePortableCollectionLoader imports from the collection module', () =
 test('generatePortableCollectionLoader includes body in schema validation', () => {
 	const src = generatePortableCollectionLoader('article');
 	assert.ok(
-		src.includes('body: z.array(z.record(z.unknown()))'),
+		src.includes('body: z.array(z.record(z.string(), z.unknown()))'),
 		'should require a portable body array in schema'
 	);
 });

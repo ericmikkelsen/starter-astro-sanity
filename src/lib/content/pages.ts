@@ -163,6 +163,11 @@ export async function getAstroPageBySlugDirect(
 export async function getAstroPageBySlug(
 	slug: string
 ): Promise<AstroPage | undefined> {
+	const normalizedSlug = normalizePageSlug(slug);
+	if (!normalizedSlug) {
+		return undefined;
+	}
+
 	const pages = await getAstroPages();
-	return pages.find((page) => page.slug === slug);
+	return pages.find((page) => page.slug === normalizedSlug);
 }

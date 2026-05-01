@@ -4,7 +4,7 @@ import { z } from 'astro/zod';
 import {
 	mapSanityPageToCollectionEntry,
 	SANITY_PAGE_COLLECTION_QUERY,
-	type SanityPageQueryResult,
+	type SanityPageQueryResult
 } from './pageCollection';
 import { isPreviewEnabled, loadQuery } from './preview';
 
@@ -20,11 +20,11 @@ const pageCollectionSchema = z.object({
 			assetRef: z.string(),
 			alt: z.string().optional(),
 			width: z.number().optional(),
-			height: z.number().optional(),
+			height: z.number().optional()
 		})
 		.optional(),
 	metaImageAlt: z.string().optional(),
-	path: z.string(),
+	path: z.string()
 });
 
 /**
@@ -74,17 +74,17 @@ export function createSanityPageCollectionLoader() {
 
 				const data = await parseData({
 					id: mapped.id,
-					data: mapped.data,
+					data: mapped.data
 				});
 
 				store.set({
 					id: mapped.id,
 					data,
 					// Digests let Astro skip rewrites when entry data has not changed between syncs.
-					digest: generateDigest(data),
+					digest: generateDigest(data)
 				});
 			}
-		},
+		}
 	} satisfies Loader;
 }
 

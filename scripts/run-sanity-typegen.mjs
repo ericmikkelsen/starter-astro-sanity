@@ -22,7 +22,7 @@ mkdirSync('./src/sanity', { recursive: true });
  */
 function runSanityCommand(args) {
 	const result = spawnSync('npx', ['sanity', ...args], {
-		stdio: 'inherit',
+		stdio: 'inherit'
 	});
 
 	return result.status ?? 1;
@@ -33,7 +33,7 @@ const extractStatus = runSanityCommand([
 	'schema',
 	'extract',
 	'--enforce-required-fields',
-	'--path=./src/sanity/extract.json',
+	'--path=./src/sanity/extract.json'
 ]);
 
 if (extractStatus !== 0) {

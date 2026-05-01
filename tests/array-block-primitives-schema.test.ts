@@ -5,7 +5,7 @@ import {
 	billboardType,
 	listScrollerType,
 	peopleRefsType,
-	richTextType,
+	richTextType
 } from '../sanity/schemaTypes/objects/arrayBlockPrimitives';
 import { schemaTypes } from '../sanity/schemaTypes';
 
@@ -78,16 +78,16 @@ test('richTextType defines portable content field', () => {
 
 test('block previews include block name as subtitle', () => {
 	const billboardPreview = billboardType.preview?.prepare?.({
-		title: 'Hero section',
+		title: 'Hero section'
 	});
 	const listScrollerPreview = listScrollerType.preview?.prepare?.({
-		title: 'Highlights',
+		title: 'Highlights'
 	});
 	const peopleRefsPreview = peopleRefsType.preview?.prepare?.({
-		people: [{ _ref: 'person-1' }, { _ref: 'person-2' }],
+		people: [{ _ref: 'person-1' }, { _ref: 'person-2' }]
 	});
 	const richTextPreview = richTextType.preview?.prepare?.({
-		content: [{ _type: 'block' }],
+		content: [{ _type: 'block' }]
 	});
 
 	assert.equal(billboardPreview?.subtitle, 'Billboard');

@@ -9,9 +9,9 @@ export const headingType = defineType({
 			name: 'text',
 			title: 'Text',
 			type: 'string',
-			validation: (rule) => rule.required(),
-		}),
-	],
+			validation: (rule) => rule.required()
+		})
+	]
 });
 
 export const subheadingType = defineType({
@@ -23,9 +23,9 @@ export const subheadingType = defineType({
 			name: 'text',
 			title: 'Text',
 			type: 'string',
-			validation: (rule) => rule.required(),
-		}),
-	],
+			validation: (rule) => rule.required()
+		})
+	]
 });
 
 export const bodyTextType = defineType({
@@ -38,9 +38,9 @@ export const bodyTextType = defineType({
 			title: 'Text',
 			type: 'text',
 			rows: 4,
-			validation: (rule) => rule.required(),
-		}),
-	],
+			validation: (rule) => rule.required()
+		})
+	]
 });
 
 export const linkType = defineType({
@@ -52,15 +52,15 @@ export const linkType = defineType({
 			name: 'url',
 			title: 'URL',
 			type: 'url',
-			validation: (rule) => rule.required(),
+			validation: (rule) => rule.required()
 		}),
 		defineField({
 			name: 'text',
 			title: 'Text',
 			type: 'string',
-			validation: (rule) => rule.required(),
-		}),
-	],
+			validation: (rule) => rule.required()
+		})
+	]
 });
 
 export const listType = defineType({
@@ -73,9 +73,9 @@ export const listType = defineType({
 			title: 'Items',
 			type: 'array',
 			of: [defineArrayMember({ type: 'string' })],
-			validation: (rule) => rule.required().min(1),
-		}),
-	],
+			validation: (rule) => rule.required().min(1)
+		})
+	]
 });
 
 export const imageObjectType = defineType({
@@ -88,8 +88,8 @@ export const imageObjectType = defineType({
 			title: 'Image',
 			type: 'image',
 			options: { hotspot: true },
-			validation: (rule) => rule.required(),
+			validation: (rule) => rule.required()
 		}),
-		defineField({ name: 'alt', title: 'Alt Text', type: 'string' }),
-	],
+		defineField({ name: 'alt', title: 'Alt Text', type: 'string' })
+	]
 });

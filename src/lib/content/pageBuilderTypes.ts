@@ -49,5 +49,5 @@ export type ArrayPageBuilderBlock =
  * Utility type to derive a specific block shape by `_type` key.
  */
 export type ArrayPageBuilderBlockByType<
-	TType extends ArrayPageBuilderBlock['_type'],
+	TType extends ArrayPageBuilderBlock['_type']
 > = Extract<ArrayPageBuilderBlock, { _type: TType }>;

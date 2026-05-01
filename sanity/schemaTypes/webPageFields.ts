@@ -12,7 +12,7 @@ export const WEB_PAGE_FIELDS = {
 		name: 'title',
 		title: 'Title',
 		type: 'string',
-		validation: (rule) => rule.required().min(2),
+		validation: (rule) => rule.required().min(2)
 	}),
 	slug: defineField({
 		name: 'slug',
@@ -20,26 +20,26 @@ export const WEB_PAGE_FIELDS = {
 		type: 'slug',
 		options: {
 			source: 'title',
-			maxLength: 96,
+			maxLength: 96
 		},
-		validation: (rule) => rule.required(),
+		validation: (rule) => rule.required()
 	}),
 	description: defineField({
 		name: 'description',
 		title: 'Description',
 		type: 'text',
-		rows: 3,
+		rows: 3
 	}),
 	metaImage: defineField({
 		name: 'metaImage',
 		title: 'Meta Image',
 		type: 'image',
-		options: { hotspot: true },
+		options: { hotspot: true }
 	}),
 	metaImageAlt: defineField({
 		name: 'metaImageAlt',
 		title: 'Meta Image Alt',
 		type: 'string',
-		description: 'Alternative text used when meta image is present.',
-	}),
+		description: 'Alternative text used when meta image is present.'
+	})
 };

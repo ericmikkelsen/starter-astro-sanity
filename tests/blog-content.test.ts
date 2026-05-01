@@ -9,7 +9,7 @@ test('mapSanityBlogToAstroPost maps valid blog records', () => {
 		title: 'Hello World',
 		slug: 'hello-world',
 		description: 'A post',
-		richText: [{ _type: 'block', children: [] }],
+		richText: [{ _type: 'block', children: [] }]
 	};
 
 	const result = mapSanityBlogToAstroPost(entry);
@@ -37,7 +37,7 @@ test('mapSanityBlogToAstroPost defaults body to empty array when richText absent
 	const result = mapSanityBlogToAstroPost({
 		_id: 'blog-1',
 		title: 'Hello',
-		slug: 'hello',
+		slug: 'hello'
 	});
 
 	assert.ok(result);
@@ -50,7 +50,7 @@ test('mapSanityBlogToAstroPost maps metaImage when asset ref is present', () => 
 		title: 'Hello',
 		slug: 'hello',
 		metaImage: { asset: { _ref: 'image-abc' } },
-		metaImageAlt: 'A nice image',
+		metaImageAlt: 'A nice image'
 	});
 
 	assert.ok(result);

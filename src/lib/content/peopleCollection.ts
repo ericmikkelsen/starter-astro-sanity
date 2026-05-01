@@ -1,6 +1,6 @@
 import {
 	projectObjectFields,
-	SANITY_IMAGE_METADATA_PROJECTION,
+	SANITY_IMAGE_METADATA_PROJECTION
 } from './groqProjections';
 
 /**
@@ -62,8 +62,8 @@ export function mapSanityPersonToCollectionEntry(
 				src: entry.image.src,
 				alt: entry.image.alt,
 				width: entry.image.width,
-				height: entry.image.height,
-			},
-		},
+				height: entry.image.height
+			}
+		}
 	};
 }

@@ -1,7 +1,7 @@
 ---
 import type {
 	ArrayPageBuilderBlock,
-	BlockSettings,
+	BlockSettings
 } from '../../lib/content/pageBuilderTypes';
 import Billboard from './Billboard.astro';
 import ListScroller from './listScroller.astro';
@@ -18,7 +18,7 @@ const blockSettings: BlockSettings = {
 	as: index === 0 ? 'header' : 'section',
 	hLevel: index === 0 ? 1 : 2,
 	index: index,
-	priority: index === 0 ? true : false,
+	priority: index === 0 ? true : false
 };
 ---
 

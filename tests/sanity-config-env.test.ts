@@ -44,14 +44,14 @@ test('resolveStudioEnvValue prefers import.meta env values', async () => {
 		const value = resolveStudioEnvValue('PUBLIC_SANITY_PROJECT_ID', {
 			defineValues: {
 				PUBLIC_SANITY_PROJECT_ID: undefined,
-				PUBLIC_SANITY_DATASET: undefined,
+				PUBLIC_SANITY_DATASET: undefined
 			},
 			importMetaEnv: {
-				PUBLIC_SANITY_PROJECT_ID: 'meta-project',
+				PUBLIC_SANITY_PROJECT_ID: 'meta-project'
 			},
 			processEnv: {
-				PUBLIC_SANITY_PROJECT_ID: 'process-project',
-			},
+				PUBLIC_SANITY_PROJECT_ID: 'process-project'
+			}
 		});
 
 		assert.equal(value, 'meta-project');
@@ -64,12 +64,12 @@ test('resolveStudioEnvValue falls back to process env when import.meta env is mi
 		const value = resolveStudioEnvValue('PUBLIC_SANITY_DATASET', {
 			defineValues: {
 				PUBLIC_SANITY_PROJECT_ID: undefined,
-				PUBLIC_SANITY_DATASET: undefined,
+				PUBLIC_SANITY_DATASET: undefined
 			},
 			importMetaEnv: {},
 			processEnv: {
-				PUBLIC_SANITY_DATASET: 'process-dataset',
-			},
+				PUBLIC_SANITY_DATASET: 'process-dataset'
+			}
 		});
 
 		assert.equal(value, 'process-dataset');
@@ -82,14 +82,14 @@ test('resolveStudioEnvValue prefers define-injected studio values', async () => 
 		const value = resolveStudioEnvValue('PUBLIC_SANITY_PROJECT_ID', {
 			defineValues: {
 				PUBLIC_SANITY_PROJECT_ID: 'defined-project',
-				PUBLIC_SANITY_DATASET: 'defined-dataset',
+				PUBLIC_SANITY_DATASET: 'defined-dataset'
 			},
 			importMetaEnv: {
-				PUBLIC_SANITY_PROJECT_ID: 'meta-project',
+				PUBLIC_SANITY_PROJECT_ID: 'meta-project'
 			},
 			processEnv: {
-				PUBLIC_SANITY_PROJECT_ID: 'process-project',
-			},
+				PUBLIC_SANITY_PROJECT_ID: 'process-project'
+			}
 		});
 
 		assert.equal(value, 'defined-project');
@@ -104,10 +104,10 @@ test('resolveStudioEnvValue throws when required env value is missing', async ()
 				resolveStudioEnvValue('PUBLIC_SANITY_PROJECT_ID', {
 					defineValues: {
 						PUBLIC_SANITY_PROJECT_ID: undefined,
-						PUBLIC_SANITY_DATASET: undefined,
+						PUBLIC_SANITY_DATASET: undefined
 					},
 					importMetaEnv: {},
-					processEnv: {},
+					processEnv: {}
 				}),
 			/missing required environment variable public_sanity_project_id/i
 		);

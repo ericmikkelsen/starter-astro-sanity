@@ -4,7 +4,7 @@ import {
 	BODY_FIELD_ARGS,
 	HEADING_FIELD_ARGS,
 	IMAGE_FIELD_ARGS,
-	RICH_TEXT_FIELD_ARGS,
+	RICH_TEXT_FIELD_ARGS
 } from './componentFields';
 
 /**
@@ -17,19 +17,19 @@ export const billboardType = defineType({
 	fields: [
 		defineField(HEADING_FIELD_ARGS),
 		defineField(BODY_FIELD_ARGS),
-		defineField(IMAGE_FIELD_ARGS),
+		defineField(IMAGE_FIELD_ARGS)
 	],
 	preview: {
 		select: {
-			title: 'heading',
+			title: 'heading'
 		},
 		prepare(selection) {
 			return {
 				title: selection.title || 'Untitled Billboard',
-				subtitle: 'Billboard',
+				subtitle: 'Billboard'
 			};
-		},
-	},
+		}
+	}
 });
 
 /**
@@ -47,20 +47,20 @@ export const listScrollerType = defineType({
 			title: 'Items',
 			type: 'array',
 			of: [defineArrayMember({ type: 'string' })],
-			validation: (rule) => rule.required().min(1),
-		}),
+			validation: (rule) => rule.required().min(1)
+		})
 	],
 	preview: {
 		select: {
-			title: 'heading',
+			title: 'heading'
 		},
 		prepare(selection) {
 			return {
 				title: selection.title || 'Untitled List',
-				subtitle: 'List Scroller',
+				subtitle: 'List Scroller'
 			};
-		},
-	},
+		}
+	}
 });
 
 /**
@@ -78,15 +78,15 @@ export const peopleRefsType = defineType({
 			of: [
 				defineArrayMember({
 					type: 'reference',
-					to: [{ type: 'person' }],
-				}),
+					to: [{ type: 'person' }]
+				})
 			],
-			validation: (rule) => rule.required().min(1),
-		}),
+			validation: (rule) => rule.required().min(1)
+		})
 	],
 	preview: {
 		select: {
-			people: 'people',
+			people: 'people'
 		},
 		prepare(selection) {
 			const peopleCount = Array.isArray(selection.people)
@@ -95,10 +95,10 @@ export const peopleRefsType = defineType({
 
 			return {
 				title: `${peopleCount} linked ${peopleCount === 1 ? 'person' : 'people'}`,
-				subtitle: 'People References',
+				subtitle: 'People References'
 			};
-		},
-	},
+		}
+	}
 });
 
 /**
@@ -111,7 +111,7 @@ export const richTextType = defineType({
 	fields: [defineField(RICH_TEXT_FIELD_ARGS)],
 	preview: {
 		select: {
-			content: 'richText',
+			content: 'richText'
 		},
 		prepare(selection) {
 			const blockCount = Array.isArray(selection.content)
@@ -120,8 +120,8 @@ export const richTextType = defineType({
 
 			return {
 				title: `${blockCount} block${blockCount === 1 ? '' : 's'}`,
-				subtitle: 'Rich Text',
+				subtitle: 'Rich Text'
 			};
-		},
-	},
+		}
+	}
 });

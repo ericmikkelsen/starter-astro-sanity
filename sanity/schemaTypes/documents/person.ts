@@ -9,7 +9,7 @@ export const personType = defineType({
 			name: 'name',
 			title: 'Name',
 			type: 'string',
-			validation: (rule) => rule.required().min(2),
+			validation: (rule) => rule.required().min(2)
 		}),
 		defineField({
 			name: 'bio',
@@ -32,15 +32,15 @@ export const personType = defineType({
 										name: 'href',
 										title: 'URL',
 										type: 'url',
-										validation: (rule) => rule.required(),
-									}),
-								],
-							},
-						],
-					},
-				}),
+										validation: (rule) => rule.required()
+									})
+								]
+							}
+						]
+					}
+				})
 			],
-			validation: (rule) => rule.required().min(1),
+			validation: (rule) => rule.required().min(1)
 		}),
 		defineField({
 			name: 'image',
@@ -51,16 +51,16 @@ export const personType = defineType({
 				defineField({
 					name: 'alt',
 					title: 'Alt Text',
-					type: 'string',
-				}),
+					type: 'string'
+				})
 			],
-			validation: (rule) => rule.required(),
-		}),
+			validation: (rule) => rule.required()
+		})
 	],
 	preview: {
 		select: {
 			title: 'name',
-			media: 'image',
-		},
-	},
+			media: 'image'
+		}
+	}
 });
